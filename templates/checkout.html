@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold mb-2">تکمیل سفارش</h1>
+    <p class="text-gray-500 mb-10">اطلاعات خود را وارد کنید</p>
+
+    <form action="/checkout" method="POST" class="card p-8 flex flex-col gap-6">
+        
+        <div>
+            <label class="block font-semibold mb-2">نام و نام خانوادگی</label>
+            <input 
+                type="text" 
+                name="name" 
+                required
+                placeholder="مثال: علی رضایی"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition"
+            >
+        </div>
+
+        <div>
+            <label class="block font-semibold mb-2">شماره تماس</label>
+            <input 
+                type="text" 
+                name="phone" 
+                required
+                placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition"
+            >
+        </div>
+
+        <div>
+            <label class="block font-semibold mb-2">آدرس کامل</label>
+            <textarea 
+                name="address" 
+                required
+                rows="4"
+                placeholder="استان، شهر، خیابان، پلاک، کد پستی"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition resize-none"
+            ></textarea>
+        </div>
+
+        <div class="bg-[#F7F4F0] rounded-xl p-4 text-sm text-gray-500">
+            💳 پرداخت در حال حاضر به صورت کارت به کارت انجام می‌شود. پس از ثبت سفارش با شما تماس گرفته می‌شود.
+        </div>
+
+        <button type="submit" class="btn-primary text-center font-semibold text-lg">
+            ثبت سفارش
+        </button>
+
+        <a href="/cart" class="block text-center text-gray-400 hover:text-[#7B9E87] text-sm transition">
+            ← بازگشت به سبد خرید
+        </a>
+
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    
+    <!-- Product Image -->
+    <div class="bg-white rounded-2xl h-80 flex items-center justify-center text-8xl shadow-sm">
+        {% if 'استرس' in product.name %}🧘
+        {% elif 'عشق' in product.name %}💛
+        {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
+        {% else %}🃏
+        {% endif %}
+    </div>
+
+    <!-- Product Info -->
+    <div>
+        <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+        <p class="text-gray-500 text-lg mb-6 leading-relaxed">{{ product.description }}</p>
+        
+        <div class="bg-[#F7F4F0] rounded-xl p-6 mb-6">
+            <p class="text-3xl font-bold text-[#7B9E87]">{{ "{:,}".format(product.price|int) }} تومان</p>
+            <p class="text-sm text-gray-400 mt-1">موجودی: {{ product.stock }} عدد</p>
+        </div>
+
+        {% if product.stock > 0 %}
+        <a href="/add-to-cart/{{ product.id }}" class="btn-primary inline-block text-center w-full text-lg font-semibold">
+            افزودن به سبد خرید 🛒
+        </a>
+        {% else %}
+        <button disabled class="w-full bg-gray-200 text-gray-400 py-3 rounded-xl text-lg font-semibold cursor-not-allowed">
+            ناموجود
+        </button>
+        {% endif %}
+
+        <a href="/shop" class="block text-center text-gray-400 hover:text-[#7B9E87] mt-4 text-sm transition">
+            ← بازگشت به فروشگاه
+        </a>
+    </div>
+</div>
+
+{% endblock %}

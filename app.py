@@ -1,0 +1,178 @@
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.secret_key = 'onlycards2024'
+ADMIN_PASSWORD = 'bizzleunoshots2IG'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onlycards.db'
+db = SQLAlchemy(app)
+
+# Database Models
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    stock = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String(200), nullable=False)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_name = db.Column(db.String(200), nullable=False)
+    customer_phone = db.Column(db.String(20), nullable=False)
+    customer_address = db.Column(db.Text, nullable=False)
+    items = db.Column(db.Text, nullable=False)
+    total = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(50), default='pending')
+
+# Routes
+@app.route('/')
+def index():
+    products = Product.query.all()
+    return render_template('index.html', products=products)
+
+@app.route('/shop')
+def shop():
+    products = Product.query.all()
+    return render_template('shop.html', products=products)
+
+@app.route('/product/<int:id>')
+def product(id):
+    product = Product.query.get_or_404(id)
+    return render_template('product.html', product=product)
+
+@app.route('/cart')
+def cart():
+    cart_items = session.get('cart', [])
+    products = []
+    total = 0
+    for item in cart_items:
+        p = Product.query.get(item['id'])
+        if p:
+            products.append({'product': p, 'quantity': item['quantity']})
+            total += p.price * item['quantity']
+    return render_template('cart.html', products=products, total=total)
+
+@app.route('/add-to-cart/<int:id>')
+def add_to_cart(id):
+    cart = session.get('cart', [])
+    for item in cart:
+        if item['id'] == id:
+            item['quantity'] += 1
+            session['cart'] = cart
+            return redirect(url_for('cart'))
+    cart.append({'id': id, 'quantity': 1})
+    session['cart'] = cart
+    return redirect(url_for('cart'))
+
+@app.route('/remove-from-cart/<int:id>')
+def remove_from_cart(id):
+    cart = session.get('cart', [])
+    cart = [item for item in cart if item['id'] != id]
+    session['cart'] = cart
+    return redirect(url_for('cart'))
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        cart_items = session.get('cart', [])
+        items_text = ', '.join([f"Product {item['id']} x{item['quantity']}" for item in cart_items])
+        total = sum([Product.query.get(item['id']).price * item['quantity'] for item in cart_items])
+        order = Order(
+            customer_name=request.form['name'],
+            customer_phone=request.form['phone'],
+            customer_address=request.form['address'],
+            items=items_text,
+            total=total
+        )
+        db.session.add(order)
+        db.session.commit()
+        session['cart'] = []
+        return redirect(url_for('confirmation'))
+    return render_template('checkout.html')
+
+@app.route('/confirmation')
+def confirmation():
+    return render_template('confirmation.html')
+
+# Admin Routes
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if request.method == 'POST':
+        if request.form.get('password') == ADMIN_PASSWORD:
+            session['admin'] = True
+        else:
+            return render_template('admin_login.html', error=True)
+
+    if not session.get('admin'):
+        return render_template('admin_login.html', error=False)
+
+    products = Product.query.all()
+    orders = Order.query.all()
+    return render_template('admin.html', products=products, orders=orders)
+    if request.method == 'POST':
+        if request.form.get('password') == ADMIN_PASSWORD:
+            session['admin'] = True
+        else:
+            return render_template('admin_login.html', error=True)
+    if not session.get('admin'):
+        return render_template('admin_login.html', error=False)
+    products = Product.query.all()
+    orders = Order.query.all()
+    return render_template('admin.html', products=products, orders=orders)
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin', None)
+    return redirect(url_for('admin'))
+
+@app.route('/admin/add-product', methods=['POST'])
+def add_product():
+    product = Product(
+        name=request.form['name'],
+        description=request.form['description'],
+        price=float(request.form['price']),
+        stock=int(request.form['stock']),
+        image=request.form['image']
+    )
+    db.session.add(product)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+@app.route('/admin/edit-product/<int:id>', methods=['POST'])
+def edit_product(id):
+    product = Product.query.get_or_404(id)
+    product.name = request.form['name']
+    product.description = request.form['description']
+    product.price = float(request.form['price'])
+    product.stock = int(request.form['stock'])
+    product.image = request.form['image']
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+@app.route('/admin/delete-product/<int:id>')
+def delete_product(id):
+    product = Product.query.get_or_404(id)
+    db.session.delete(product)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+@app.route('/admin/update-order/<int:id>', methods=['POST'])
+def update_order(id):
+    order = Order.query.get_or_404(id)
+    order.status = request.form['status']
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        if Product.query.count() == 0:
+            sample_products = [
+                Product(name='کارت‌های مدیریت استرس', description='مجموعه کارت‌هایی برای مدیریت استرس و اضطراب روزانه', price=150000, stock=100, image='stress.jpg'),
+                Product(name='کارت های عشق', description='مجموعه کارت‌هایی برای تقویت روابط عاشقانه', price=150000, stock=100, image='love.jpg'),
+                Product(name='کارت های مهارت های DBT', description='مجموعه کارت‌هایی بر اساس مهارت‌های درمان دیالکتیکی رفتاری', price=150000, stock=100, image='dbt.jpg'),
+            ]
+            db.session.add_all(sample_products)
+            db.session.commit()
+    app.run(debug=True)

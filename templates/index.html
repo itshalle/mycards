@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="text-center py-20">
+    <h1 class="text-5xl font-bold text-[#2C2C2C] mb-6 leading-tight">
+        کارت‌هایی برای<br>
+        <span class="text-[#7B9E87]">لحظه‌های واقعی زندگی</span>
+    </h1>
+    <p class="text-gray-500 text-lg mb-10 max-w-xl mx-auto">
+        مجموعه‌ای از کارت‌های طراحی‌شده برای کمک به مدیریت احساسات، تقویت روابط و رشد شخصی
+    </p>
+    <a href="/shop" class="btn-primary text-lg font-semibold">مشاهده محصولات</a>
+</section>
+
+<!-- Products Section -->
+<section class="mt-10">
+    <h2 class="text-2xl font-bold text-center mb-10">محصولات ما</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for product in products %}
+        <a href="/product/{{ product.id }}" class="card p-6 block">
+            <div class="bg-[#F7F4F0] rounded-12 h-48 flex items-center justify-center mb-4 text-6xl">
+                {% if 'استرس' in product.name %}🧘
+                {% elif 'عشق' in product.name %}💛
+                {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
+                {% else %}🃏
+                {% endif %}
+            </div>
+            <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
+            <p class="text-gray-500 text-sm mb-4">{{ product.description }}</p>
+            <p class="text-[#7B9E87] font-bold text-lg">{{ "{:,}".format(product.price|int) }} تومان</p>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Why Us Section -->
+<section class="mt-24 bg-white rounded-2xl p-12 text-center">
+    <h2 class="text-2xl font-bold mb-12">چرا Only Cards؟</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+            <div class="text-4xl mb-4">🎯</div>
+            <h3 class="font-bold mb-2">هدفمند</h3>
+            <p class="text-gray-500 text-sm">هر کارت برای یک هدف مشخص طراحی شده</p>
+        </div>
+        <div>
+            <div class="text-4xl mb-4">💬</div>
+            {% endblock %}
