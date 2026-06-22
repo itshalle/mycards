@@ -5,16 +5,20 @@
 <h1 class="text-3xl font-bold mb-2">فروشگاه</h1>
 <p class="text-gray-500 mb-10">همه محصولات Only Cards</p>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-    {% for product in products %}
-    <a href="/product/{{ product.id }}" class="card p-6 block">
-        <div class="bg-[#F7F4F0] rounded-xl h-48 flex items-center justify-center mb-4 text-6xl">
-            {% if 'استرس' in product.name %}🧘
-            {% elif 'عشق' in product.name %}💛
-            {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
-            {% else %}🃏
-            {% endif %}
-        </div>
+<div class="bg-[#F7F4F0] rounded-xl h-48 flex items-center justify-center mb-4 text-6xl overflow-hidden">
+    {% if product.image %}
+        <img src="{{ url_for('static', filename=product.image if '/' in product.image else 'images/' ~ product.image) }}"
+             alt="{{ product.name }}"
+             class="w-full h-full object-cover rounded-xl"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
+    {% else %}
+        {% if 'استرس' in product.name %}🧘
+        {% elif 'عشق' in product.name %}💛
+        {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
+        {% else %}🃏
+        {% endif %}
+    {% endif %}
+</div>
         <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
         <p class="text-gray-500 text-sm mb-4">{{ product.description }}</p>
         <div class="flex items-center justify-between">

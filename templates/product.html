@@ -5,13 +5,20 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
     
     <!-- Product Image -->
-    <div class="bg-white rounded-2xl h-80 flex items-center justify-center text-8xl shadow-sm">
+   <div class="bg-white rounded-2xl h-80 flex items-center justify-center text-8xl shadow-sm overflow-hidden">
+    {% if product.image %}
+        <img src="{{ url_for('static', filename=product.image if '/' in product.image else 'images/' ~ product.image) }}"
+             alt="{{ product.name }}"
+             class="w-full h-full object-cover rounded-2xl"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
+    {% else %}
         {% if 'استرس' in product.name %}🧘
         {% elif 'عشق' in product.name %}💛
         {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
         {% else %}🃏
         {% endif %}
-    </div>
+    {% endif %}
+</div>
 
     <!-- Product Info -->
     <div>

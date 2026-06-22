@@ -7,32 +7,39 @@
 <!-- Add Product -->
 <div class="card p-8 mb-10">
     <h2 class="text-xl font-bold mb-6">افزودن محصول جدید</h2>
-    <form action="/admin/add-product" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <form action="/admin/add-product" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
             <label class="block font-semibold mb-2">نام محصول</label>
             <input type="text" name="name" required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
         </div>
+
         <div>
             <label class="block font-semibold mb-2">قیمت (تومان)</label>
             <input type="number" name="price" required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
         </div>
+
         <div>
             <label class="block font-semibold mb-2">موجودی</label>
             <input type="number" name="stock" required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
         </div>
+
         <div>
-            <label class="block font-semibold mb-2">نام فایل تصویر</label>
-            <input type="text" name="image" placeholder="مثال: stress.jpg"
+            <label class="block font-semibold mb-2">تصویر محصول</label>
+            <input type="file" name="image_file" accept="image/*" required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
+            <p class="text-xs text-gray-400 mt-2">فرمت‌های مجاز: JPG, PNG, WEBP, GIF</p>
         </div>
+
         <div class="md:col-span-2">
             <label class="block font-semibold mb-2">توضیحات</label>
             <textarea name="description" required rows="3"
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition resize-none"></textarea>
         </div>
+
         <div class="md:col-span-2">
             <button type="submit" class="btn-primary font-semibold">افزودن محصول</button>
         </div>
@@ -42,43 +49,69 @@
 <!-- Products List -->
 <div class="card p-8 mb-10">
     <h2 class="text-xl font-bold mb-6">محصولات فعلی</h2>
+
     <div class="flex flex-col gap-6">
         {% for product in products %}
         <div class="border border-gray-100 rounded-xl p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg">{{ product.name }}</h3>
-                <a href="/admin/delete-product/{{ product.id }}" 
+
+                <a href="/admin/delete-product/{{ product.id }}"
                    onclick="return confirm('آیا مطمئن هستید؟')"
-                   class="text-red-400 hover:text-red-600 text-sm transition">حذف</a>
+                   class="text-red-400 hover:text-red-600 text-sm transition">
+                    حذف
+                </a>
             </div>
-            <form action="/admin/edit-product/{{ product.id }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <form action="/admin/edit-product/{{ product.id }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold mb-1">نام محصول</label>
                     <input type="text" name="name" value="{{ product.name }}" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
                 </div>
+
                 <div>
                     <label class="block text-sm font-semibold mb-1">قیمت (تومان)</label>
                     <input type="number" name="price" value="{{ product.price|int }}" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
                 </div>
+
                 <div>
                     <label class="block text-sm font-semibold mb-1">موجودی</label>
                     <input type="number" name="stock" value="{{ product.stock }}" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
                 </div>
+
                 <div>
-                    <label class="block text-sm font-semibold mb-1">نام فایل تصویر</label>
-                    <input type="text" name="image" value="{{ product.image }}"
+                    <label class="block text-sm font-semibold mb-1">تصویر محصول</label>
+
+                    {% if product.image %}
+                    <div class="mb-3">
+                        <img src="{{ url_for('static', filename=product.image if '/' in product.image else 'images/' ~ product.image) }}"
+                             alt="{{ product.name }}"
+                             class="w-24 h-24 object-cover rounded-xl border border-gray-200">
+                        <p class="text-xs text-gray-400 mt-1">تصویر فعلی</p>
+                    </div>
+                    {% endif %}
+
+                    <input type="file" name="image_file" accept="image/*"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
+
+                    <p class="text-xs text-gray-400 mt-2">
+                        اگر عکس جدید انتخاب نکنی، عکس قبلی حفظ می‌شود.
+                    </p>
                 </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1">توضیحات</label>
                     <textarea name="description" required rows="2"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition resize-none text-sm">{{ product.description }}</textarea>
                 </div>
+
                 <div class="md:col-span-2">
-                    <button type="submit" class="btn-primary text-sm font-semibold">ذخیره تغییرات</button>
+                    <button type="submit" class="btn-primary text-sm font-semibold">
+                        ذخیره تغییرات
+                    </button>
                 </div>
             </form>
         </div>
@@ -89,6 +122,7 @@
 <!-- Orders List -->
 <div class="card p-8">
     <h2 class="text-xl font-bold mb-6">سفارش‌ها</h2>
+
     {% if orders %}
     <div class="flex flex-col gap-4">
         {% for order in orders %}
@@ -98,24 +132,30 @@
                     <p class="text-sm text-gray-400">نام مشتری</p>
                     <p class="font-semibold">{{ order.customer_name }}</p>
                 </div>
+
                 <div>
                     <p class="text-sm text-gray-400">شماره تماس</p>
                     <p class="font-semibold">{{ order.customer_phone }}</p>
                 </div>
+
                 <div>
                     <p class="text-sm text-gray-400">آدرس</p>
                     <p class="font-semibold">{{ order.customer_address }}</p>
                 </div>
+
                 <div>
                     <p class="text-sm text-gray-400">مبلغ کل</p>
                     <p class="font-semibold text-[#7B9E87]">{{ "{:,}".format(order.total|int) }} تومان</p>
                 </div>
+
                 <div>
                     <p class="text-sm text-gray-400">اقلام</p>
                     <p class="font-semibold">{{ order.items }}</p>
                 </div>
+
                 <div>
                     <p class="text-sm text-gray-400 mb-1">وضعیت</p>
+
                     <form action="/admin/update-order/{{ order.id }}" method="POST" class="flex gap-2">
                         <select name="status" class="border border-gray-200 rounded-lg px-3 py-1 text-sm focus:outline-none focus:border-[#7B9E87]">
                             <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>در انتظار</option>
@@ -123,6 +163,7 @@
                             <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>ارسال شده</option>
                             <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>تحویل داده شده</option>
                         </select>
+
                         <button type="submit" class="btn-primary text-sm">ذخیره</button>
                     </form>
                 </div>

@@ -1,13 +1,40 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+import os
+from uuid import uuid4
 
 app = Flask(__name__)
 app.secret_key = 'onlycards2024'
-ADMIN_PASSWORD = 'bizzleunoshots2IG'
+ADMIN_USERNAME = 'itshalle'
+ADMIN_PASSWORD = '121299'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onlycards.db'
 db = SQLAlchemy(app)
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'products')
+ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 
-# Database Models
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+def allowed_image(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
+def save_product_image(file):
+    if not file or file.filename == '':
+        return None
+
+    if not allowed_image(file.filename):
+        raise ValueError('فرمت تصویر باید png، jpg، jpeg، webp یا gif باشد.')
+
+    original_filename = secure_filename(file.filename)
+    extension = original_filename.rsplit('.', 1)[1].lower()
+    new_filename = f"{uuid4().hex}.{extension}"
+
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+    file.save(file_path)
+
+    return f"uploads/products/{new_filename}"
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
@@ -25,7 +52,6 @@ class Order(db.Model):
     total = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='pending')
 
-# Routes
 @app.route('/')
 def index():
     products = Product.query.all()
@@ -95,28 +121,25 @@ def checkout():
 def confirmation():
     return render_template('confirmation.html')
 
-# Admin Routes
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        if request.form.get('password') == ADMIN_PASSWORD:
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['admin'] = True
-        else:
-            return render_template('admin_login.html', error=True)
+            return redirect(url_for('admin'))
+
+        return render_template('admin_login.html', error=True)
 
     if not session.get('admin'):
         return render_template('admin_login.html', error=False)
 
-    products = Product.query.all()
-    orders = Order.query.all()
-    return render_template('admin.html', products=products, orders=orders)
-    if request.method == 'POST':
-        if request.form.get('password') == ADMIN_PASSWORD:
-            session['admin'] = True
-        else:
-            return render_template('admin_login.html', error=True)
-    if not session.get('admin'):
-        return render_template('admin_login.html', error=False)
     products = Product.query.all()
     orders = Order.query.all()
     return render_template('admin.html', products=products, orders=orders)
@@ -128,13 +151,19 @@ def admin_logout():
 
 @app.route('/admin/add-product', methods=['POST'])
 def add_product():
+    try:
+        image_path = save_product_image(request.files.get('image_file'))
+    except ValueError as error:
+        return str(error), 400
+
     product = Product(
         name=request.form['name'],
         description=request.form['description'],
         price=float(request.form['price']),
         stock=int(request.form['stock']),
-        image=request.form['image']
+        image=image_path or ''
     )
+
     db.session.add(product)
     db.session.commit()
     return redirect(url_for('admin'))
@@ -142,11 +171,20 @@ def add_product():
 @app.route('/admin/edit-product/<int:id>', methods=['POST'])
 def edit_product(id):
     product = Product.query.get_or_404(id)
+
     product.name = request.form['name']
     product.description = request.form['description']
     product.price = float(request.form['price'])
     product.stock = int(request.form['stock'])
-    product.image = request.form['image']
+
+    try:
+        image_path = save_product_image(request.files.get('image_file'))
+    except ValueError as error:
+        return str(error), 400
+
+    if image_path:
+        product.image = image_path
+
     db.session.commit()
     return redirect(url_for('admin'))
 
