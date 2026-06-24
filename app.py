@@ -270,6 +270,58 @@ def edit_product(id):
     remove_indices = request.form.getlist('remove_images')
     remove_indices = [int(index) for index in remove_indices if index.isdigit()]
 
+    preview_index_raw = request.form.get('preview_image_index')
+    preview_index = int(preview_index_raw) if preview_index_raw and preview_index_raw.isdigit() else None
+
+    kept_images = []
+    removed_images = []
+
+    for index, image in enumerate(existing_images):
+        if index in remove_indices:
+            removed_images.append(image)
+        else:
+            kept_images.append(image)
+
+    for image in removed_images:
+        delete_product_file(image)
+
+    try:
+        new_image_paths = save_product_images(request.files.getlist('image_file'))
+    except ValueError as error:
+        return str(error), 400
+
+    all_images = kept_images + new_image_paths
+
+    selected_preview_image = None
+
+    if preview_index is not None and 0 <= preview_index < len(existing_images):
+        chosen_image = existing_images[preview_index]
+
+        if chosen_image in all_images:
+            selected_preview_image = chosen_image
+
+    if selected_preview_image:
+        all_images = [selected_preview_image] + [
+            image for image in all_images if image != selected_preview_image
+        ]
+
+    product.image = '||'.join(all_images)
+
+    db.session.commit()
+
+    return redirect(url_for('admin'))
+    product = Product.query.get_or_404(id)
+
+    product.name = request.form['name']
+    product.description = request.form['description']
+    product.price = float(request.form['price'])
+    product.stock = int(request.form['stock'])
+
+    existing_images = split_product_images(product.image)
+
+    remove_indices = request.form.getlist('remove_images')
+    remove_indices = [int(index) for index in remove_indices if index.isdigit()]
+
     kept_images = []
     removed_images = []
 

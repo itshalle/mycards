@@ -16,33 +16,78 @@
 <!-- Products Section -->
 <section class="mt-10">
     <h2 class="text-2xl font-bold text-center mb-10">محصولات ما</h2>
+
+    {% if products %}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {% for product in products %}
+
+        {% set preview_image = get_product_preview_image(product) %}
+
         <a href="/product/{{ product.id }}" class="card p-6 block">
-            <div class="bg-[#F7F4F0] rounded-12 h-48 flex items-center justify-center mb-4 text-6xl">
-                {% if 'استرس' in product.name %}🧘
-                {% elif 'عشق' in product.name %}💛
-                {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
-                {% else %}🃏
+            <div class="bg-[#F7F4F0] rounded-xl h-56 flex items-center justify-center mb-4 text-6xl overflow-hidden">
+                {% if preview_image %}
+                    <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
+                         alt="{{ product.name }}"
+                         class="w-full h-full object-contain rounded-xl p-3"
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
+                {% else %}
+                    {% if 'استرس' in product.name %}🧘
+                    {% elif 'عشق' in product.name %}💛
+                    {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
+                    {% else %}🃏
+                    {% endif %}
                 {% endif %}
             </div>
+
             <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
-            <p class="text-gray-500 text-sm mb-4">{{ product.description }}</p>
-            <p class="text-[#7B9E87] font-bold text-lg">{{ "{:,}".format(product.price|int) }} تومان</p>
+
+            <p class="text-gray-500 text-sm mb-4 leading-relaxed">
+                {{ product.description }}
+            </p>
+
+            <p class="text-[#7B9E87] font-bold text-lg">
+                {{ "{:,}".format(product.price|int) }} تومان
+            </p>
         </a>
+
         {% endfor %}
     </div>
+    {% else %}
+    <div class="bg-white rounded-2xl p-10 text-center shadow-sm">
+        <p class="text-gray-500">هنوز محصولی ثبت نشده است.</p>
+    </div>
+    {% endif %}
 </section>
 
 <!-- Why Us Section -->
 <section class="mt-24 bg-white rounded-2xl p-12 text-center">
     <h2 class="text-2xl font-bold mb-12">چرا Only Cards؟</h2>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
             <div class="text-4xl mb-4">🎯</div>
             <h3 class="font-bold mb-2">هدفمند</h3>
-            <p class="text-gray-500 text-sm">هر کارت برای یک هدف مشخص طراحی شده</p>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                هر کارت برای یک موقعیت مشخص و واقعی طراحی شده است.
+            </p>
         </div>
+
         <div>
-            <div class="text-4xl mb-4">💬</div>
-            {% endblock %}
+            <div class="text-4xl mb-4">🃏</div>
+            <h3 class="font-bold mb-2">ساده و قابل استفاده</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                تمرین‌ها کوتاه‌اند و می‌توانی همان لحظه از آن‌ها استفاده کنی.
+            </p>
+        </div>
+
+        <div>
+            <div class="text-4xl mb-4">🌿</div>
+            <h3 class="font-bold mb-2">آرام و کاربردی</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                طراحی‌شده برای مکث‌های کوچک، روزهای شلوغ و مراقبت از خود.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

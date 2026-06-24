@@ -88,38 +88,47 @@
                 <div>
                     <label class="block text-sm font-semibold mb-2">تصاویر محصول</label>
 
-                    {% set product_images = split_product_images(product.image) %}
+{% set product_images = split_product_images(product.image) %}
 
-                    {% if product_images %}
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-                        {% for image in product_images %}
-                        <div class="border border-gray-200 rounded-xl p-2 bg-[#F7F4F0]">
-                            <img src="{{ url_for('static', filename=image if '/' in image else 'images/' ~ image) }}"
-                                 alt="{{ product.name }}"
-                                 class="w-full h-24 object-contain rounded-lg bg-white">
+{% if product_images %}
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+    {% for image in product_images %}
+    <div class="border border-gray-200 rounded-xl p-2 bg-[#F7F4F0]">
+        <img src="{{ url_for('static', filename=image if '/' in image else 'images/' ~ image) }}"
+             alt="{{ product.name }}"
+             class="w-full h-24 object-contain rounded-lg bg-white">
 
-                            <label class="flex items-center gap-2 mt-2 text-xs text-red-500 cursor-pointer">
-                                <input type="checkbox" name="remove_images" value="{{ loop.index0 }}">
-                                حذف این عکس
-                            </label>
+        <label class="flex items-center gap-2 mt-2 text-xs text-[#7B9E87] cursor-pointer">
+            <input type="radio"
+                   name="preview_image_index"
+                   value="{{ loop.index0 }}"
+                   {% if loop.index0 == 0 %}checked{% endif %}>
+            انتخاب به عنوان پیش‌نمایش
+        </label>
 
-                            {% if loop.index0 == 0 %}
-                            <p class="text-[11px] text-[#7B9E87] mt-1">عکس پیش‌نمایش</p>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-xs text-gray-400 mb-3">برای این محصول هنوز عکسی ثبت نشده است.</p>
-                    {% endif %}
+        <label class="flex items-center gap-2 mt-2 text-xs text-red-500 cursor-pointer">
+            <input type="checkbox" name="remove_images" value="{{ loop.index0 }}">
+            حذف این عکس
+        </label>
 
-                    <input type="file" name="image_file" accept="image/*" multiple
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
+        {% if loop.index0 == 0 %}
+        <p class="text-[11px] text-[#7B9E87] mt-1">پیش‌نمایش فعلی</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-xs text-gray-400 mb-3">برای این محصول هنوز عکسی ثبت نشده است.</p>
+{% endif %}
 
-                    <p class="text-xs text-gray-400 mt-2 leading-relaxed">
-                        برای اضافه کردن چند عکس، چند فایل را همزمان انتخاب کن.
-                        برای حذف عکس‌ها، تیک «حذف این عکس» را بزن و بعد «ذخیره تغییرات» را بزن.
-                    </p>
+<input type="file" name="image_file" accept="image/*" multiple
+    class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
+
+<p class="text-xs text-gray-400 mt-2 leading-relaxed">
+    برای اضافه کردن چند عکس، چند فایل را همزمان انتخاب کن.
+    برای تعیین عکس پیش‌نمایش، گزینه «انتخاب به عنوان پیش‌نمایش» را بزن و بعد «ذخیره تغییرات» را بزن.
+    عکس‌های جدید بعد از ذخیره اضافه می‌شوند؛ اگر خواستی یکی از عکس‌های جدید پیش‌نمایش باشد، بعد از ذخیره دوباره انتخابش کن.
+</p>
                 </div>
 
                 <div class="md:col-span-2">
