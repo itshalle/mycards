@@ -2,31 +2,61 @@
 
 {% block content %}
 
-<h1 class="text-3xl font-bold mb-2">فروشگاه</h1>
-<p class="text-gray-500 mb-10">همه محصولات Only Cards</p>
-
-<div class="bg-[#F7F4F0] rounded-xl h-48 flex items-center justify-center mb-4 text-6xl overflow-hidden">
-    {% if product.image %}
-        <img src="{{ url_for('static', filename=product.image if '/' in product.image else 'images/' ~ product.image) }}"
-             alt="{{ product.name }}"
-             class="w-full h-full object-cover rounded-xl"
-             onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
-    {% else %}
-        {% if 'استرس' in product.name %}🧘
-        {% elif 'عشق' in product.name %}💛
-        {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
-        {% else %}🃏
-        {% endif %}
-    {% endif %}
+<div class="mb-10">
+    <h1 class="text-3xl font-bold mb-2">فروشگاه</h1>
+    <p class="text-gray-500">همه محصولات Only Cards</p>
 </div>
+
+{% if products %}
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    {% for product in products %}
+
+    {% set preview_image = get_product_preview_image(product) %}
+
+    <a href="/product/{{ product.id }}" class="card p-5 block">
+        <div class="bg-[#F7F4F0] rounded-xl h-56 flex items-center justify-center mb-4 text-6xl overflow-hidden">
+            {% if preview_image %}
+                <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
+                     alt="{{ product.name }}"
+                     class="w-full h-full object-contain rounded-xl p-3"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
+            {% else %}
+                {% if 'استرس' in product.name %}🧘
+                {% elif 'عشق' in product.name %}💛
+                {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
+                {% else %}🃏
+                {% endif %}
+            {% endif %}
+        </div>
+
         <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
-        <p class="text-gray-500 text-sm mb-4">{{ product.description }}</p>
+
+        <p class="text-gray-500 text-sm mb-4 leading-relaxed">
+            {{ product.description }}
+        </p>
+
         <div class="flex items-center justify-between">
-            <p class="text-[#7B9E87] font-bold text-lg">{{ "{:,}".format(product.price|int) }} تومان</p>
-            <span class="text-xs text-gray-400">موجودی: {{ product.stock }}</span>
+            <p class="text-[#7B9E87] font-bold text-lg">
+                {{ "{:,}".format(product.price|int) }} تومان
+            </p>
+
+            <span class="text-xs text-gray-400">
+                موجودی: {{ product.stock }}
+            </span>
         </div>
     </a>
+
     {% endfor %}
 </div>
+
+{% else %}
+
+<div class="bg-white rounded-2xl p-10 text-center shadow-sm">
+    <p class="text-gray-500 mb-4">هنوز محصولی در فروشگاه ثبت نشده است.</p>
+    <a href="/admin" class="btn-primary inline-block">رفتن به پنل مدیریت</a>
+</div>
+
+{% endif %}
 
 {% endblock %}
