@@ -8,11 +8,29 @@
     <meta name="robots" content="{{ meta_robots or 'index, follow' }}">
     <link rel="canonical" href="{{ canonical_url or request.base_url }}">
 
+    <meta property="og:locale" content="fa_IR">
     <meta property="og:site_name" content="Only Cards">
     <meta property="og:title" content="{{ meta_title or 'Only Cards' }}">
     <meta property="og:description" content="{{ meta_description or 'کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو و لحظه‌های mindful.' }}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ og_type or 'website' }}">
     <meta property="og:url" content="{{ canonical_url or request.base_url }}">
+    {% if og_image %}
+    <meta property="og:image" content="{{ og_image }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ og_image }}">
+    {% else %}
+    <meta name="twitter:card" content="summary">
+    {% endif %}
+    <meta name="twitter:title" content="{{ meta_title or 'Only Cards' }}">
+    <meta name="twitter:description" content="{{ meta_description or 'کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو و لحظه‌های mindful.' }}">
+
+    <script type="application/ld+json">
+        {{ organization_schema | tojson | safe }}
+    </script>
+    <script type="application/ld+json">
+        {{ website_schema | tojson | safe }}
+    </script>
+    {% block structured_data %}{% endblock %}
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}?v=3">

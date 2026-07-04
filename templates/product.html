@@ -1,6 +1,33 @@
 {% extends 'base.html' %}
 
+{% block structured_data %}
+{% set schema_image = product_image_url(product) %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ product.name | tojson }},
+    "description": {{ (product.short_description or product.description) | tojson }},
+    "brand": {
+        "@type": "Brand",
+        "name": "Only Cards"
+    },
+    {% if schema_image %}
+    "image": [{{ schema_image | tojson }}],
+    {% endif %}
+    "offers": {
+        "@type": "Offer",
+        "url": {{ canonical_url | tojson }},
+        "priceCurrency": "IRR",
+        "price": "{{ (product.price|int) * 10 }}",
+        "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
+
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
 

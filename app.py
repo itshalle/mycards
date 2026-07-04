@@ -108,6 +108,20 @@ def absolute_url(path):
     return f"{SITE_URL}{path}"
 
 
+def absolute_static_url(filename):
+    return absolute_url(url_for('static', filename=filename))
+
+
+def product_image_url(product):
+    preview_image = get_product_preview_image(product)
+
+    if not preview_image:
+        return ''
+
+    filename = preview_image if '/' in preview_image else f"images/{preview_image}"
+    return absolute_static_url(filename)
+
+
 def clean_meta_description(text, fallback=''):
     text = (text or fallback or '').strip()
     text = re.sub(r'\s+', ' ', text)
@@ -132,10 +146,34 @@ def delete_product_file(image_path):
 
 @app.context_processor
 def image_helpers():
+    organization_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'Only Cards',
+        'url': SITE_URL,
+        'logo': absolute_static_url('favicon_io/apple-touch-icon.png'),
+        'sameAs': [
+            'https://t.me/onlycards724'
+        ],
+        'description': 'Only Cards برند کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو، تأمل و mindful play است.'
+    }
+
+    website_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'name': 'Only Cards',
+        'url': SITE_URL,
+        'inLanguage': 'fa-IR',
+        'description': 'کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو، تأمل و mindful play.'
+    }
+
     return dict(
         split_product_images=split_product_images,
         get_product_preview_image=get_product_preview_image,
-        get_product_url=get_product_url
+        get_product_url=get_product_url,
+        product_image_url=product_image_url,
+        organization_schema=organization_schema,
+        website_schema=website_schema
     )
 
 
@@ -224,7 +262,9 @@ def render_product_detail(product):
         product=product,
         meta_title=f'{product.name} | Only Cards',
         meta_description=product_description,
-        canonical_url=absolute_url(get_product_url(product))
+        canonical_url=absolute_url(get_product_url(product)),
+        og_type='product',
+        og_image=product_image_url(product)
     )
 
 
