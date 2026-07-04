@@ -20,7 +20,21 @@ ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 SITE_URL = os.environ.get('SITE_URL', 'https://www.onlycards.ir').rstrip('/')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+
+@app.after_request
+def add_seo_and_cache_headers(response):
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+
+    if request.path.startswith('/admin'):
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+    elif request.path in ['/cart', '/checkout', '/confirmation']:
+        response.headers['X-Robots-Tag'] = 'noindex, follow'
+
+    return response
 
 
 def allowed_image(filename):
@@ -403,15 +417,37 @@ def admin():
             session['admin'] = True
             return redirect(url_for('admin'))
 
-        return render_template('admin_login.html', error=True)
+        return render_template(
+            'admin_login.html',
+            error=True,
+            meta_title='ورود مدیریت | Only Cards',
+            meta_description='صفحه ورود مدیریت Only Cards.',
+            meta_robots='noindex, nofollow',
+            canonical_url=absolute_url(url_for('admin'))
+        )
 
     if not session.get('admin'):
-        return render_template('admin_login.html', error=False)
+        return render_template(
+            'admin_login.html',
+            error=False,
+            meta_title='ورود مدیریت | Only Cards',
+            meta_description='صفحه ورود مدیریت Only Cards.',
+            meta_robots='noindex, nofollow',
+            canonical_url=absolute_url(url_for('admin'))
+        )
 
     products = Product.query.all()
     orders = Order.query.all()
 
-    return render_template('admin.html', products=products, orders=orders)
+    return render_template(
+        'admin.html',
+        products=products,
+        orders=orders,
+        meta_title='پنل مدیریت | Only Cards',
+        meta_description='پنل مدیریت Only Cards.',
+        meta_robots='noindex, nofollow',
+        canonical_url=absolute_url(url_for('admin'))
+    )
 
 
 @app.route('/admin/logout')
