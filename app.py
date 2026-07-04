@@ -76,7 +76,15 @@ def make_product_slug(product):
 
 
 def get_product_url(product):
-    return url_for('product', id=product.id, slug=make_product_slug(product))
+    return url_for('product_by_slug', slug=make_product_slug(product))
+
+
+def get_product_by_slug(slug):
+    for product in Product.query.all():
+        if make_product_slug(product) == slug:
+            return product
+
+    return None
 
 
 def absolute_url(path):
@@ -191,15 +199,7 @@ def shop():
     )
 
 
-@app.route('/product/<int:id>')
-@app.route('/product/<int:id>/<slug>')
-def product(id, slug=None):
-    product = Product.query.get_or_404(id)
-    expected_slug = make_product_slug(product)
-
-    if slug != expected_slug:
-        return redirect(url_for('product', id=product.id, slug=expected_slug), code=301)
-
+def render_product_detail(product):
     product_description = clean_meta_description(
         product.short_description or product.description,
         fallback='مشاهده و خرید محصول از فروشگاه Only Cards.'
@@ -210,8 +210,30 @@ def product(id, slug=None):
         product=product,
         meta_title=f'{product.name} | Only Cards',
         meta_description=product_description,
-        canonical_url=absolute_url(url_for('product', id=product.id, slug=expected_slug))
+        canonical_url=absolute_url(get_product_url(product))
     )
+
+
+@app.route('/products/<slug>')
+def product_by_slug(slug):
+    product = get_product_by_slug(slug)
+
+    if not product:
+        return redirect(url_for('shop'), code=302)
+
+    expected_slug = make_product_slug(product)
+
+    if slug != expected_slug:
+        return redirect(get_product_url(product), code=301)
+
+    return render_product_detail(product)
+
+
+@app.route('/product/<int:id>')
+@app.route('/product/<int:id>/<slug>')
+def product_legacy_redirect(id, slug=None):
+    product = Product.query.get_or_404(id)
+    return redirect(get_product_url(product), code=301)
 
 
 @app.route('/cart')
@@ -342,7 +364,7 @@ def sitemap():
 
     for product in Product.query.all():
         pages.append({
-            'loc': absolute_url(url_for('product', id=product.id, slug=make_product_slug(product))),
+            'loc': absolute_url(get_product_url(product)),
             'priority': '0.8',
             'changefreq': 'weekly'
         })
