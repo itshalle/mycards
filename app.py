@@ -121,6 +121,11 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/shipping')
+def shipping():
+    return render_template('shipping.html')
+
+
 @app.route('/shop')
 def shop():
     products = Product.query.all()
