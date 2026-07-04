@@ -93,6 +93,7 @@ def image_helpers():
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+    short_description = db.Column(db.String(300), nullable=False, default='')
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
@@ -244,6 +245,7 @@ def add_product():
 
     product = Product(
         name=request.form['name'],
+        short_description=request.form.get('short_description', ''),
         description=request.form['description'],
         price=float(request.form['price']),
         stock=int(request.form['stock']),
@@ -261,6 +263,7 @@ def edit_product(id):
     product = Product.query.get_or_404(id)
 
     product.name = request.form['name']
+    product.short_description = request.form.get('short_description', '')
     product.description = request.form['description']
     product.price = float(request.form['price'])
     product.stock = int(request.form['stock'])
@@ -313,6 +316,7 @@ def edit_product(id):
     product = Product.query.get_or_404(id)
 
     product.name = request.form['name']
+    product.short_description = request.form.get('short_description', '')
     product.description = request.form['description']
     product.price = float(request.form['price'])
     product.stock = int(request.form['stock'])

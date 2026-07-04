@@ -72,12 +72,15 @@
         </div>
 
         {% if product.stock > 0 %}
-            <a href="/add-to-cart/{{ product.id }}" class="btn-primary inline-block text-lg font-semibold">
-                افزودن به سبد خرید
-            </a>
-        {% else %}
-            <p class="text-red-400 font-semibold">ناموجود</p>
-        {% endif %}
+    <a href="/add-to-cart/{{ product.id }}"
+       class="inline-flex items-center justify-center bg-[#7B9E87] hover:bg-[#6a8d76] text-white text-lg font-semibold px-8 py-3 rounded-xl shadow-sm transition">
+        افزودن به سبد خرید
+    </a>
+{% else %}
+    <p class="inline-flex items-center justify-center bg-gray-200 text-gray-500 text-lg font-semibold px-8 py-3 rounded-xl">
+        ناموجود
+    </p>
+{% endif %}
     </div>
 
 </div>

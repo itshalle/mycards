@@ -33,7 +33,7 @@
         <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
 
         <p class="text-gray-500 text-sm mb-4 leading-relaxed">
-            {{ product.description }}
+            {{ product.short_description or product.description }}
         </p>
 
         <div class="flex items-center justify-between">

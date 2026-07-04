@@ -16,6 +16,17 @@
         </div>
 
         <div>
+            <label class="block font-semibold mb-2">????? ?????</label>
+            <input type="text" name="short_description" maxlength="160"
+                placeholder="?????: ?????????? ????? ???? ?????? ?????? ? ?????? ???????"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
+            <p class="text-xs text-gray-400 mt-2">
+                ??? ??? ?? ???? ???? ? ??????? ????? ???? ??????.
+            </p>
+        </div>
+
+
+        <div>
             <label class="block font-semibold mb-2">قیمت (تومان)</label>
             <input type="number" name="price" required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition">
@@ -72,6 +83,17 @@
                     <input type="text" name="name" value="{{ product.name }}" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
                 </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1">????? ?????</label>
+                    <input type="text" name="short_description" value="{{ product.short_description or '' }}" maxlength="160"
+                        placeholder="????? ????? ???? ???? ???? ? ???????"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-[#7B9E87] transition text-sm">
+                    <p class="text-xs text-gray-400 mt-2">
+                        ??? ??? ?? ???? ???? ? ??????? ????? ???? ??????.
+                    </p>
+                </div>
+
 
                 <div>
                     <label class="block text-sm font-semibold mb-1">قیمت (تومان)</label>
