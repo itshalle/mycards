@@ -126,6 +126,11 @@ def shipping():
     return render_template('shipping.html')
 
 
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
 @app.route('/shop')
 def shop():
     products = Product.query.all()
