@@ -116,6 +116,11 @@ def index():
     return render_template('index.html', products=products)
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @app.route('/shop')
 def shop():
     products = Product.query.all()
@@ -313,42 +318,6 @@ def edit_product(id):
     db.session.commit()
 
     return redirect(url_for('admin'))
-    product = Product.query.get_or_404(id)
-
-    product.name = request.form['name']
-    product.short_description = request.form.get('short_description', '')
-    product.description = request.form['description']
-    product.price = float(request.form['price'])
-    product.stock = int(request.form['stock'])
-
-    existing_images = split_product_images(product.image)
-
-    remove_indices = request.form.getlist('remove_images')
-    remove_indices = [int(index) for index in remove_indices if index.isdigit()]
-
-    kept_images = []
-    removed_images = []
-
-    for index, image in enumerate(existing_images):
-        if index in remove_indices:
-            removed_images.append(image)
-        else:
-            kept_images.append(image)
-
-    for image in removed_images:
-        delete_product_file(image)
-
-    try:
-        new_image_paths = save_product_images(request.files.getlist('image_file'))
-    except ValueError as error:
-        return str(error), 400
-
-    product.image = '||'.join(kept_images + new_image_paths)
-
-    db.session.commit()
-
-    return redirect(url_for('admin'))
-
 
 @app.route('/admin/delete-product/<int:id>')
 def delete_product(id):
