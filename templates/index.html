@@ -23,12 +23,14 @@
 
         {% set preview_image = get_product_preview_image(product) %}
 
-        <a href="/product/{{ product.id }}" class="card p-6 block">
+        <a href="{{ get_product_url(product) }}" class="card p-6 block">
             <div class="bg-[#F7F4F0] rounded-xl h-56 flex items-center justify-center mb-4 text-6xl overflow-hidden">
                 {% if preview_image %}
                     <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
-                         alt="{{ product.name }}"
+                         alt="تصویر محصول {{ product.name }}"
                          class="w-full h-full object-contain rounded-xl p-3"
+                         loading="lazy"
+                         decoding="async"
                          onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
                 {% else %}
                     {% if 'استرس' in product.name %}🧘

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /confirmation
+
+Sitemap: https://www.onlycards.ir/sitemap.xml

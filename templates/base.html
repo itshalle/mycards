@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Only Cards</title>
+    <title>{{ meta_title or 'Only Cards | کارت‌های فارسی برای آرامش و گفت‌وگو' }}</title>
+    <meta name="description" content="{{ meta_description or 'Only Cards برند کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو، تأمل و mindful play است.' }}">
+    <meta name="robots" content="{{ meta_robots or 'index, follow' }}">
+    <link rel="canonical" href="{{ canonical_url or request.base_url }}">
+
+    <meta property="og:site_name" content="Only Cards">
+    <meta property="og:title" content="{{ meta_title or 'Only Cards' }}">
+    <meta property="og:description" content="{{ meta_description or 'کارت‌های فارسی برای آرامش، رابطه، گفت‌وگو و لحظه‌های mindful.' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url or request.base_url }}">
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}?v=3">
@@ -12,7 +21,6 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon_io/favicon.ico') }}?v=3">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    ...
 </head>
 <body>
 

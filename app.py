@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, Response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
+import re
 from uuid import uuid4
+from xml.sax.saxutils import escape
 
 app = Flask(__name__)
 app.secret_key = 'onlycards2024'
@@ -15,6 +17,7 @@ db = SQLAlchemy(app)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'products')
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+SITE_URL = os.environ.get('SITE_URL', 'https://www.onlycards.ir').rstrip('/')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -66,6 +69,29 @@ def get_product_preview_image(product):
     return ''
 
 
+def make_product_slug(product):
+    name = (product.name or '').strip().lower()
+    slug = re.sub(r'[^\w\u0600-\u06FF]+', '-', name, flags=re.UNICODE).strip('-')
+    return slug or str(product.id)
+
+
+def get_product_url(product):
+    return url_for('product', id=product.id, slug=make_product_slug(product))
+
+
+def absolute_url(path):
+    if not path.startswith('/'):
+        path = '/' + path
+
+    return f"{SITE_URL}{path}"
+
+
+def clean_meta_description(text, fallback=''):
+    text = (text or fallback or '').strip()
+    text = re.sub(r'\s+', ' ', text)
+    return text[:155]
+
+
 def delete_product_file(image_path):
     if not image_path:
         return
@@ -86,7 +112,8 @@ def delete_product_file(image_path):
 def image_helpers():
     return dict(
         split_product_images=split_product_images,
-        get_product_preview_image=get_product_preview_image
+        get_product_preview_image=get_product_preview_image,
+        get_product_url=get_product_url
     )
 
 
@@ -113,34 +140,78 @@ class Order(db.Model):
 @app.route('/')
 def index():
     products = Product.query.all()
-    return render_template('index.html', products=products)
+    return render_template(
+        'index.html',
+        products=products,
+        meta_title='Only Cards | کارت‌های فارسی برای آرامش و گفت‌وگو',
+        meta_description='Only Cards برند کارت‌های فارسی برای آرامش، مراقبت از خود، رابطه، گفت‌وگو و لحظه‌های mindful است.',
+        canonical_url=absolute_url(url_for('index'))
+    )
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template(
+        'about.html',
+        meta_title='درباره ما | Only Cards',
+        meta_description='درباره Only Cards؛ برند فارسی کارت‌هایی برای آرامش، تأمل، رابطه، گفت‌وگو و مراقبت روزمره از خود.',
+        canonical_url=absolute_url(url_for('about'))
+    )
 
 
 @app.route('/shipping')
 def shipping():
-    return render_template('shipping.html')
+    return render_template(
+        'shipping.html',
+        meta_title='ارسال و تحویل | Only Cards',
+        meta_description='اطلاعات ارسال و تحویل سفارش‌های Only Cards، زمان آماده‌سازی، هزینه ارسال، تأیید پرداخت و بسته‌بندی هدیه.',
+        canonical_url=absolute_url(url_for('shipping'))
+    )
 
 
 @app.route('/faq')
 def faq():
-    return render_template('faq.html')
+    return render_template(
+        'faq.html',
+        meta_title='سوالات پرتکرار | Only Cards',
+        meta_description='پاسخ به سوالات پرتکرار درباره خرید، پرداخت، ارسال، بسته‌بندی هدیه و کاربرد کارت‌های Only Cards.',
+        canonical_url=absolute_url(url_for('faq'))
+    )
 
 
 @app.route('/shop')
 def shop():
     products = Product.query.all()
-    return render_template('shop.html', products=products)
+    return render_template(
+        'shop.html',
+        products=products,
+        meta_title='فروشگاه | Only Cards',
+        meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، مراقبت از خود، رابطه، گفت‌وگو و هدیه‌ای آرام و متفاوت.',
+        canonical_url=absolute_url(url_for('shop'))
+    )
 
 
 @app.route('/product/<int:id>')
-def product(id):
+@app.route('/product/<int:id>/<slug>')
+def product(id, slug=None):
     product = Product.query.get_or_404(id)
-    return render_template('product.html', product=product)
+    expected_slug = make_product_slug(product)
+
+    if slug != expected_slug:
+        return redirect(url_for('product', id=product.id, slug=expected_slug), code=301)
+
+    product_description = clean_meta_description(
+        product.short_description or product.description,
+        fallback='مشاهده و خرید محصول از فروشگاه Only Cards.'
+    )
+
+    return render_template(
+        'product.html',
+        product=product,
+        meta_title=f'{product.name} | Only Cards',
+        meta_description=product_description,
+        canonical_url=absolute_url(url_for('product', id=product.id, slug=expected_slug))
+    )
 
 
 @app.route('/cart')
@@ -155,7 +226,15 @@ def cart():
             products.append({'product': p, 'quantity': item['quantity']})
             total += p.price * item['quantity']
 
-    return render_template('cart.html', products=products, total=total)
+    return render_template(
+        'cart.html',
+        products=products,
+        total=total,
+        meta_title='سبد خرید | Only Cards',
+        meta_description='سبد خرید شما در فروشگاه Only Cards.',
+        meta_robots='noindex, follow',
+        canonical_url=absolute_url(url_for('cart'))
+    )
 
 
 @app.route('/add-to-cart/<int:id>')
@@ -211,12 +290,80 @@ def checkout():
         session['cart'] = []
         return redirect(url_for('confirmation'))
 
-    return render_template('checkout.html')
+    return render_template(
+        'checkout.html',
+        meta_title='تکمیل سفارش | Only Cards',
+        meta_description='تکمیل سفارش در فروشگاه Only Cards.',
+        meta_robots='noindex, follow',
+        canonical_url=absolute_url(url_for('checkout'))
+    )
 
 
 @app.route('/confirmation')
 def confirmation():
-    return render_template('confirmation.html')
+    return render_template(
+        'confirmation.html',
+        meta_title='ثبت سفارش | Only Cards',
+        meta_description='تأیید ثبت سفارش در فروشگاه Only Cards.',
+        meta_robots='noindex, follow',
+        canonical_url=absolute_url(url_for('confirmation'))
+    )
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    pages = [
+        {
+            'loc': absolute_url(url_for('index')),
+            'priority': '1.0',
+            'changefreq': 'weekly'
+        },
+        {
+            'loc': absolute_url(url_for('shop')),
+            'priority': '0.9',
+            'changefreq': 'weekly'
+        },
+        {
+            'loc': absolute_url(url_for('about')),
+            'priority': '0.7',
+            'changefreq': 'monthly'
+        },
+        {
+            'loc': absolute_url(url_for('shipping')),
+            'priority': '0.6',
+            'changefreq': 'monthly'
+        },
+        {
+            'loc': absolute_url(url_for('faq')),
+            'priority': '0.6',
+            'changefreq': 'monthly'
+        },
+    ]
+
+    for product in Product.query.all():
+        pages.append({
+            'loc': absolute_url(url_for('product', id=product.id, slug=make_product_slug(product))),
+            'priority': '0.8',
+            'changefreq': 'weekly'
+        })
+
+    xml_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    ]
+
+    for page in pages:
+        xml_lines.extend([
+            '  <url>',
+            f"    <loc>{escape(page['loc'])}</loc>",
+            f"    <changefreq>{page['changefreq']}</changefreq>",
+            f"    <priority>{page['priority']}</priority>",
+            '  </url>'
+        ])
+
+    xml_lines.append('</urlset>')
+
+    return Response('\n'.join(xml_lines), mimetype='application/xml')
 
 
 @app.route('/robots.txt')
@@ -328,6 +475,7 @@ def edit_product(id):
     db.session.commit()
 
     return redirect(url_for('admin'))
+
 
 @app.route('/admin/delete-product/<int:id>')
 def delete_product(id):

@@ -15,8 +15,9 @@
             <div class="bg-white rounded-2xl min-h-[420px] flex items-center justify-center shadow-sm overflow-hidden p-4 mb-4">
                 <img id="mainProductImage"
                      src="{{ main_image_url }}"
-                     alt="{{ product.name }}"
+                     alt="تصویر محصول {{ product.name }}"
                      class="w-full h-full max-h-[520px] object-contain rounded-2xl"
+                     decoding="async"
                      onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
             </div>
 
@@ -29,8 +30,10 @@
                             data-image-url="{{ image_url }}"
                             class="product-thumbnail bg-white rounded-xl border border-gray-200 p-2 h-24 hover:border-[#7B9E87] transition">
                         <img src="{{ image_url }}"
-                             alt="{{ product.name }}"
-                             class="w-full h-full object-contain rounded-lg">
+                             alt="تصویر {{ loop.index }} از محصول {{ product.name }}"
+                             class="w-full h-full object-contain rounded-lg"
+                             loading="lazy"
+                             decoding="async">
                     </button>
                 {% endfor %}
             </div>
