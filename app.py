@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session, Response
+from flask import Flask, render_template, request, redirect, url_for, session, Response, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+import markdown
+import yaml
 import os
 import re
 from uuid import uuid4
@@ -18,10 +20,68 @@ db = SQLAlchemy(app)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'products')
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 SITE_URL = os.environ.get('SITE_URL', 'https://www.onlycards.ir').rstrip('/')
+BLOG_CONTENT_DIR = os.path.join(app.root_path, 'content', 'blog')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(BLOG_CONTENT_DIR, exist_ok=True)
+
+
+def load_blog_post(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        source = file.read()
+
+    match = re.match(r'^---\s*\n(.*?)\n---\s*\n(.*)$', source, re.DOTALL)
+    if not match:
+        return None
+
+    metadata = yaml.safe_load(match.group(1)) or {}
+    body = match.group(2).strip()
+
+    required_fields = ['title', 'slug', 'description', 'published_at']
+    if any(not metadata.get(field) for field in required_fields):
+        return None
+
+    metadata['slug'] = str(metadata['slug']).strip().strip('/')
+    metadata['published_at'] = str(metadata['published_at'])
+    metadata['updated_at'] = str(metadata.get('updated_at') or metadata['published_at'])
+    metadata['category'] = metadata.get('category', 'بلاگ Only Cards')
+    metadata['image'] = str(metadata.get('image') or '').strip().lstrip('/')
+    metadata['image_alt'] = metadata.get('image_alt') or metadata['title']
+    metadata['draft'] = bool(metadata.get('draft', False))
+    metadata['body_markdown'] = body
+    metadata['body_html'] = markdown.markdown(
+        body,
+        extensions=['extra', 'sane_lists']
+    )
+    return metadata
+
+
+def get_blog_posts(include_drafts=False):
+    posts = []
+
+    if not os.path.isdir(BLOG_CONTENT_DIR):
+        return posts
+
+    for filename in os.listdir(BLOG_CONTENT_DIR):
+        if not filename.endswith('.md'):
+            continue
+
+        post = load_blog_post(os.path.join(BLOG_CONTENT_DIR, filename))
+        if not post or (post['draft'] and not include_drafts):
+            continue
+
+        posts.append(post)
+
+    return sorted(posts, key=lambda post: post['published_at'], reverse=True)
+
+
+def get_blog_post(slug):
+    for post in get_blog_posts():
+        if post['slug'] == slug:
+            return post
+    return None
 
 
 @app.after_request
@@ -251,6 +311,60 @@ def shop():
     )
 
 
+@app.route('/blog')
+def blog():
+    posts = get_blog_posts()
+    return render_template(
+        'blog.html',
+        posts=posts,
+        meta_title='بلاگ Only Cards | آرامش، رابطه و مهارت‌های زندگی',
+        meta_description='مقاله‌های Only Cards درباره استفاده روزمره از کارت‌ها، ذهن‌آگاهی، مهارت‌های DBT، آرامش، گفت‌وگو و رابطه.',
+        canonical_url=absolute_url(url_for('blog'))
+    )
+
+
+@app.route('/blog/<slug>')
+def blog_post(slug):
+    post = get_blog_post(slug)
+    if not post:
+        abort(404)
+
+    canonical_url = absolute_url(url_for('blog_post', slug=post['slug']))
+    image_url = absolute_static_url(post['image']) if post['image'] else None
+
+    article_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': post['title'],
+        'description': post['description'],
+        'datePublished': post['published_at'],
+        'dateModified': post['updated_at'],
+        'mainEntityOfPage': canonical_url,
+        'publisher': {
+            '@type': 'Organization',
+            'name': 'Only Cards',
+            'logo': {
+                '@type': 'ImageObject',
+                'url': absolute_static_url('favicon_io/apple-touch-icon.png')
+            }
+        }
+    }
+
+    if image_url:
+        article_schema['image'] = [image_url]
+
+    return render_template(
+        'blog_post.html',
+        post=post,
+        article_schema=article_schema,
+        meta_title=f"{post['title']} | Only Cards",
+        meta_description=clean_meta_description(post['description']),
+        canonical_url=canonical_url,
+        og_type='article',
+        og_image=image_url
+    )
+
+
 def render_product_detail(product):
     product_description = clean_meta_description(
         product.short_description or product.description,
@@ -414,6 +528,11 @@ def sitemap():
             'priority': '0.6',
             'changefreq': 'monthly'
         },
+        {
+            'loc': absolute_url(url_for('blog')),
+            'priority': '0.8',
+            'changefreq': 'weekly'
+        },
     ]
 
     for product in Product.query.all():
@@ -423,19 +542,32 @@ def sitemap():
             'changefreq': 'weekly'
         })
 
+    for post in get_blog_posts():
+        pages.append({
+            'loc': absolute_url(url_for('blog_post', slug=post['slug'])),
+            'priority': '0.7',
+            'changefreq': 'monthly',
+            'lastmod': post['updated_at']
+        })
+
     xml_lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     ]
 
     for page in pages:
-        xml_lines.extend([
+        page_lines = [
             '  <url>',
             f"    <loc>{escape(page['loc'])}</loc>",
+        ]
+        if page.get('lastmod'):
+            page_lines.append(f"    <lastmod>{escape(page['lastmod'])}</lastmod>")
+        page_lines.extend([
             f"    <changefreq>{page['changefreq']}</changefreq>",
             f"    <priority>{page['priority']}</priority>",
             '  </url>'
         ])
+        xml_lines.extend(page_lines)
 
     xml_lines.append('</urlset>')
 

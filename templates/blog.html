@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto">
+    <div class="mb-10">
+        <p class="text-[#637A63] font-semibold mb-2">بلاگ Only Cards</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-[#4A3A35] mb-4">چند دقیقه برای حال خودت</h1>
+        <p class="text-gray-600 leading-8 max-w-2xl">
+            درباره‌ی کارت‌ها، آرامش، گفت‌وگو و مهارت‌هایی که می‌شود در زندگی روزمره تمرینشان کرد.
+        </p>
+    </div>
+
+    {% if posts %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+        {% for post in posts %}
+        <article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#EEE9E1]">
+            {% if post.image %}
+            <a href="{{ url_for('blog_post', slug=post.slug) }}">
+                <img src="{{ url_for('static', filename=post.image) }}"
+                     alt="{{ post.image_alt }}"
+                     class="w-full h-56 object-cover"
+                     loading="lazy">
+            </a>
+            {% endif %}
+            <div class="p-6">
+                <p class="text-sm text-[#637A63] mb-3">{{ post.category }}</p>
+                <h2 class="text-xl font-bold text-[#4A3A35] leading-8 mb-3">
+                    <a href="{{ url_for('blog_post', slug=post.slug) }}" class="hover:text-[#637A63] transition">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <p class="text-gray-600 leading-7 mb-5">{{ post.description }}</p>
+                <a href="{{ url_for('blog_post', slug=post.slug) }}"
+                   class="text-[#637A63] font-semibold hover:text-[#4A3A35] transition">
+                    خواندن مقاله ←
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-2xl p-8 text-gray-500 shadow-sm">
+        اولین مقاله‌ها به‌زودی اینجا منتشر می‌شوند.
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
