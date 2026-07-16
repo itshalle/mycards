@@ -38,25 +38,55 @@
     <link rel="manifest" href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}?v=3">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon_io/favicon.ico') }}?v=3">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- onlycards-home-refresh-v1 -->
+    <style>
+        :root { --oc-cream:#F4F0E8; --oc-brown:#4A3A35; --oc-green:#637A63; }
+        body { background:#F4F0E8; color:#4A3A35; font-family:"Vazirmatn",Tahoma,Arial,sans-serif; }
+        .home-hero { background:#EDE5D9; }
+        .hero-soft-overlay { background:linear-gradient(90deg,transparent 38%,rgba(244,240,232,.2) 51%,rgba(244,240,232,.95) 75%,#F4F0E8 100%); }
+        .hero-notes span { display:inline-flex; align-items:center; gap:.5rem; }
+        .hero-notes i { width:9px; height:9px; border:2px solid #637A63; border-radius:999px; display:inline-block; }
+        .onlycards-outline-button { display:inline-flex; align-items:center; justify-content:center; padding:.8rem 1.5rem; border:1px solid #637A63; color:#4A3A35; border-radius:999px; font-weight:800; transition:.25s ease; background:rgba(255,255,255,.45); }
+        .onlycards-outline-button:hover { color:white; background:#637A63; transform:translateY(-2px); }
+        .organic-blob { position:absolute; display:block; pointer-events:none; filter:blur(.2px); opacity:.45; z-index:-1; }
+        .blob-one { width:150px; height:110px; border-radius:57% 43% 61% 39% / 45% 53% 47% 55%; background:#C9B9B0; top:610px; right:-70px; transform:rotate(18deg); }
+        .blob-two { width:115px; height:140px; border-radius:41% 59% 37% 63% / 61% 42% 58% 39%; background:#A9B5A3; top:980px; left:-65px; transform:rotate(-22deg); }
+        .blob-three { width:105px; height:85px; border-radius:62% 38% 55% 45% / 44% 60% 40% 56%; background:#D7BEB5; top:-42px; left:-38px; }
+        .minimal-card-placeholder { width:88px; height:128px; border:1px solid #9AA897; border-radius:12px; box-shadow:10px 10px 0 #DED5CA; transform:rotate(-5deg); }
+        @media (max-width:767px) {
+            .home-hero img { opacity:.38; object-position:28% center; }
+            .hero-soft-overlay { background:linear-gradient(90deg,rgba(244,240,232,.72),rgba(244,240,232,.94)); }
+            .home-hero .absolute.inset-y-0 { align-items:flex-end; padding-bottom:2.5rem; }
+            .organic-blob { opacity:.28; }
+        }
+    </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="text-2xl font-bold text-[#7B9E87]">Only Cards</a>
-            <div class="flex items-center gap-6">
-                <a href="/" class="text-gray-600 hover:text-[#7B9E87] transition">خانه</a>
-                <a href="/shop" class="text-gray-600 hover:text-[#7B9E87] transition">فروشگاه</a>
-                <a href="/blog" class="text-gray-600 hover:text-[#7B9E87] transition">بلاگ</a>
-                <a href="/about" class="text-gray-600 hover:text-[#7B9E87] transition">درباره ما</a>
-                <a href="/cart" class="relative text-gray-600 hover:text-[#7B9E87] transition">
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-[#EEE8DF]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="/" class="flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-[#637A63]" aria-label="صفحه اصلی Only Cards">
+                    <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}" alt="" class="w-9 h-9 rounded-full" width="36" height="36">
+                    <span>Only Cards</span>
+                </a>
+                <span class="hidden sm:inline-block h-6 w-px bg-[#DED6CC]" aria-hidden="true"></span>
+                <span class="hidden sm:inline text-sm font-extrabold text-[#4A3A35] whitespace-nowrap">کارت‌هاتو رو کن</span>
+            </div>
+            <div class="flex items-center gap-3 md:gap-6 text-xs sm:text-sm md:text-base whitespace-nowrap">
+                <a href="/" class="text-gray-600 hover:text-[#637A63] transition">خانه</a>
+                <a href="/shop" class="text-gray-600 hover:text-[#637A63] transition">فروشگاه</a>
+                <a href="/blog" class="text-gray-600 hover:text-[#637A63] transition">بلاگ</a>
+                <a href="/about" class="text-gray-600 hover:text-[#637A63] transition">درباره ما</a>
+                <a href="/cart" aria-label="سبد خرید" class="relative text-xl leading-none text-gray-600 hover:text-[#637A63] transition">
                     🛒
                     {% if session.get('cart') %}
-                    <span class="absolute -top-2 -right-2 bg-[#7B9E87] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                        {{ session['cart']|length }}
-                    </span>
+                    <span class="absolute -top-3 -left-3 bg-[#637A63] text-white text-[10px] rounded-full min-w-4 h-4 px-1 flex items-center justify-center">{{ session['cart']|length }}</span>
                     {% endif %}
                 </a>
             </div>

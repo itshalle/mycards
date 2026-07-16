@@ -269,11 +269,13 @@ class Order(db.Model):
 @app.route('/')
 def index():
     products = Product.query.all()
+    posts = get_blog_posts()[:3]
     return render_template(
         'index.html',
         products=products,
-        meta_title='Only Cards | کارت‌های فارسی برای آرامش و گفت‌وگو',
-        meta_description='Only Cards برند کارت‌های فارسی برای آرامش، مراقبت از خود، رابطه، گفت‌وگو و لحظه‌های mindful است.',
+        posts=posts,
+        meta_title='خرید کارت‌های گفت‌وگو و خودشناسی فارسی | Only Cards',
+        meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، خودشناسی، گفت‌وگوی عمیق، رابطه عاطفی و وقت‌گذرانی دونفره معنادار بدون موبایل.',
         canonical_url=absolute_url(url_for('index'))
     )
 
@@ -314,8 +316,8 @@ def shop():
     return render_template(
         'shop.html',
         products=products,
-        meta_title='فروشگاه | Only Cards',
-        meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، مراقبت از خود، رابطه، گفت‌وگو و هدیه‌ای آرام و متفاوت.',
+        meta_title='خرید آنلاین کارت گفت‌وگو و خودشناسی | Only Cards',
+        meta_description='خرید آنلاین کارت گفت‌وگو و خودشناسی فارسی برای زوج‌ها، آرامش ذهن، ذهن‌آگاهی، دیت نایت و هدیه‌ای کوچک اما معنادار.',
         canonical_url=absolute_url(url_for('shop'))
     )
 
@@ -374,17 +376,39 @@ def blog_post(slug):
     )
 
 
+def get_product_seo_metadata(product, fallback_description):
+    product_seo = {
+        1: (
+            'خرید کارت‌های آرامش ذهن | Only Cards',
+            'خرید کارت‌های آرامش ذهن با ۵۳ تمرین کوتاه فارسی برای آرامش روزانه، ذهن‌آگاهی، خودمراقبتی و مکث در روزهای پراسترس.'
+        ),
+        2: (
+            'خرید کارت سؤال برای زوج‌ها | کارت‌های ما',
+            'خرید کارت سؤال برای زوج‌ها؛ مجموعه‌ای فارسی از سؤال‌ها و فعالیت‌های دونفره برای شناخت بیشتر پارتنر، گفت‌وگوی عمیق و صمیمیت.'
+        ),
+        3: (
+            'خرید کارت تمرین ذهن‌آگاهی فارسی | Only Cards',
+            'خرید کارت تمرین ذهن‌آگاهی فارسی با مهارت‌های اصلی DBT برای مشاهده، توصیف، حضور در لحظه و استفاده در موقعیت‌های واقعی روزمره.'
+        ),
+    }
+    return product_seo.get(
+        product.id,
+        (f'{product.name} | Only Cards', fallback_description)
+    )
+
+
 def render_product_detail(product):
     product_description = clean_meta_description(
         product.short_description or product.description,
         fallback='مشاهده و خرید محصول از فروشگاه Only Cards.'
     )
+    seo_title, seo_description = get_product_seo_metadata(product, product_description)
 
     return render_template(
         'product.html',
         product=product,
-        meta_title=f'{product.name} | Only Cards',
-        meta_description=product_description,
+        meta_title=seo_title,
+        meta_description=seo_description,
         canonical_url=absolute_url(get_product_url(product)),
         og_type='product',
         og_image=product_image_url(product)
