@@ -5,8 +5,6 @@ description: "چرخ احساسات ابزاری برای پیدا کردن وا
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "احساسات و آرامش"
-image: "blog/what-is-dbt.png"
-image_alt: "راهنمای فارسی استفاده از چرخ احساسات برای شناخت بهتر حال"
 draft: false
 ---
 

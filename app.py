@@ -143,10 +143,19 @@ def get_product_preview_image(product):
     return ''
 
 
-def make_product_slug(product):
+def make_legacy_product_slug(product):
     name = (product.name or '').strip().lower()
     slug = re.sub(r'[^\w\u0600-\u06FF]+', '-', name, flags=re.UNICODE).strip('-')
     return slug or str(product.id)
+
+
+def make_product_slug(product):
+    product_slugs = {
+        1: 'calm-cards',
+        2: 'couples-conversation-cards',
+        3: 'mindfulness-skills-cards',
+    }
+    return product_slugs.get(product.id, make_legacy_product_slug(product))
 
 
 def get_product_url(product):
@@ -155,7 +164,7 @@ def get_product_url(product):
 
 def get_product_by_slug(slug):
     for product in Product.query.all():
-        if make_product_slug(product) == slug:
+        if slug in (make_product_slug(product), make_legacy_product_slug(product)):
             return product
 
     return None

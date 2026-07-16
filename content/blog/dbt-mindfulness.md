@@ -5,8 +5,6 @@ description: "ذهن‌آگاهی در DBT یعنی دیدن فکرها، احس
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "مهارت‌های زندگی"
-image: "blog/what-is-dbt.png"
-image_alt: "کارت‌های تمرین ذهن‌آگاهی DBT از Only Cards"
 draft: false
 ---
 
