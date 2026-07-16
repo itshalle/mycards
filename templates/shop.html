@@ -43,8 +43,8 @@
                 {{ "{:,}".format(product.price|int) }} تومان
             </p>
 
-            <span class="text-xs text-gray-400">
-                موجودی: {{ product.stock }}
+            <span class="text-xs font-bold rounded-full px-3 py-1 {% if product.stock > 0 %}text-[#637A63] bg-[#EEF2EC]{% else %}text-gray-500 bg-gray-100{% endif %}">
+                {% if product.stock > 0 %}موجود{% else %}ناموجود{% endif %}
             </span>
         </div>
     </a>

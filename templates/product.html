@@ -8,134 +8,184 @@
     "@type": "Product",
     "name": {{ product.name | tojson }},
     "description": {{ (product.short_description or product.description) | tojson }},
-    "brand": {
-        "@type": "Brand",
-        "name": "Only Cards"
-    },
-    {% if schema_image %}
-    "image": [{{ schema_image | tojson }}],
-    {% endif %}
+    "brand": { "@type": "Brand", "name": "Only Cards" },
+    {% if schema_image %}"image": [{{ schema_image | tojson }}],{% endif %}
     "offers": {
         "@type": "Offer",
         "url": {{ canonical_url | tojson }},
         "priceCurrency": "IRR",
         "price": "{{ (product.price|int) * 10 }}",
+        "itemCondition": "https://schema.org/NewCondition",
         "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
     }
 }
 </script>
+{% if page_content %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {% for item in page_content.faqs %}
+        {
+            "@type": "Question",
+            "name": {{ item.question | tojson }},
+            "acceptedAnswer": { "@type": "Answer", "text": {{ item.answer | tojson }} }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
-
+<nav class="text-sm text-[#746863] mb-7" aria-label="مسیر صفحه">
+    <a href="{{ url_for('index') }}" class="hover:text-[#637A63]">خانه</a>
+    <span class="mx-2">/</span>
+    <a href="{{ url_for('shop') }}" class="hover:text-[#637A63]">فروشگاه</a>
+    <span class="mx-2">/</span>
+    <span class="text-[#4A3A35]">{{ product.name }}</span>
+</nav>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-
-    <!-- Product Images -->
     <div>
         {% set product_images = split_product_images(product.image) %}
-
         {% if product_images %}
             {% set main_image = product_images[0] %}
             {% set main_image_url = url_for('static', filename=main_image if '/' in main_image else 'images/' ~ main_image) %}
-
-            <div class="bg-white rounded-2xl min-h-[420px] flex items-center justify-center shadow-sm overflow-hidden p-4 mb-4">
-                <img id="mainProductImage"
-                     src="{{ main_image_url }}"
-                     alt="تصویر محصول {{ product.name }}"
-                     class="w-full h-full max-h-[520px] object-contain rounded-2xl"
-                     decoding="async"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='🃏';">
+            <div class="bg-white rounded-[1.75rem] min-h-[420px] flex items-center justify-center shadow-sm overflow-hidden p-4 mb-4 border border-[#E9E2D8]">
+                <img id="mainProductImage" src="{{ main_image_url }}"
+                     alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
+                     class="w-full h-full max-h-[540px] object-contain rounded-2xl"
+                     decoding="async">
             </div>
 
             {% if product_images|length > 1 %}
             <div class="grid grid-cols-4 gap-3">
                 {% for image in product_images %}
                     {% set image_url = url_for('static', filename=image if '/' in image else 'images/' ~ image) %}
-
-                    <button type="button"
-                            data-image-url="{{ image_url }}"
-                            class="product-thumbnail bg-white rounded-xl border border-gray-200 p-2 h-24 hover:border-[#7B9E87] transition">
-                        <img src="{{ image_url }}"
-                             alt="تصویر {{ loop.index }} از محصول {{ product.name }}"
-                             class="w-full h-full object-contain rounded-lg"
-                             loading="lazy"
-                             decoding="async">
+                    <button type="button" data-image-url="{{ image_url }}"
+                            class="product-thumbnail bg-white rounded-xl border border-[#E0D8CE] p-2 h-24 hover:border-[#637A63] transition"
+                            aria-label="نمایش تصویر {{ loop.index }} از {{ product.name }}">
+                        <img src="{{ image_url }}" alt="نمای دیگر {{ product.name }}، تصویر {{ loop.index }}"
+                             class="w-full h-full object-contain rounded-lg" loading="lazy" decoding="async">
                     </button>
                 {% endfor %}
             </div>
             {% endif %}
-
         {% else %}
-
-            <div class="bg-white rounded-2xl min-h-[420px] flex items-center justify-center text-8xl shadow-sm overflow-hidden p-4">
-                {% if 'استرس' in product.name %}🧘
-                {% elif 'عشق' in product.name %}💛
-                {% elif 'DBT' in product.name or 'dbt' in product.name %}🌱
-                {% else %}🃏
-                {% endif %}
+            <div class="bg-white rounded-[1.75rem] min-h-[420px] flex items-center justify-center shadow-sm border border-[#E9E2D8]">
+                <span class="minimal-card-placeholder" aria-hidden="true"></span>
             </div>
-
         {% endif %}
     </div>
 
-    <!-- Product Info -->
-    <div class="bg-white rounded-2xl p-8 shadow-sm">
-        <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+    <div class="bg-white rounded-[1.75rem] p-7 md:p-9 shadow-sm border border-[#E9E2D8] md:sticky md:top-28">
+        {% if page_content %}<p class="text-sm font-bold text-[#637A63] mb-3">{{ page_content.eyebrow }}</p>{% endif %}
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#4A3A35] leading-[1.5] mb-5">{{ product.name }}</h1>
+        <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ product.description }}</p>
 
-        <p class="text-gray-500 leading-relaxed mb-6">
-            {{ product.description }}
-        </p>
-
-        <div class="mb-6">
-            <p class="text-sm text-gray-400 mb-1">قیمت</p>
-            <p class="text-2xl font-bold text-[#7B9E87]">
-                {{ "{:,}".format(product.price|int) }} تومان
-            </p>
-        </div>
-
-        <div class="mb-8">
-            <p class="text-sm text-gray-400 mb-1">موجودی</p>
-            <p class="font-semibold">
-                {{ product.stock }} عدد
-            </p>
+        <div class="border-y border-[#EEE8DF] py-5 mb-7 flex items-center justify-between gap-4">
+            <div>
+                <p class="text-sm text-[#8A7E78] mb-1">قیمت</p>
+                <p class="text-2xl font-extrabold text-[#637A63]">{{ "{:,}".format(product.price|int) }} تومان</p>
+            </div>
+            <span class="text-sm font-bold {% if product.stock > 0 %}text-[#637A63] bg-[#EEF2EC]{% else %}text-gray-500 bg-gray-100{% endif %} rounded-full px-4 py-2">
+                {% if product.stock > 0 %}موجود{% else %}ناموجود{% endif %}
+            </span>
         </div>
 
         {% if product.stock > 0 %}
-    <a href="/add-to-cart/{{ product.id }}"
-       class="inline-flex items-center justify-center bg-[#7B9E87] hover:bg-[#6a8d76] text-white text-lg font-semibold px-8 py-3 rounded-xl shadow-sm transition">
-        افزودن به سبد خرید
-    </a>
-{% else %}
-    <p class="inline-flex items-center justify-center bg-gray-200 text-gray-500 text-lg font-semibold px-8 py-3 rounded-xl">
-        ناموجود
-    </p>
-{% endif %}
+        <a href="/add-to-cart/{{ product.id }}" class="flex w-full items-center justify-center bg-[#637A63] hover:bg-[#536A53] text-white text-lg font-bold px-8 py-4 rounded-2xl shadow-sm transition">افزودن به سبد خرید</a>
+        {% else %}
+        <p class="flex w-full items-center justify-center bg-gray-200 text-gray-500 text-lg font-bold px-8 py-4 rounded-2xl">ناموجود</p>
+        {% endif %}
+        <p class="text-xs text-[#8A7E78] text-center mt-4">ارسال تهران با پیک و شهرهای دیگر با پست</p>
+    </div>
+</div>
+
+{% if page_content %}
+<section class="mt-20 md:mt-28">
+    <div class="max-w-3xl mx-auto text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35] leading-[1.6] mb-4">{{ page_content.section_title }}</h2>
+        <p class="text-[#665A55] leading-8">{{ page_content.section_text }}</p>
     </div>
 
-</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+        <div class="bg-white rounded-[1.6rem] p-7 md:p-8 border border-[#E9E2D8] shadow-sm">
+            <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">داخل جعبه</h2>
+            <ul class="space-y-4">
+                {% for item in page_content.inside_box %}
+                <li class="flex gap-3 text-[#665A55] leading-7"><span class="mt-2 w-2 h-2 rounded-full bg-[#637A63] shrink-0"></span><span>{{ item }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="bg-white rounded-[1.6rem] p-7 md:p-8 border border-[#E9E2D8] shadow-sm">
+            <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">مناسب برای</h2>
+            <ul class="space-y-4">
+                {% for item in page_content.suitable_for %}
+                <li class="flex gap-3 text-[#665A55] leading-7"><span class="mt-2 w-2 h-2 rounded-full bg-[#C3AFA5] shrink-0"></span><span>{{ item }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="mt-20 md:mt-28 max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+        <p class="text-sm font-bold text-[#637A63] mb-2">اگر چیزی هنوز مبهم مانده</p>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">سؤال‌های پرتکرار</h2>
+    </div>
+    <div class="space-y-4">
+        {% for item in page_content.faqs %}
+        <details class="group bg-white rounded-2xl border border-[#E9E2D8] shadow-sm p-6">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-extrabold text-[#4A3A35] leading-7">
+                <span>{{ item.question }}</span>
+                <span class="text-[#637A63] text-2xl font-normal transition group-open:rotate-45" aria-hidden="true">＋</span>
+            </summary>
+            <p class="text-[#665A55] leading-8 pt-5 mt-5 border-t border-[#EEE8DF]">{{ item.answer }}</p>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+
+{% if page_content.related_posts %}
+<section class="mt-20 md:mt-28">
+    <div class="flex items-end justify-between gap-4 mb-8">
+        <div>
+            <p class="text-sm font-bold text-[#637A63] mb-2">برای خواندن بیشتر</p>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">مقاله‌های مرتبط</h2>
+        </div>
+        <a href="{{ url_for('blog') }}" class="hidden sm:block text-sm font-bold text-[#637A63]">همه مقاله‌ها ←</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+        {% for post in page_content.related_posts %}
+        <a href="{{ url_for('blog_post', slug=post.slug) }}" class="bg-white rounded-[1.6rem] p-7 border border-[#E9E2D8] shadow-sm hover:-translate-y-1 hover:shadow-md transition">
+            <p class="text-xs font-bold text-[#637A63] mb-3">{{ post.category }}</p>
+            <h3 class="text-xl font-extrabold text-[#4A3A35] leading-8 mb-3">{{ post.title }}</h3>
+            <p class="text-sm text-[#746863] leading-7 line-clamp-2">{{ post.description }}</p>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endif %}
 
 <script>
     const thumbnails = document.querySelectorAll('.product-thumbnail');
     const mainImage = document.getElementById('mainProductImage');
-
     thumbnails.forEach(function(button) {
         button.addEventListener('click', function() {
             const newImageUrl = button.getAttribute('data-image-url');
-
-            if (mainImage && newImageUrl) {
-                mainImage.src = newImageUrl;
-            }
-
+            if (mainImage && newImageUrl) mainImage.src = newImageUrl;
             thumbnails.forEach(function(item) {
-                item.classList.remove('border-[#7B9E87]');
-                item.classList.add('border-gray-200');
+                item.classList.remove('border-[#637A63]');
+                item.classList.add('border-[#E0D8CE]');
             });
-
-            button.classList.remove('border-gray-200');
-            button.classList.add('border-[#7B9E87]');
+            button.classList.remove('border-[#E0D8CE]');
+            button.classList.add('border-[#637A63]');
         });
     });
 </script>
-
 {% endblock %}
