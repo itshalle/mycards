@@ -4,4 +4,4 @@ Disallow: /cart
 Disallow: /checkout
 Disallow: /confirmation
 
-Sitemap: https://www.onlycards.ir/sitemap.xml
+Sitemap: https://onlycards.ir/sitemap.xml
