@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'products')
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
-SITE_URL = os.environ.get('SITE_URL', 'https://www.onlycards.ir').rstrip('/')
+SITE_URL = os.environ.get('SITE_URL', 'https://onlycards.ir').rstrip('/')
 BLOG_CONTENT_DIR = os.path.join(app.root_path, 'content', 'blog')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
