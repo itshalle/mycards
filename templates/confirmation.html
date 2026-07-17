@@ -2,13 +2,16 @@
 {% from '_icons.html' import icon %}
 
 {% block content %}
-<section class="max-w-3xl mx-auto oc-surface p-6 sm:p-9 md:p-11 text-center">
-    <div class="oc-icon-tile mx-auto mb-6">{{ icon('check-circle', 'w-9 h-9') }}</div>
-    <div class="oc-title-frame oc-title-frame-center mb-5"><h1 class="oc-page-title">سفارش شما ثبت شد</h1></div>
-
-    <p class="text-[#665A55] leading-8 max-w-xl mx-auto mb-8">
+<header class="max-w-3xl mx-auto oc-page-hero oc-page-title-card mb-10 text-center">
+    <p class="oc-page-eyebrow">تأیید سفارش Only Cards</p>
+    <h1 class="oc-page-title">سفارش شما ثبت شد</h1>
+    <p class="oc-hero-copy mx-auto">
         ممنون از خرید شما. برای تکمیل فرایند، مراحل زیر را انجام دهید.
     </p>
+</header>
+
+<section class="max-w-3xl mx-auto oc-surface p-6 sm:p-9 md:p-11 text-center">
+    <div class="oc-icon-tile mx-auto mb-8">{{ icon('check-circle', 'w-9 h-9') }}</div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-right mb-8">
         <div class="oc-soft-surface p-5">

@@ -91,6 +91,35 @@
             box-shadow: 0 12px 40px rgba(74, 58, 53, .055);
         }
 
+        .oc-page-title-card {
+            padding: 1.5rem;
+        }
+
+        .oc-page-eyebrow {
+            display: block;
+            margin: 0 0 .75rem;
+            color: var(--oc-green);
+            font-size: .875rem;
+            font-weight: 700;
+            line-height: 1.8;
+        }
+
+        .oc-page-title-card .oc-page-title {
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .oc-page-title-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .oc-page-title-card {
+                padding: 2.5rem;
+            }
+        }
+
 
         .oc-page-title {
             margin: 0;
@@ -101,18 +130,26 @@
         }
 
         .oc-title-frame {
-            display: inline-flex;
+            display: flex;
             flex-direction: column;
             align-items: flex-start;
-            width: fit-content;
+            width: 100%;
             max-width: 100%;
-            padding: .72rem 1rem .78rem;
-            border: 1px solid rgba(222, 214, 204, .92);
-            border-radius: 1.15rem;
-            background: rgba(248, 245, 239, .82);
-            box-shadow: 0 8px 28px rgba(74, 58, 53, .055), 0 0 24px rgba(244, 240, 232, .55);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            padding: 1.35rem 1.5rem 1.45rem;
+            border: 1px solid var(--oc-border);
+            border-radius: 2rem;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 12px 40px rgba(74, 58, 53, .055);
+        }
+
+        .home-page .oc-title-frame {
+            background: rgba(255, 255, 255, .045);
+            border-color: rgba(233, 226, 216, .48);
+            box-shadow:
+                0 12px 40px rgba(74, 58, 53, .035),
+                inset 0 0 24px rgba(255, 255, 255, .08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .oc-title-frame-center {
@@ -195,7 +232,7 @@
             flex-wrap: wrap;
             align-items: center;
             gap: .55rem;
-            width: fit-content;
+            width: 100%;
             max-width: 100%;
             margin-bottom: 1.6rem;
             padding: .62rem .9rem;
@@ -258,8 +295,8 @@
             .organic-blob { opacity: .24; }
             .oc-page-hero { border-radius: 1.5rem; }
             .oc-page-title { font-size: clamp(1.35rem, 6.2vw, 1.8rem); line-height: 1.65; }
-            .oc-title-frame { padding: .62rem .82rem .68rem; border-radius: 1rem; }
-            .oc-breadcrumb { padding: .55rem .75rem; border-radius: .9rem; }
+            .oc-title-frame { padding: 1.05rem 1.1rem 1.15rem; border-radius: 1.5rem; }
+            .oc-breadcrumb { padding: .7rem .85rem; border-radius: 1rem; }
             .oc-hero-copy { line-height: 2.05; }
         }
     </style>

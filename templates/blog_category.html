@@ -16,8 +16,8 @@
         <span class="current">{{ category.name }}</span>
     </nav>
 
-    <header class="oc-page-hero p-6 sm:p-9 md:p-12">
-        <p class="text-sm font-bold text-[#637A63] mb-3">دسته‌بندی بلاگ</p>
+    <header class="oc-page-hero oc-page-title-card">
+        <p class="oc-page-eyebrow">دسته‌بندی بلاگ</p>
         <h1 class="oc-page-title mb-5">{{ category.name }}</h1>
         <div class="oc-hero-copy space-y-5">
             {% for paragraph in category.intro_paragraphs %}

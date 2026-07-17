@@ -49,6 +49,18 @@
     <span class="current">{{ product.name }}</span>
 </nav>
 
+<header class="oc-page-hero oc-page-title-card mb-10">
+    {% if page_content %}
+    <p class="oc-page-eyebrow">{{ page_content.eyebrow }}</p>
+    {% else %}
+    <p class="oc-page-eyebrow">محصول Only Cards</p>
+    {% endif %}
+    <h1 class="oc-page-title">{{ product.name }}</h1>
+    {% if product.short_description %}
+    <p class="oc-hero-copy">{{ product.short_description }}</p>
+    {% endif %}
+</header>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-10 items-start">
     <div>
         {% set product_images = split_product_images(product.image) %}
@@ -100,10 +112,6 @@
     </div>
 
     <div class="oc-surface p-6 sm:p-8 md:sticky md:top-28">
-        <div class="oc-title-frame mb-6">
-            {% if page_content %}<p class="text-sm font-bold text-[#637A63] mb-2">{{ page_content.eyebrow }}</p>{% endif %}
-            <h1 class="oc-page-title">{{ product.name }}</h1>
-        </div>
         <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ product.description }}</p>
 
         <div class="border-y border-[#EEE8DF] py-5 mb-7">

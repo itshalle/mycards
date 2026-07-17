@@ -22,15 +22,12 @@
         <span class="current">{{ post.title }}</span>
     </nav>
 
-    <header class="mb-9">
-        <a href="{{ category_path }}"
-           class="inline-flex items-center rounded-full bg-[#F4F0E8] px-3 py-1.5 text-sm font-bold text-[#637A63] hover:bg-[#E4EADF] hover:text-[#4A3A35] transition mb-4">
+    <header class="oc-page-hero oc-page-title-card mb-10">
+        <a href="{{ category_path }}" class="oc-page-eyebrow hover:text-[#4A3A35] transition">
             {{ post.category }}
         </a>
-        <div class="oc-title-frame mb-5">
-            <h1 class="oc-page-title">{{ post.title }}</h1>
-        </div>
-        <p class="text-base sm:text-lg text-[#665A55] leading-8 sm:leading-9">{{ post.description }}</p>
+        <h1 class="oc-page-title">{{ post.title }}</h1>
+        <p class="oc-hero-copy">{{ post.description }}</p>
         <p class="text-sm text-gray-400 mt-4">
             انتشار: {{ post.published_at }}
             {% if post.updated_at != post.published_at %}
