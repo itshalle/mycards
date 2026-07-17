@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block structured_data %}
 {% set schema_image = product_image_url(product) %}
@@ -40,21 +41,21 @@
 {% endblock %}
 
 {% block content %}
-<nav class="text-sm text-[#746863] mb-7" aria-label="مسیر صفحه">
-    <a href="{{ url_for('index') }}" class="hover:text-[#637A63]">خانه</a>
-    <span class="mx-2">/</span>
-    <a href="{{ url_for('shop') }}" class="hover:text-[#637A63]">فروشگاه</a>
-    <span class="mx-2">/</span>
-    <span class="text-[#4A3A35]">{{ product.name }}</span>
+<nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+    <a href="{{ url_for('index') }}">خانه</a>
+    <span>/</span>
+    <a href="{{ url_for('shop') }}">فروشگاه</a>
+    <span>/</span>
+    <span class="current">{{ product.name }}</span>
 </nav>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-10 items-start">
     <div>
         {% set product_images = split_product_images(product.image) %}
         {% if product_images %}
             {% set main_image = product_images[0] %}
             {% set main_image_url = url_for('static', filename=main_image if '/' in main_image else 'images/' ~ main_image) %}
-            <div class="bg-white rounded-[1.75rem] min-h-[420px] flex items-center justify-center shadow-sm overflow-hidden p-4 mb-4 border border-[#E9E2D8]">
+            <div class="oc-surface min-h-[380px] md:min-h-[420px] flex items-center justify-center overflow-hidden p-4 mb-4">
                 <img id="mainProductImage" src="{{ main_image_url }}"
                      alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
                      class="w-full h-full max-h-[540px] object-contain rounded-2xl"
@@ -66,7 +67,7 @@
                 {% for image in product_images %}
                     {% set image_url = url_for('static', filename=image if '/' in image else 'images/' ~ image) %}
                     <button type="button" data-image-url="{{ image_url }}"
-                            class="product-thumbnail bg-white rounded-xl border border-[#E0D8CE] p-2 h-24 hover:border-[#637A63] transition"
+                            class="product-thumbnail bg-white rounded-xl border border-[#E0D8CE] p-2 h-20 sm:h-24 hover:border-[#637A63] transition"
                             aria-label="نمایش تصویر {{ loop.index }} از {{ product.name }}">
                         <img src="{{ image_url }}" alt="نمای دیگر {{ product.name }}، تصویر {{ loop.index }}"
                              class="w-full h-full object-contain rounded-lg" loading="lazy" decoding="async">
@@ -75,45 +76,49 @@
             </div>
             {% endif %}
         {% else %}
-            <div class="bg-white rounded-[1.75rem] min-h-[420px] flex items-center justify-center shadow-sm border border-[#E9E2D8]">
-                <span class="minimal-card-placeholder" aria-hidden="true"></span>
+            <div class="oc-surface min-h-[380px] md:min-h-[420px] flex items-center justify-center">
+                <span class="oc-product-fallback">{{ icon('card', 'w-16 h-16') }}</span>
             </div>
         {% endif %}
     </div>
 
-    <div class="bg-white rounded-[1.75rem] p-7 md:p-9 shadow-sm border border-[#E9E2D8] md:sticky md:top-28">
-        {% if page_content %}<p class="text-sm font-bold text-[#637A63] mb-3">{{ page_content.eyebrow }}</p>{% endif %}
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#4A3A35] leading-[1.5] mb-5">{{ product.name }}</h1>
+    <div class="oc-surface p-6 sm:p-8 md:sticky md:top-28">
+        <div class="oc-title-frame mb-6">
+            {% if page_content %}<p class="text-sm font-bold text-[#637A63] mb-2">{{ page_content.eyebrow }}</p>{% endif %}
+            <h1 class="oc-page-title">{{ product.name }}</h1>
+        </div>
         <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ product.description }}</p>
 
-        <div class="border-y border-[#EEE8DF] py-5 mb-7 flex items-center justify-between gap-4">
-            <div>
-                <p class="text-sm text-[#8A7E78] mb-1">قیمت</p>
-                <p class="text-2xl font-extrabold text-[#637A63]">{{ "{:,}".format(product.price|int) }} تومان</p>
-            </div>
-            <span class="text-sm font-bold {% if product.stock > 0 %}text-[#637A63] bg-[#EEF2EC]{% else %}text-gray-500 bg-gray-100{% endif %} rounded-full px-4 py-2">
-                {% if product.stock > 0 %}موجود{% else %}ناموجود{% endif %}
-            </span>
+        <div class="border-y border-[#EEE8DF] py-5 mb-7">
+            {% if product.stock > 0 %}
+            <p class="text-sm text-[#8A7E78] mb-1">قیمت</p>
+            <p class="text-2xl font-extrabold text-[#637A63]">{{ "{:,}".format(product.price|int) }} تومان</p>
+            {% else %}
+            <p class="text-lg font-extrabold text-gray-500">ناموجود</p>
+            {% endif %}
         </div>
 
         {% if product.stock > 0 %}
-        <a href="/add-to-cart/{{ product.id }}" class="flex w-full items-center justify-center bg-[#637A63] hover:bg-[#536A53] text-white text-lg font-bold px-8 py-4 rounded-2xl shadow-sm transition">افزودن به سبد خرید</a>
+        <a href="/add-to-cart/{{ product.id }}" class="oc-primary-button w-full text-lg py-4">افزودن به سبد خرید</a>
         {% else %}
-        <p class="flex w-full items-center justify-center bg-gray-200 text-gray-500 text-lg font-bold px-8 py-4 rounded-2xl">ناموجود</p>
+        <span class="flex w-full items-center justify-center bg-gray-200 text-gray-500 text-lg font-bold px-8 py-4 rounded-full">ناموجود</span>
         {% endif %}
         <p class="text-xs text-[#8A7E78] text-center mt-4">ارسال تهران با پیک و شهرهای دیگر با پست</p>
     </div>
 </div>
 
 {% if page_content %}
-<section class="mt-20 md:mt-28">
-    <div class="max-w-3xl mx-auto text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35] leading-[1.6] mb-4">{{ page_content.section_title }}</h2>
+<section class="mt-16 md:mt-24">
+    <div class="max-w-3xl mx-auto text-center mb-10">
+        <div class="oc-title-frame oc-title-frame-center mb-5">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35] leading-[1.6]">{{ page_content.section_title }}</h2>
+        </div>
         <p class="text-[#665A55] leading-8">{{ page_content.section_text }}</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
-        <div class="bg-white rounded-[1.6rem] p-7 md:p-8 border border-[#E9E2D8] shadow-sm">
+        <div class="oc-surface p-7 sm:p-8">
+            <div class="oc-icon-tile mb-5">{{ icon('box', 'w-8 h-8') }}</div>
             <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">داخل جعبه</h2>
             <ul class="space-y-4">
                 {% for item in page_content.inside_box %}
@@ -121,7 +126,8 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="bg-white rounded-[1.6rem] p-7 md:p-8 border border-[#E9E2D8] shadow-sm">
+        <div class="oc-surface p-7 sm:p-8">
+            <div class="oc-icon-tile mb-5">{{ icon('target', 'w-8 h-8') }}</div>
             <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">مناسب برای</h2>
             <ul class="space-y-4">
                 {% for item in page_content.suitable_for %}
@@ -132,14 +138,16 @@
     </div>
 </section>
 
-<section class="mt-20 md:mt-28 max-w-4xl mx-auto">
-    <div class="text-center mb-10">
-        <p class="text-sm font-bold text-[#637A63] mb-2">اگر چیزی هنوز مبهم مانده</p>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">سؤال‌های پرتکرار</h2>
+<section class="mt-16 md:mt-24 max-w-4xl mx-auto">
+    <div class="text-center mb-9">
+        <div class="oc-title-frame oc-title-frame-center">
+            <p class="text-sm font-bold text-[#637A63] mb-2">اگر چیزی هنوز مبهم مانده</p>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">سؤال‌های پرتکرار</h2>
+        </div>
     </div>
     <div class="space-y-4">
         {% for item in page_content.faqs %}
-        <details class="group bg-white rounded-2xl border border-[#E9E2D8] shadow-sm p-6">
+        <details class="group oc-surface p-6">
             <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-extrabold text-[#4A3A35] leading-7">
                 <span>{{ item.question }}</span>
                 <span class="text-[#637A63] text-2xl font-normal transition group-open:rotate-45" aria-hidden="true">＋</span>
@@ -151,9 +159,9 @@
 </section>
 
 {% if page_content.related_posts %}
-<section class="mt-20 md:mt-28">
+<section class="mt-16 md:mt-24">
     <div class="flex items-end justify-between gap-4 mb-8">
-        <div>
+        <div class="oc-title-frame">
             <p class="text-sm font-bold text-[#637A63] mb-2">برای خواندن بیشتر</p>
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">مقاله‌های مرتبط</h2>
         </div>
@@ -161,7 +169,7 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
         {% for post in page_content.related_posts %}
-        <a href="{{ url_for('blog_post', slug=post.slug) }}" class="bg-white rounded-[1.6rem] p-7 border border-[#E9E2D8] shadow-sm hover:-translate-y-1 hover:shadow-md transition">
+        <a href="{{ url_for('blog_post', slug=post.slug) }}" class="oc-surface p-7 hover:-translate-y-1 hover:shadow-md transition">
             <p class="text-xs font-bold text-[#637A63] mb-3">{{ post.category }}</p>
             <h3 class="text-xl font-extrabold text-[#4A3A35] leading-8 mb-3">{{ post.title }}</h3>
             <p class="text-sm text-[#746863] leading-7 line-clamp-2">{{ post.description }}</p>

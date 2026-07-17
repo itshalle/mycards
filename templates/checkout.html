@@ -1,55 +1,61 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block content %}
+<nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+    <a href="{{ url_for('cart') }}">سبد خرید</a>
+    <span>/</span>
+    <span class="current">تکمیل سفارش</span>
+</nav>
 
-<div class="max-w-xl mx-auto">
-    <h1 class="text-3xl font-bold mb-2">تکمیل سفارش</h1>
-    <p class="text-gray-500 mb-10">اطلاعات خود را وارد کنید</p>
+<header class="mb-9">
+    <div class="oc-title-frame mb-5"><h1 class="oc-page-title">تکمیل سفارش</h1></div>
+    <p class="oc-hero-copy">اطلاعات ارسال را وارد کن تا سفارشت ثبت شود.</p>
+</header>
 
-    <form action="/checkout" method="POST" class="card p-8 flex flex-col gap-6">
-        
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-start">
+    <form action="/checkout" method="POST" class="lg:col-span-2 oc-surface p-6 sm:p-8 space-y-6">
         <div>
-            <label class="block font-semibold mb-2">نام و نام خانوادگی</label>
-            <input 
-                type="text" 
-                name="name" 
-                required
-                placeholder="مثال: هما امینی"
-                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition"
-            >
+            <label for="checkout-name" class="block font-extrabold mb-2">نام و نام خانوادگی</label>
+            <input id="checkout-name" type="text" name="name" required placeholder="مثال: هما امینی" class="oc-field">
         </div>
 
         <div>
-            <label class="block font-semibold mb-2">شماره تماس</label>
-            <input 
-                type="text" 
-                name="phone" 
-                required
-                placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹"
-                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition"
-            >
+            <label for="checkout-phone" class="block font-extrabold mb-2">شماره تماس</label>
+            <input id="checkout-phone" type="text" name="phone" required placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹" class="oc-field">
+            <p class="text-xs text-[#8A7E78] mt-2">شماره‌ای وارد کن که برای هماهنگی ارسال در دسترس باشد.</p>
         </div>
 
         <div>
-            <label class="block font-semibold mb-2">آدرس کامل</label>
-            <textarea 
-                name="address" 
-                required
-                rows="4"
-                placeholder="استان، شهر، خیابان، پلاک، کد پستی"
-                class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#7B9E87] transition resize-none"
-            ></textarea>
+            <label for="checkout-address" class="block font-extrabold mb-2">آدرس کامل</label>
+            <textarea id="checkout-address" name="address" required rows="5" placeholder="استان، شهر، خیابان، پلاک، کد پستی" class="oc-field resize-none"></textarea>
+            <p class="text-xs text-[#8A7E78] mt-2">آدرس و کد پستی را کامل بنویس تا آماده‌سازی سفارش عقب نیفتد.</p>
         </div>
 
-        <button type="submit" class="btn-primary text-center font-semibold text-lg">
-            ثبت سفارش
-        </button>
-
-        <a href="/cart" class="block text-center text-gray-400 hover:text-[#7B9E87] text-sm transition">
-            ← بازگشت به سبد خرید
-        </a>
-
+        <div class="pt-2 space-y-3">
+            <button type="submit" class="oc-primary-button w-full text-base">ثبت سفارش</button>
+            <a href="/cart" class="oc-secondary-button w-full">بازگشت به سبد خرید</a>
+        </div>
     </form>
-</div>
 
+    <aside class="oc-soft-surface p-6 sm:p-7">
+        <div class="oc-icon-tile mb-5">{{ icon('box', 'w-8 h-8') }}</div>
+        <h2 class="text-xl font-extrabold text-[#4A3A35] mb-5">اطلاعات ارسال</h2>
+        <ul class="space-y-4 text-sm text-[#665A55] leading-7">
+            <li>زمان آماده‌سازی معمولاً ۱۰ روز کاری است.</li>
+            <li>سفارش‌های تهران با پیک ارسال می‌شوند.</li>
+            <li>سفارش شهرهای دیگر با پست ارسال می‌شوند.</li>
+            <li>هزینه ارسال به‌صورت پس‌کرایه است.</li>
+        </ul>
+
+        <div class="mt-6 pt-6 border-t border-[#DED6CC]">
+            <div class="flex items-start gap-3">
+                <span class="text-[#637A63] mt-1">{{ icon('envelope', 'w-5 h-5') }}</span>
+                <p class="text-sm text-[#665A55] leading-7">
+                    بعد از پرداخت، از <a href="{{ url_for('contact') }}" class="font-bold text-[#637A63] hover:text-[#4A3A35]">صفحه ارتباط با ما</a> پیام بده تا سفارش بررسی و آماده‌سازی شود.
+                </p>
+            </div>
+        </div>
+    </aside>
+</div>
 {% endblock %}

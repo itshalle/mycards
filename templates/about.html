@@ -1,121 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<!-- About Hero -->
-<section class="bg-white rounded-3xl p-8 md:p-14 shadow-sm overflow-hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+<section class="oc-page-hero p-6 sm:p-8 md:p-12 overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 items-center">
         <div>
-            <p class="text-[#7B9E87] font-semibold mb-4">درباره Only Cards</p>
-
-            <h1 class="text-4xl md:text-5xl font-bold text-[#4A3728] leading-tight mb-6">
-                کارت‌هایی برای هر روز
-            </h1>
-
-            <p class="text-gray-600 leading-8 mb-8">
-                Only Cards یک برند کارت فارسی است برای لحظه‌هایی که می‌خواهیم کمی آرام‌تر فکر کنیم،
-                احساساتمان را بهتر ببینیم، با خودمان مهربان‌تر باشیم و گفت‌وگوهای عمیق‌تری با آدم‌های مهم زندگی‌مان بسازیم و حتی بیشتر.
+            <p class="text-[#637A63] font-bold mb-4">درباره Only Cards</p>
+            <h1 class="oc-page-title whitespace-nowrap text-[clamp(1.25rem,6vw,2.2rem)] mb-5">کارت‌هایی برای هر روز</h1>
+            <p class="oc-hero-copy mb-8">
+                Only Cards یک برند کارت است که از لحظه‌های واقعی زندگی شروع شده؛ از درس‌خواندن و تراپی تا دوستی، رابطه، آرامش و هدیه‌دادن. کارت‌ها شروع ما هستند و به‌تدریج مجموعه‌های بیشتر و محصولات همراه دیگری هم به آن‌ها اضافه می‌شوند.
             </p>
-
-            <div class="flex flex-col sm:flex-row gap-4">
-               <a href="/shop"
-   class="inline-flex items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-[#F7F4F0] transition">
-    مشاهده محصولات
-</a>
-
-                <a href="https://t.me/onlycards724"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="inline-flex items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-[#F7F4F0] transition">
-                    ارتباط با ما
-                </a>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{{ url_for('shop') }}" class="oc-primary-button">مشاهده محصولات</a>
+                <a href="{{ url_for('contact') }}" class="oc-secondary-button">ارتباط با ما</a>
             </div>
         </div>
 
-        <div class="bg-[#F7F4F0] rounded-3xl p-8 text-center">
-            <div class="text-6xl mb-6">🌳</div>
-            <p class="text-2xl font-bold text-[#7B9E87] mb-3">کارت‌هاتو رو کن</p>
-            <p class="text-gray-600 leading-8">
+        <div class="oc-soft-surface p-7 sm:p-9 text-center">
+            <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+                 alt="لوگوی درخت Only Cards"
+                 class="w-24 h-24 rounded-full mx-auto mb-6"
+                 width="96"
+                 height="96">
+            <p class="text-2xl font-extrabold text-[#637A63] mb-3">کارت‌هاتو رو کن</p>
+            <p class="text-[#665A55] leading-8">
                 گاهی فقط یک کارت، یک سؤال یا یک جمله کافی است تا چند دقیقه به خودمان برگردیم.
             </p>
         </div>
     </div>
 </section>
 
-<!-- Story -->
-<section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="md:col-span-2 bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">داستان ما</h2>
-
-        <div class="space-y-5 text-gray-600 leading-8">
+<section class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-3 gap-7">
+    <div class="lg:col-span-2 oc-surface p-7 sm:p-9">
+        <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-6">داستان ما</h2>
+        <div class="space-y-5 text-[#665A55] leading-9">
             <p>
-                Only Cards از یک ایده ساده شروع شد: کارت هایی که برای خودم میساختم تبدیل به محصولی شد که استفاده از آن آسان باشد،
-                اما حس عمیق و آرام داشته باشد.
+                برای من کارت‌ها خیلی قبل‌تر از Only Cards شروع شده بودند. هر وقت می‌خواستم چیزی را بهتر یاد بگیرم، مرتب‌تر فکر کنم یا حرفی را فراموش نکنم، آن را روی یک کارت می‌نوشتم. برای درس‌خواندن کارت درست می‌کردم، برای چیزهایی که می‌خواستم با خودم به تراپی ببرم، برای سؤال‌هایی که در یک رابطه یا دوستی گفتنشان آسان نبود و برای لحظه‌هایی که لازم داشتم کمی مکث کنم و بفهمم واقعاً چه حسی دارم.
             </p>
-
             <p>
-                ما به کارت‌ها مثل یک ابزار کوچک برای مکث نگاه می‌کنیم؛ نه درمان، نه شعار، نه بازی شلوغ.
-                فقط چند لحظه توجه، انتخاب، فکر کردن و حرف زدن.
+                کم‌کم کارت‌ها از یک ابزار شخصی به چیزی بیشتر تبدیل شدند. متوجه شدم یک سؤال درست، یک جمله کوتاه یا یک تمرین کوچک می‌تواند شروع یک گفت‌وگوی مهم باشد؛ یا کمک کند آدم چیزی را در خودش ببیند که پیش از آن نامی برایش نداشته است.
             </p>
-
-        
+            <p>
+                از طرف دیگر، هدیه‌دادن همیشه برایم فقط انتخاب یک وسیله نبوده. به جعبه‌ای که باز می‌شود، ترتیب چیزهایی که داخل آن قرار گرفته‌اند، کاغذی که دورشان پیچیده شده و احساسی که در لحظه بازکردن هدیه منتقل می‌شود فکر می‌کنم. برای من ارزش یک هدیه بیشتر از قیمت آن، به توجه و معنایی است که همراهش فرستاده می‌شود.
+            </p>
+            <p>
+                Only Cards از کنار هم قرارگرفتن همین دو علاقه شکل گرفت: ساختن کارت‌هایی برای لحظه‌های واقعی و طراحی هدیه‌هایی که چیزی فراتر از یک محصول منتقل می‌کنند. کارت‌ها اولین قدم این مسیرند؛ بعدتر مجموعه‌های تازه، راهنماها، محصولات کاغذی، پک‌ها و چیزهای بامزه و کاربردی دیگری هم به این دنیا اضافه خواهند شد.
+            </p>
         </div>
     </div>
 
-    <div class="bg-[#F7F4F0] rounded-3xl p-8">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">ما چه می‌سازیم؟</h2>
-
-        <ul class="space-y-4 text-gray-600 leading-8">
-            <li>کارت‌های آرامش و مراقبت از خود</li>
-            <li>کارت‌های رابطه و گفت‌وگو</li>
-            <li>کارت‌های تأمل، بازی mindful و لحظه‌های مشترک</li>
-            <li>و به زودی محصولات بیشتر</li>
-
-        </ul>
-    </div>
+    <aside class="oc-soft-surface p-7 sm:p-8">
+        <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-6">ما چه می‌سازیم؟</h2>
+        <div class="space-y-4 text-[#665A55] leading-8">
+            <a href="{{ url_for('product_by_slug', slug='calm-cards') }}" class="block font-extrabold text-[#637A63] hover:text-[#4A3A35] transition">کارت‌های آرامش</a>
+            <a href="{{ url_for('product_by_slug', slug='couples-conversation-cards') }}" class="block font-extrabold text-[#637A63] hover:text-[#4A3A35] transition">کارت‌های رابطه و گفت‌وگو</a>
+            <a href="{{ url_for('product_by_slug', slug='mindfulness-skills-cards') }}" class="block font-extrabold text-[#637A63] hover:text-[#4A3A35] transition">کارت‌های ذهن‌آگاهی و مهارت‌های زندگی</a>
+            <p class="pt-4 border-t border-[#DED6CC]">
+                کارت‌ها شروع این مسیرند و در آینده راهنماها، محصولات کاغذی، پک‌ها و چیزهای بامزه و کاربردی بیشتری به مجموعه اضافه می‌شوند.
+            </p>
+        </div>
+    </aside>
 </section>
 
-<!-- Values -->
-<section class="mt-16">
-    <h2 class="text-2xl font-bold text-center text-[#4A3728] mb-10">ارزش‌های Only Cards</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
-            <div class="text-4xl mb-4">🌿</div>
-            <h3 class="font-bold text-lg mb-3">آرام و ساده</h3>
-            <p class="text-gray-500 text-sm leading-7">
-                طراحی ما باید حس آرامش بدهد؛ بدون شلوغی، بدون فشار و بدون زبان سخت.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
-            <div class="text-4xl mb-4">💛</div>
-            <h3 class="font-bold text-lg mb-3">انسانی و احساسی</h3>
-            <p class="text-gray-500 text-sm leading-7">
-                کارت‌ها برای احساسات واقعی، رابطه‌های واقعی و روزمره‌های واقعی طراحی می‌شوند.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-3xl p-8 shadow-sm text-center">
-            <div class="text-4xl mb-4">🃏</div>
-            <h3 class="font-bold text-lg mb-3">قابل استفاده</h3>
-            <p class="text-gray-500 text-sm leading-7">
-                هر محصول باید روشن، قابل لمس و مناسب استفاده در خانه، جمع‌های کوچک یا زمان تنهایی باشد.
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="mt-16 bg-[#7B9E87] rounded-3xl p-10 text-center text-white">
-    <h2 class="text-3xl font-bold mb-4">اولین محصول ما را ببین</h2>
-    <p class="leading-8 mb-8 text-white/90">
-        «کارت‌های آرامش» برای مکث‌های کوتاه، روزهای شلوغ و برگشتن به خود طراحی شده‌اند.
+<section class="mt-14 md:mt-16 bg-[#637A63] rounded-[1.75rem] p-8 sm:p-10 text-center text-white shadow-sm">
+    <h2 class="text-2xl md:text-3xl font-extrabold mb-4">کارت‌های آرامش را ببین</h2>
+    <p class="leading-8 mb-7 text-white/90">
+        مجموعه‌ای برای مکث‌های کوتاه، روزهای شلوغ و برگشتن به حال همین لحظه.
     </p>
-
-    <a href="/shop" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-[#7B9E87] font-bold hover:bg-[#F7F4F0] transition">
-        رفتن به فروشگاه
+    <a href="{{ url_for('product_by_slug', slug='calm-cards') }}" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-[#637A63] font-extrabold hover:bg-[#F7F4F0] transition">
+        دیدن کارت‌های آرامش
     </a>
 </section>
-
 {% endblock %}

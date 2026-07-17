@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% from '_icons.html' import icon %}
+
+{% block content %}
+<nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+    <a href="{{ url_for('index') }}">خانه</a>
+    <span>/</span>
+    <span class="current">ارتباط با ما</span>
+</nav>
+
+<section class="oc-page-hero p-6 sm:p-8 md:p-12 overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 items-center">
+        <div>
+            <p class="text-[#637A63] font-bold mb-4">ارتباط با Only Cards</p>
+            <h1 class="oc-page-title mb-5">از اینجا با ما در ارتباط باش</h1>
+            <p class="oc-hero-copy mb-8">
+                برای پرسش درباره محصولات، ثبت و پیگیری سفارش، ارسال یا بسته‌بندی می‌توانی در تلگرام برای ما پیام بفرستی.
+            </p>
+            <a href="https://t.me/onlycards724" target="_blank" rel="noopener noreferrer" class="oc-primary-button">
+                {{ icon('envelope', 'w-5 h-5') }}
+                ورود به تلگرام
+            </a>
+        </div>
+
+        <div class="oc-soft-surface p-7 sm:p-9 text-center">
+            <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+                 alt="لوگوی درخت Only Cards"
+                 class="w-24 h-24 rounded-full mx-auto mb-6"
+                 width="96"
+                 height="96">
+            <p class="text-sm text-[#8A7E78] mb-2">آیدی تلگرام</p>
+            <p class="text-2xl font-extrabold text-[#637A63]" dir="ltr">@onlycards724</p>
+        </div>
+    </div>
+</section>
+
+<section class="mt-14 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-7">
+    <a href="{{ url_for('shipping') }}" class="oc-surface p-7 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
+        <div class="oc-icon-tile mb-5">{{ icon('box', 'w-8 h-8') }}</div>
+        <h2 class="text-xl font-extrabold text-[#4A3A35] mb-3">ارسال و تحویل</h2>
+        <p class="text-[#665A55] leading-8">زمان آماده‌سازی، روش ارسال و هزینه تحویل سفارش‌ها را ببین.</p>
+    </a>
+
+    <a href="{{ url_for('faq') }}" class="oc-surface p-7 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
+        <div class="oc-icon-tile mb-5">{{ icon('chat', 'w-8 h-8') }}</div>
+        <h2 class="text-xl font-extrabold text-[#4A3A35] mb-3">سوالات پرتکرار</h2>
+        <p class="text-[#665A55] leading-8">پاسخ سوال‌های رایج درباره سفارش، پرداخت، ارسال و کاربرد کارت‌ها را بخوان.</p>
+    </a>
+</section>
+
+<!-- محل افزودن ایمیل در آینده -->
+{% endblock %}

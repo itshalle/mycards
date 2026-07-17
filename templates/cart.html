@@ -1,63 +1,95 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block content %}
+<nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+    <a href="{{ url_for('index') }}">خانه</a>
+    <span>/</span>
+    <span class="current">سبد خرید</span>
+</nav>
 
-<h1 class="text-3xl font-bold mb-10">سبد خرید</h1>
+<header class="mb-9">
+    <div class="oc-title-frame mb-5"><h1 class="oc-page-title">سبد خرید</h1></div>
+    <p class="oc-hero-copy">محصولات انتخاب‌شده‌ات را قبل از ثبت سفارش مرور کن.</p>
+</header>
 
 {% if products %}
-<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-    
-    <!-- Cart Items -->
-    <div class="md:col-span-2 flex flex-col gap-4">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-start">
+    <section class="lg:col-span-2 space-y-4" aria-label="محصولات سبد خرید">
         {% for item in products %}
-        <div class="card p-6 flex items-center justify-between gap-6">
-            <div class="text-5xl">
-                {% if 'استرس' in item.product.name %}🧘
-                {% elif 'عشق' in item.product.name %}💛
-                {% elif 'DBT' in item.product.name or 'dbt' in item.product.name %}🌱
-                {% else %}🃏
-                {% endif %}
+        {% set preview_image = get_product_preview_image(item.product) %}
+        <article class="oc-surface p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
+                <div class="bg-[#F4F0E8] rounded-2xl w-full sm:w-28 h-44 sm:h-28 flex items-center justify-center overflow-hidden shrink-0">
+                    {% if preview_image %}
+                    <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
+                         alt="تصویر محصول {{ item.product.name }}"
+                         class="w-full h-full object-contain p-2"
+                         loading="lazy"
+                         decoding="async">
+                    {% else %}
+                    <span class="oc-product-fallback">{{ icon('card', 'w-10 h-10') }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <h2 class="font-extrabold text-lg text-[#4A3A35] leading-8 mb-2">{{ item.product.name }}</h2>
+                    <p class="text-sm text-[#746863] mb-4">قیمت واحد: {{ "{:,}".format(item.product.price|int) }} تومان</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="inline-flex items-center rounded-full bg-[#F4F0E8] px-4 py-2 text-sm font-bold text-[#4A3A35]">
+                            تعداد: {{ item.quantity }}
+                        </span>
+                        <a href="/remove-from-cart/{{ item.product.id }}"
+                           class="inline-flex items-center justify-center rounded-full border border-[#D8C5BE] px-4 py-2 text-sm font-bold text-[#9A5F55] hover:bg-[#F7EFEC] transition">
+                            حذف
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sm:text-left sm:min-w-32 pt-4 sm:pt-0 border-t sm:border-t-0 border-[#EEE8DF]">
+                    <p class="text-xs text-[#8A7E78] mb-1">مبلغ این محصول</p>
+                    <p class="text-lg font-extrabold text-[#637A63]">
+                        {{ "{:,}".format((item.product.price * item.quantity)|int) }} تومان
+                    </p>
+                </div>
             </div>
-            <div class="flex-1">
-                <h3 class="font-bold text-lg mb-1">{{ item.product.name }}</h3>
-                <p class="text-[#7B9E87] font-semibold">{{ "{:,}".format(item.product.price|int) }} تومان</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="bg-[#F7F4F0] px-4 py-2 rounded-lg font-bold">{{ item.quantity }}</span>
-                <a href="/remove-from-cart/{{ item.product.id }}" class="text-red-400 hover:text-red-600 text-sm transition">حذف</a>
-            </div>
-        </div>
+        </article>
         {% endfor %}
-    </div>
+    </section>
 
-    <!-- Order Summary -->
-    <div class="card p-6 h-fit">
-        <h2 class="text-xl font-bold mb-6">خلاصه سفارش</h2>
-        <div class="flex justify-between mb-4 text-gray-500">
-            <span>جمع کل</span>
-            <span>{{ "{:,}".format(total|int) }} تومان</span>
+    <aside class="oc-surface p-6 sm:p-7 lg:sticky lg:top-28">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="oc-icon-tile !w-12 !h-12 !rounded-xl">{{ icon('payment', 'w-6 h-6') }}</span>
+            <h2 class="text-xl font-extrabold text-[#4A3A35]">خلاصه سفارش</h2>
         </div>
-        <div class="border-t pt-4 flex justify-between font-bold text-lg mb-6">
-            <span>مبلغ قابل پرداخت</span>
-            <span class="text-[#7B9E87]">{{ "{:,}".format(total|int) }} تومان</span>
-        </div>
-        <a href="/checkout" class="btn-primary block text-center font-semibold text-lg">
-            ادامه و پرداخت
-        </a>
-        <a href="/shop" class="block text-center text-gray-400 hover:text-[#7B9E87] mt-4 text-sm transition">
-            ← ادامه خرید
-        </a>
-    </div>
 
+        <div class="space-y-4 text-sm">
+            <div class="flex items-center justify-between gap-4 text-[#746863]">
+                <span>جمع محصولات</span>
+                <span>{{ "{:,}".format(total|int) }} تومان</span>
+            </div>
+            <div class="flex items-center justify-between gap-4 text-[#746863]">
+                <span>هزینه ارسال</span>
+                <span>پس‌کرایه</span>
+            </div>
+            <div class="border-t border-[#EEE8DF] pt-4 flex items-center justify-between gap-4">
+                <span class="font-extrabold text-[#4A3A35]">مبلغ قابل پرداخت</span>
+                <span class="font-extrabold text-lg text-[#637A63]">{{ "{:,}".format(total|int) }} تومان</span>
+            </div>
+        </div>
+
+        <div class="mt-7 space-y-3">
+            <a href="/checkout" class="oc-primary-button w-full">ادامه و ثبت اطلاعات</a>
+            <a href="/shop" class="oc-secondary-button w-full">رفتن به فروشگاه</a>
+        </div>
+    </aside>
 </div>
-
 {% else %}
-<div class="text-center py-24">
-    <div class="text-7xl mb-6">🛒</div>
-    <h2 class="text-2xl font-bold mb-4">سبد خرید شما خالی است</h2>
-    <p class="text-gray-500 mb-8">محصولات ما را ببینید و خرید خود را شروع کنید</p>
-    <a href="/shop" class="btn-primary inline-block font-semibold text-lg">مشاهده محصولات</a>
-</div>
+<section class="oc-surface text-center py-14 sm:py-20 px-6">
+    <div class="oc-icon-tile mx-auto mb-6">{{ icon('card', 'w-9 h-9') }}</div>
+    <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-4">سبد خریدت هنوز خالی است</h2>
+    <p class="text-[#746863] mb-8">محصولات را ببین و کارت مناسب حال یا رابطه‌ات را انتخاب کن.</p>
+    <a href="/shop" class="oc-primary-button">رفتن به فروشگاه</a>
+</section>
 {% endif %}
-
 {% endblock %}

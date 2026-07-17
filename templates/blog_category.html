@@ -8,22 +8,22 @@
 
 {% block content %}
 <section class="max-w-6xl mx-auto">
-    <nav class="text-sm text-gray-500 mb-7" aria-label="مسیر صفحه">
-        <a href="{{ url_for('index') }}" class="hover:text-[#637A63]">خانه</a>
-        <span class="mx-2">/</span>
-        <a href="{{ url_for('blog') }}" class="hover:text-[#637A63]">بلاگ</a>
-        <span class="mx-2">/</span>
-        <span>{{ category.name }}</span>
+    <nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+        <a href="{{ url_for('index') }}">خانه</a>
+        <span>/</span>
+        <a href="{{ url_for('blog') }}">بلاگ</a>
+        <span>/</span>
+        <span class="current">{{ category.name }}</span>
     </nav>
 
-    <header class="bg-white rounded-[2rem] border border-[#E9E2D8] shadow-sm p-7 sm:p-10 md:p-14">
+    <header class="oc-page-hero p-6 sm:p-9 md:p-12">
         <p class="text-sm font-bold text-[#637A63] mb-3">دسته‌بندی بلاگ</p>
-        <h1 class="text-3xl md:text-5xl font-extrabold text-[#4A3A35] leading-[1.55] mb-5">
-            {{ category.name }}
-        </h1>
-        <p class="text-[#665954] leading-8 max-w-3xl">
-            {{ category.intro }}
-        </p>
+        <h1 class="oc-page-title mb-5">{{ category.name }}</h1>
+        <div class="oc-hero-copy space-y-5">
+            {% for paragraph in category.intro_paragraphs %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+        </div>
     </header>
 
     {% if posts %}
@@ -35,18 +35,13 @@
         </div>
     </section>
     {% else %}
-    <div class="mt-10 bg-white rounded-2xl p-8 text-gray-500 shadow-sm">
-        هنوز مقاله‌ای در این دسته منتشر نشده است.
-    </div>
+    <div class="mt-10 oc-surface p-8 text-[#746863]">هنوز مقاله‌ای در این دسته منتشر نشده است.</div>
     {% endif %}
 
     <nav class="mt-14 pt-8 border-t border-[#DED6CC]" aria-label="دسته‌های دیگر بلاگ">
         <p class="font-extrabold text-[#4A3A35] mb-5">دسته‌های دیگر</p>
         <div class="flex flex-wrap gap-3">
-            <a href="{{ url_for('blog') }}"
-               class="inline-flex rounded-full border border-[#A9B8A4] px-4 py-2 text-sm font-bold text-[#637A63] hover:bg-white transition">
-                همه مقاله‌ها
-            </a>
+            <a href="{{ url_for('blog') }}" class="oc-secondary-button text-sm">همه مقاله‌ها</a>
             {% for item in other_categories %}
             <a href="{{ url_for('blog_category', category_slug=item.slug) }}"
                class="inline-flex rounded-full border border-[#DED6CC] px-4 py-2 text-sm font-bold text-[#665954] hover:bg-white hover:text-[#637A63] transition">

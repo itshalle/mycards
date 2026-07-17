@@ -1,3 +1,4 @@
+{% from '_icons.html' import icon %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -42,32 +43,229 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- onlycards-home-refresh-v1 -->
+
     <style>
-        :root { --oc-cream:#F4F0E8; --oc-brown:#4A3A35; --oc-green:#637A63; }
-        body { background:#F4F0E8; color:#4A3A35; font-family:"Vazirmatn",Tahoma,Arial,sans-serif; }
-        .home-hero { background:#EDE5D9; }
-        .hero-soft-overlay { background:linear-gradient(90deg,transparent 38%,rgba(244,240,232,.2) 51%,rgba(244,240,232,.95) 75%,#F4F0E8 100%); }
-        .hero-notes span { display:inline-flex; align-items:center; gap:.5rem; }
-        .hero-notes i { width:9px; height:9px; border:2px solid #637A63; border-radius:999px; display:inline-block; }
-        .onlycards-outline-button { display:inline-flex; align-items:center; justify-content:center; padding:.8rem 1.5rem; border:1px solid #637A63; color:#4A3A35; border-radius:999px; font-weight:800; transition:.25s ease; background:rgba(255,255,255,.45); }
-        .onlycards-outline-button:hover { color:white; background:#637A63; transform:translateY(-2px); }
-        .organic-blob { position:absolute; display:block; pointer-events:none; filter:blur(.2px); opacity:.45; z-index:-1; }
-        .blob-one { width:150px; height:110px; border-radius:57% 43% 61% 39% / 45% 53% 47% 55%; background:#C9B9B0; top:610px; right:-70px; transform:rotate(18deg); }
-        .blob-two { width:115px; height:140px; border-radius:41% 59% 37% 63% / 61% 42% 58% 39%; background:#A9B5A3; top:980px; left:-65px; transform:rotate(-22deg); }
-        .blob-three { width:105px; height:85px; border-radius:62% 38% 55% 45% / 44% 60% 40% 56%; background:#D7BEB5; top:-42px; left:-38px; }
-        .minimal-card-placeholder { width:88px; height:128px; border:1px solid #9AA897; border-radius:12px; box-shadow:10px 10px 0 #DED5CA; transform:rotate(-5deg); }
-        @media (max-width:767px) {
-            .home-hero img { opacity:.38; object-position:28% center; }
-            .hero-soft-overlay { background:linear-gradient(90deg,rgba(244,240,232,.72),rgba(244,240,232,.94)); }
-            .home-hero .absolute.inset-y-0 { align-items:flex-end; padding-bottom:2.5rem; }
-            .organic-blob { opacity:.28; }
+        :root {
+            --oc-cream: #F4F0E8;
+            --oc-cream-soft: #F8F5EF;
+            --oc-brown: #4A3A35;
+            --oc-green: #637A63;
+            --oc-green-dark: #526852;
+            --oc-rose: #C9B9B0;
+            --oc-blue: #C8D5D9;
+            --oc-border: #E9E2D8;
+            --oc-muted: #746863;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--oc-cream);
+            color: var(--oc-brown);
+            font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+        }
+
+        .home-hero { background: #EDE5D9; }
+        .hero-soft-overlay { background: linear-gradient(90deg, transparent 38%, rgba(244,240,232,.2) 51%, rgba(244,240,232,.95) 75%, #F4F0E8 100%); }
+        .hero-notes span { display: inline-flex; align-items: center; gap: .5rem; }
+        .hero-notes i { width: 9px; height: 9px; border: 2px solid var(--oc-green); border-radius: 999px; display: inline-block; }
+
+        .oc-surface,
+        .card {
+            background: #fff;
+            border: 1px solid var(--oc-border);
+            border-radius: 1.65rem;
+            box-shadow: 0 10px 35px rgba(74, 58, 53, .055);
+        }
+
+        .oc-soft-surface {
+            background: rgba(248, 245, 239, .9);
+            border: 1px solid rgba(222, 214, 204, .9);
+            border-radius: 1.65rem;
+        }
+
+        .oc-page-hero {
+            background: rgba(255, 255, 255, .9);
+            border: 1px solid var(--oc-border);
+            border-radius: 2rem;
+            box-shadow: 0 12px 40px rgba(74, 58, 53, .055);
+        }
+
+
+        .oc-page-title {
+            margin: 0;
+            color: var(--oc-brown);
+            font-size: clamp(1.45rem, 3.8vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1.55;
+        }
+
+        .oc-title-frame {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: fit-content;
+            max-width: 100%;
+            padding: .72rem 1rem .78rem;
+            border: 1px solid rgba(222, 214, 204, .92);
+            border-radius: 1.15rem;
+            background: rgba(248, 245, 239, .82);
+            box-shadow: 0 8px 28px rgba(74, 58, 53, .055), 0 0 24px rgba(244, 240, 232, .55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .oc-title-frame-center {
+            align-items: center;
+            text-align: center;
+            margin-inline: auto;
+        }
+
+        .oc-title-frame .oc-page-title,
+        .oc-title-frame h1,
+        .oc-title-frame h2,
+        .oc-title-frame p {
+            margin-bottom: 0;
+        }
+
+        .oc-hero-copy {
+            max-width: 43rem;
+            color: #665A55;
+            line-height: 2;
+        }
+
+        .oc-icon-tile {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.5rem;
+            height: 4.5rem;
+            border-radius: 1.35rem;
+            color: var(--oc-green);
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(169, 184, 164, .55);
+        }
+
+        .oc-primary-button,
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .55rem;
+            border-radius: 999px;
+            background: var(--oc-green);
+            color: #fff;
+            padding: .85rem 1.55rem;
+            font-weight: 800;
+            transition: .22s ease;
+            border: 1px solid var(--oc-green);
+        }
+
+        .oc-primary-button:hover,
+        .btn-primary:hover {
+            background: var(--oc-green-dark);
+            border-color: var(--oc-green-dark);
+            transform: translateY(-1px);
+        }
+
+        .oc-secondary-button,
+        .onlycards-outline-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .55rem;
+            border-radius: 999px;
+            border: 1px solid var(--oc-green);
+            color: var(--oc-brown);
+            background: rgba(255,255,255,.5);
+            padding: .85rem 1.55rem;
+            font-weight: 800;
+            transition: .22s ease;
+        }
+
+        .oc-secondary-button:hover,
+        .onlycards-outline-button:hover {
+            color: #fff;
+            background: var(--oc-green);
+            transform: translateY(-1px);
+        }
+
+        .oc-breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .55rem;
+            width: fit-content;
+            max-width: 100%;
+            margin-bottom: 1.6rem;
+            padding: .62rem .9rem;
+            color: #887B75;
+            font-size: .875rem;
+            background: rgba(255, 255, 255, .76);
+            border: 1px solid rgba(222, 214, 204, .9);
+            border-radius: 1rem;
+            box-shadow: 0 7px 24px rgba(74, 58, 53, .045);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .oc-breadcrumb a { transition: color .2s ease; }
+        .oc-breadcrumb a:hover { color: var(--oc-green); }
+        .oc-breadcrumb .current { color: var(--oc-brown); font-weight: 700; }
+
+        .oc-field {
+            width: 100%;
+            border: 1px solid #DED6CC;
+            border-radius: 1rem;
+            background: #fff;
+            padding: .9rem 1rem;
+            color: var(--oc-brown);
+            transition: .2s ease;
+            outline: none;
+        }
+
+        .oc-field:focus {
+            border-color: var(--oc-green);
+            box-shadow: 0 0 0 3px rgba(99, 122, 99, .11);
+        }
+
+        .oc-product-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--oc-green);
+        }
+
+
+        .oc-product-card { min-height: 100%; }
+        .oc-product-media { aspect-ratio: 4 / 3; }
+        .oc-product-title { min-height: 4rem; }
+        .oc-featured-product { border-color: rgba(99, 122, 99, .58); box-shadow: 0 14px 42px rgba(82, 104, 82, .12); }
+        .oc-copy-section { max-width: 54rem; }
+        .oc-copy-section p { color: #665A55; line-height: 2; }
+        .oc-copy-section a { color: var(--oc-green); font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+
+        .organic-blob { position: absolute; display: block; pointer-events: none; filter: blur(.2px); opacity: .4; z-index: -1; }
+        .blob-one { width: 150px; height: 110px; border-radius: 57% 43% 61% 39% / 45% 53% 47% 55%; background: #C9B9B0; top: 610px; right: -70px; transform: rotate(18deg); }
+        .blob-two { width: 115px; height: 140px; border-radius: 41% 59% 37% 63% / 61% 42% 58% 39%; background: #A9B5A3; top: 980px; left: -65px; transform: rotate(-22deg); }
+        .blob-three { width: 105px; height: 85px; border-radius: 62% 38% 55% 45% / 44% 60% 40% 56%; background: #D7BEB5; top: -42px; left: -38px; }
+        .minimal-card-placeholder { width: 88px; height: 128px; border: 1px solid #9AA897; border-radius: 12px; box-shadow: 10px 10px 0 #DED5CA; transform: rotate(-5deg); }
+
+        @media (max-width: 767px) {
+            .home-hero img { opacity: .38; object-position: 28% center; }
+            .hero-soft-overlay { background: linear-gradient(90deg, rgba(244,240,232,.72), rgba(244,240,232,.94)); }
+            .home-hero .absolute.inset-y-0 { align-items: flex-end; padding-bottom: 2rem; }
+            .organic-blob { opacity: .24; }
+            .oc-page-hero { border-radius: 1.5rem; }
+            .oc-page-title { font-size: clamp(1.35rem, 6.2vw, 1.8rem); line-height: 1.65; }
+            .oc-title-frame { padding: .62rem .82rem .68rem; border-radius: 1rem; }
+            .oc-breadcrumb { padding: .55rem .75rem; border-radius: .9rem; }
+            .oc-hero-copy { line-height: 2.05; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-[#EEE8DF]">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3 sm:gap-4">
@@ -93,44 +291,47 @@
         </div>
     </nav>
 
-    <!-- Page Content -->
-    <main class="max-w-6xl mx-auto px-6 py-10">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t mt-20 py-10 text-center text-gray-400 text-sm">
+    <footer class="bg-white/90 border-t border-[#E9E2D8] mt-20">
+        <div class="max-w-6xl mx-auto px-6 py-10">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.5fr_1fr] items-center lg:items-start gap-8">
+                <a href="{{ url_for('index') }}" class="flex items-center justify-center lg:justify-start gap-3 text-right" aria-label="صفحه اصلی Only Cards">
+                    <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+                         alt="لوگوی درخت Only Cards"
+                         class="w-14 h-14 rounded-full"
+                         width="56"
+                         height="56"
+                         loading="lazy">
+                    <span>
+                        <span class="block text-[#637A63] font-extrabold text-lg">Only Cards</span>
+                        <span class="block text-[#746863] text-sm mt-1">کارت‌هاتو رو کن</span>
+                    </span>
+                </a>
 
-    <p class="text-[#7B9E87] font-semibold text-lg mb-2">Only Cards</p>
+                <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm" aria-label="لینک‌های فوتر">
+                    <a href="{{ url_for('shop') }}" class="text-gray-500 hover:text-[#637A63] transition">فروشگاه</a>
+                    <a href="{{ url_for('blog') }}" class="text-gray-500 hover:text-[#637A63] transition">بلاگ</a>
+                    <a href="{{ url_for('about') }}" class="text-gray-500 hover:text-[#637A63] transition">درباره ما</a>
+                    <a href="{{ url_for('contact') }}" class="text-gray-500 hover:text-[#637A63] transition">ارتباط با ما</a>
+                    <a href="{{ url_for('shipping') }}" class="text-gray-500 hover:text-[#637A63] transition">ارسال و تحویل</a>
+                    <a href="{{ url_for('faq') }}" class="text-gray-500 hover:text-[#637A63] transition">سوالات پرتکرار</a>
+                </nav>
 
-    <p>کارت‌هاتو رو کن</p> 
+                <a href="{{ url_for('contact') }}" class="oc-secondary-button text-sm justify-self-center lg:justify-self-end">
+                    {{ icon('envelope', 'w-5 h-5') }}
+                    <span class="text-right">
+                        <span class="block">ارتباط با ما</span>
+                        <span class="block text-xs font-semibold opacity-75 mt-0.5" dir="ltr">@onlycards724</span>
+                    </span>
+                </a>
+            </div>
 
-    <div class="mt-4 flex flex-wrap items-center justify-center gap-4">
-        <a href="/about" class="text-gray-500 hover:text-[#7B9E87] transition">درباره ما</a>
-        <a href="/shipping" class="text-gray-500 hover:text-[#7B9E87] transition">ارسال و تحویل</a>
-        <a href="/faq" class="text-gray-500 hover:text-[#7B9E87] transition">سوالات پرتکرار</a>
-        <a href="/blog" class="text-gray-500 hover:text-[#7B9E87] transition">بلاگ</a>
-    </div>
-
-
-
-    <a href="https://t.me/onlycards724" 
-
-       target="_blank"
-
-       rel="noopener noreferrer"
-
-       class="inline-block mt-4 text-[#7B9E87] hover:text-[#6a8d76] font-semibold transition">
-
-        ارتباط با ما در تلگرام: @onlycards724 
-
-    </a>
-
-
-
-    <p class="mt-4">© ۱۴۰۵ تمام حقوق محفوظ است</p> 
-
-</footer>
+            <p class="mt-8 pt-6 border-t border-[#EEE8DF] text-center text-gray-400 text-sm">© ۱۴۰۵ تمام حقوق محفوظ است</p>
+        </div>
+    </footer>
 
 </body>
 </html>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block structured_data %}
 <script type="application/ld+json">
@@ -11,12 +12,14 @@
 
 {% block content %}
 <article class="max-w-3xl mx-auto">
-    <nav class="text-sm text-gray-500 mb-7" aria-label="مسیر صفحه">
-        <a href="{{ url_for('index') }}" class="hover:text-[#637A63]">خانه</a>
-        <span class="mx-2">/</span>
-        <a href="{{ url_for('blog') }}" class="hover:text-[#637A63]">بلاگ</a>
-        <span class="mx-2">/</span>
-        <a href="{{ category_path }}" class="hover:text-[#637A63]">{{ post.category }}</a>
+    <nav class="oc-breadcrumb" aria-label="مسیر صفحه">
+        <a href="{{ url_for('index') }}">خانه</a>
+        <span>/</span>
+        <a href="{{ url_for('blog') }}">بلاگ</a>
+        <span>/</span>
+        <a href="{{ category_path }}">{{ post.category }}</a>
+        <span>/</span>
+        <span class="current">{{ post.title }}</span>
     </nav>
 
     <header class="mb-9">
@@ -24,9 +27,10 @@
            class="inline-flex items-center rounded-full bg-[#F4F0E8] px-3 py-1.5 text-sm font-bold text-[#637A63] hover:bg-[#E4EADF] hover:text-[#4A3A35] transition mb-4">
             {{ post.category }}
         </a>
-
-        <h1 class="text-3xl md:text-4xl font-bold text-[#4A3A35] leading-[1.6] mb-5">{{ post.title }}</h1>
-        <p class="text-lg text-gray-600 leading-9">{{ post.description }}</p>
+        <div class="oc-title-frame mb-5">
+            <h1 class="oc-page-title">{{ post.title }}</h1>
+        </div>
+        <p class="text-base sm:text-lg text-[#665A55] leading-8 sm:leading-9">{{ post.description }}</p>
         <p class="text-sm text-gray-400 mt-4">
             انتشار: {{ post.published_at }}
             {% if post.updated_at != post.published_at %}
@@ -38,37 +42,31 @@
     {% if post.image %}
     <img src="{{ url_for('static', filename=post.image) }}"
          alt="{{ post.image_alt }}"
-         class="w-full rounded-2xl mb-10 shadow-sm"
+         class="w-full rounded-[1.6rem] mb-10 shadow-sm border border-[#E9E2D8]"
          decoding="async">
     {% endif %}
 
-    <div class="blog-content bg-white rounded-2xl p-6 md:p-10 shadow-sm text-[#4A3A35] leading-9">
+    <div class="blog-content oc-surface p-6 md:p-10 text-[#4A3A35] leading-9">
         {{ post.body_html | safe }}
     </div>
 
     <div class="mt-10 pt-7 border-t border-[#E5DED5] flex flex-wrap items-center justify-between gap-4">
-        <a href="{{ category_path }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">
-            مقاله‌های {{ post.category }}
-        </a>
-        <a href="{{ url_for('blog') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">
-            بازگشت به بلاگ
-        </a>
-        <a href="{{ url_for('shop') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">
-            دیدن کارت‌ها
-        </a>
+        <a href="{{ category_path }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">مقاله‌های {{ post.category }}</a>
+        <a href="{{ url_for('blog') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">بازگشت به بلاگ</a>
+        <a href="{{ url_for('shop') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">دیدن کارت‌ها</a>
     </div>
 </article>
 
 <style>
-    .blog-content h2 { font-size: 1.55rem; font-weight: 800; margin: 2.2rem 0 0.9rem; }
-    .blog-content h3 { font-size: 1.25rem; font-weight: 700; margin: 1.8rem 0 0.7rem; }
+    .blog-content h2 { font-size: 1.55rem; font-weight: 800; margin: 2.2rem 0 .9rem; }
+    .blog-content h3 { font-size: 1.25rem; font-weight: 700; margin: 1.8rem 0 .7rem; }
     .blog-content p { margin: 1rem 0; }
     .blog-content ul, .blog-content ol { margin: 1rem 1.4rem 1rem 0; }
     .blog-content ul { list-style: disc; }
     .blog-content ol { list-style: decimal; }
-    .blog-content li { margin: 0.45rem 0; }
+    .blog-content li { margin: .45rem 0; }
     .blog-content a { color: #637A63; text-decoration: underline; text-underline-offset: 4px; }
-    .blog-content blockquote { border-right: 3px solid #637A63; background: #F4F0E8; padding: 0.8rem 1rem; margin: 1.4rem 0; border-radius: 0.7rem; }
+    .blog-content blockquote { border-right: 3px solid #637A63; background: #F4F0E8; padding: .8rem 1rem; margin: 1.4rem 0; border-radius: .7rem; }
     .blog-content hr { margin: 2rem 0; border-color: #E5DED5; }
 </style>
 {% endblock %}

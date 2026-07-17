@@ -1,122 +1,81 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block content %}
-
-<!-- Shipping Hero -->
-<section class="bg-white rounded-3xl p-8 md:p-14 shadow-sm overflow-hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+<section class="oc-page-hero p-6 sm:p-8 md:p-12 overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 items-center">
         <div>
-            <p class="text-[#7B9E87] font-semibold mb-4">ارسال و تحویل</p>
-
-            <h1 class="text-4xl md:text-5xl font-bold text-[#4A3728] leading-tight mb-6">
-                سفارش‌ها با دقت آماده می‌شوند
-            </h1>
-
-            <p class="text-gray-600 leading-8 mb-8">
+            <p class="text-[#637A63] font-bold mb-4">ارسال و تحویل</p>
+            <h1 class="oc-page-title mb-5">سفارش‌ها با دقت آماده می‌شوند</h1>
+            <p class="oc-hero-copy mb-8">
                 در Only Cards تلاش می‌کنیم سفارش‌ها با دقت، آرامش و بسته‌بندی مناسب آماده شوند تا کارت‌ها سالم و مرتب به دست شما برسند.
             </p>
-
-            <div class="flex flex-col sm:flex-row gap-4">
-                <a href="https://t.me/onlycards724"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="inline-flex items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-[#F7F4F0] transition">
-                    پیام در تلگرام
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{{ url_for('contact') }}" class="oc-primary-button">
+                    {{ icon('envelope', 'w-5 h-5') }}
+                    ارتباط با ما
                 </a>
-
-                <a href="/shop"
-                   class="inline-flex items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-[#F7F4F0] transition">
-                    مشاهده محصولات
-                </a>
+                <a href="/shop" class="oc-secondary-button">مشاهده محصولات</a>
             </div>
         </div>
 
-        <div class="bg-[#F7F4F0] rounded-3xl p-8 text-center">
-            <div class="text-6xl mb-6">📦</div>
-            <p class="text-2xl font-bold text-[#7B9E87] mb-3">کارت‌هاتو رو کن</p>
-            <p class="text-gray-600 leading-8">
+        <div class="oc-soft-surface p-7 sm:p-9 text-center">
+            <div class="oc-icon-tile mx-auto mb-6">{{ icon('box', 'w-9 h-9') }}</div>
+            <p class="text-2xl font-extrabold text-[#637A63] mb-3">کارت‌هاتو رو کن</p>
+            <p class="text-[#665A55] leading-8">
                 بعد از ثبت سفارش و پرداخت، کافی است در تلگرام به ما پیام بدهید تا سفارش شما بررسی و آماده‌سازی شود.
             </p>
         </div>
     </div>
 </section>
 
-<!-- Shipping Details -->
-<section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">نحوه ارسال</h2>
-        <p class="text-gray-600 leading-8">
-            در حال حاضر سفارش‌ها پس از ثبت سفارش و تأیید پرداخت بررسی و آماده‌سازی می‌شوند.
-            سفارش‌های تهران از طریق پیک و سفارش‌های شهرهای دیگر از طریق پست ارسال می‌شوند.
-        </p>
-    </div>
-
-    <div class="bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">زمان آماده‌سازی سفارش</h2>
-        <p class="text-gray-600 leading-8">
-            معمولاً سفارش‌ها طی ۱۰ روز کاری آماده ارسال می‌شوند.
-            زمان دقیق تحویل ممکن است بسته به شهر، روش ارسال و شرایط پستی متفاوت باشد.
-        </p>
-    </div>
-
-    <div class="bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">هزینه ارسال</h2>
-        <p class="text-gray-600 leading-8">
-            هزینه ارسال به صورت پس‌کرایه و به عهده مشتری است.
-        </p>
-    </div>
-
-    <div class="bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">تأیید پرداخت</h2>
-        <p class="text-gray-600 leading-8">
-            بعد از ثبت سفارش و انجام پرداخت، لطفاً از طریق تلگرام به ما پیام بدهید و پرداخت خود را اطلاع دهید
-            تا سفارش شما بررسی و آماده‌سازی شود.
-        </p>
-
-        <a href="https://t.me/onlycards724"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="inline-flex mt-5 items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-[#F7F4F0] transition">
+<section class="mt-14 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-7">
+    {% set details = [
+        ('نحوه ارسال', 'در حال حاضر سفارش‌ها پس از ثبت سفارش و تأیید پرداخت بررسی و آماده‌سازی می‌شوند. سفارش‌های تهران از طریق پیک و سفارش‌های شهرهای دیگر از طریق پست ارسال می‌شوند.'),
+        ('زمان آماده‌سازی سفارش', 'معمولاً سفارش‌ها طی ۱۰ روز کاری آماده ارسال می‌شوند. زمان دقیق تحویل ممکن است بسته به شهر، روش ارسال و شرایط پستی متفاوت باشد.'),
+        ('هزینه ارسال', 'هزینه ارسال به صورت پس‌کرایه و به عهده مشتری است.'),
+        ('تأیید پرداخت', 'بعد از ثبت سفارش و انجام پرداخت، لطفاً از طریق تلگرام به ما پیام بدهید و پرداخت خود را اطلاع دهید تا سفارش شما بررسی و آماده‌سازی شود.')
+    ] %}
+    {% for title, text in details %}
+    <div class="oc-surface p-7 sm:p-8">
+        <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-5">{{ title }}</h2>
+        <p class="text-[#665A55] leading-8">{{ text }}</p>
+        {% if loop.last %}
+        <a href="{{ url_for('contact') }}" class="oc-secondary-button mt-5 text-sm">
+            {{ icon('envelope', 'w-5 h-5') }}
             @onlycards724
         </a>
+        {% endif %}
     </div>
+    {% endfor %}
 </section>
 
-<!-- Gift and Support -->
-<section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="bg-[#F7F4F0] rounded-3xl p-8">
-        <div class="text-4xl mb-4">🎁</div>
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">بسته‌بندی هدیه</h2>
-        <p class="text-gray-600 leading-8">
+<section class="mt-14 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-7">
+    <div class="oc-soft-surface p-7 sm:p-8">
+        <div class="oc-icon-tile mb-5">{{ icon('gift', 'w-8 h-8') }}</div>
+        <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-5">بسته‌بندی هدیه</h2>
+        <p class="text-[#665A55] leading-8">
             اگر سفارش شما برای هدیه است و بسته‌بندی متفاوتی مدنظر دارید، می‌توانید قبل از آماده‌سازی سفارش
             از طریق تلگرام با ما هماهنگ کنید. هزینه بسته‌بندی هدیه جداگانه محاسبه می‌شود و پیش از آماده‌سازی سفارش
             به شما اطلاع داده خواهد شد.
         </p>
     </div>
 
-    <div class="bg-[#F7F4F0] rounded-3xl p-8">
-        <div class="text-4xl mb-4">🌿</div>
-        <h2 class="text-2xl font-bold text-[#4A3728] mb-5">پیگیری سفارش</h2>
-        <p class="text-gray-600 leading-8">
+    <div class="oc-soft-surface p-7 sm:p-8">
+        <div class="oc-icon-tile mb-5">{{ icon('envelope', 'w-8 h-8') }}</div>
+        <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-5">پیگیری سفارش</h2>
+        <p class="text-[#665A55] leading-8">
             اگر درباره وضعیت سفارش خود سوالی داشتید، می‌توانید از طریق تلگرام با ما در ارتباط باشید.
         </p>
-
-        <a href="https://t.me/onlycards724"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="inline-flex mt-5 items-center justify-center rounded-full border border-[#7B9E87] px-6 py-3 text-[#7B9E87] font-semibold hover:bg-white transition">
-            ارتباط با ما
-        </a>
+        <a href="{{ url_for('contact') }}" class="oc-primary-button mt-5">ارتباط با ما</a>
     </div>
 </section>
 
-<!-- Issue Notice -->
-<section class="mt-16 bg-white rounded-3xl p-8 md:p-10 shadow-sm">
-    <h2 class="text-2xl font-bold text-[#4A3728] mb-5">آسیب‌دیدگی یا مشکل در سفارش</h2>
-    <p class="text-gray-600 leading-8">
+<section class="mt-14 md:mt-16 oc-surface p-7 sm:p-9">
+    <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-5">آسیب‌دیدگی یا مشکل در سفارش</h2>
+    <p class="text-[#665A55] leading-8">
         اگر بسته شما آسیب‌دیده به دستتان رسید یا مشکلی در سفارش وجود داشت، لطفاً در اولین فرصت با ما تماس بگیرید
         و عکس بسته و محصول را ارسال کنید تا موضوع را بررسی کنیم.
     </p>
 </section>
-
 {% endblock %}

@@ -1,39 +1,39 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block content %}
 <div class="home-page relative">
     <span class="organic-blob blob-one" aria-hidden="true"></span>
     <span class="organic-blob blob-two" aria-hidden="true"></span>
 
-    <section class="home-hero relative overflow-hidden rounded-[2rem] shadow-sm">
+    <section class="home-hero relative overflow-hidden rounded-[2rem] shadow-sm border border-[#E7DED3]">
         <img src="{{ url_for('static', filename='images/onlycards-home-hero.webp') }}"
-             alt="دو کارت فارسی Only Cards برای ذهن‌آگاهی و یک قرار دونفره در کنار برگ و فنجان"
-             class="w-full h-[570px] md:h-[520px] object-cover object-left"
+             alt="دو کارت Only Cards برای ذهن‌آگاهی و یک قرار دونفره در کنار برگ و فنجان"
+             class="w-full h-[520px] md:h-[490px] object-cover object-left"
              width="1716" height="900" fetchpriority="high" decoding="async">
 
         <div class="absolute inset-0 hero-soft-overlay"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[48%] flex items-center px-7 sm:px-12 md:px-14">
-            <div class="max-w-md">
+        <div class="absolute inset-y-0 right-0 w-full md:w-[50%] flex items-center px-5 sm:px-10 md:px-12">
+            <div class="max-w-lg">
                 <p class="text-sm font-bold tracking-wide text-[#637A63] mb-4">Only Cards</p>
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#4A3A35] leading-[1.55] mb-5">
-                    کارت‌های فارسی برای گفت‌وگو، آرامش و شناخت بیشتر
+                <h1 class="text-[clamp(1.55rem,5.8vw,2.25rem)] font-extrabold text-[#4A3A35] leading-[1.65] mb-5">
+                    کارت‌هایی برای گفت‌وگو، آرامش و شناخت بیشتر
                 </h1>
-                <p class="text-[#5E504B] leading-8 mb-8">
-                    برای مکث‌های آرام‌تر، گفت‌وگوهای نزدیک‌تر و وقت‌گذرانی معنادار بدون موبایل.
+                <p class="text-[#5E504B] leading-8 mb-7 max-w-md">
+                    برای مکث‌های آرام، گفت‌وگوهای نزدیک‌تر و تمرین‌های کوچک و معنادار در زندگی روزمره.
                 </p>
 
                 <div class="hero-notes flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-[#4A3A35]">
                     <span><i></i>ساده برای استفاده</span>
                     <span><i></i>برای لحظه‌های واقعی</span>
-                    <span><i></i>ساخته‌شده به فارسی</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="relative mt-20 md:mt-28">
-        <div class="flex items-end justify-between gap-4 mb-9">
-            <div>
+    <section class="relative mt-16 md:mt-24">
+        <div class="flex items-end justify-between gap-4 mb-8">
+            <div class="oc-title-frame">
                 <p class="text-sm font-bold text-[#637A63] mb-2">برای حال و رابطه‌های واقعی</p>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">محصولات Only Cards</h2>
             </div>
@@ -43,44 +43,71 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-7 items-stretch">
             {% for product in products %}
             {% set preview_image = get_product_preview_image(product) %}
-            <a href="{{ get_product_url(product) }}" class="product-home-card group bg-white rounded-[1.6rem] p-5 border border-[#E9E2D8] shadow-sm flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div class="bg-[#F4F0E8] rounded-2xl h-64 flex items-center justify-center mb-5 overflow-hidden">
+            <a href="{{ get_product_url(product) }}"
+               class="group oc-surface oc-product-card p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
+                <div class="oc-product-media bg-[#F4F0E8] rounded-2xl flex items-center justify-center mb-5 overflow-hidden">
                     {% if preview_image %}
                     <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
                          alt="تصویر محصول {{ product.name }}"
                          class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
                          loading="lazy" decoding="async">
                     {% else %}
-                    <span class="minimal-card-placeholder" aria-hidden="true"></span>
+                    <span class="oc-product-fallback">{{ icon('card', 'w-14 h-14') }}</span>
                     {% endif %}
                 </div>
                 <div class="flex flex-col flex-1">
-                    <h3 class="text-xl font-extrabold text-[#4A3A35] mb-3 leading-8 min-h-[2rem]">{{ product.name }}</h3>
+                    <h3 class="oc-product-title text-xl font-extrabold text-[#4A3A35] mb-3 leading-8">{{ product.name }}</h3>
                     <p class="text-[#746863] text-sm leading-7 mb-5 line-clamp-3 min-h-[5.25rem]">
                         {{ product.short_description or product.description }}
                     </p>
-                    <div class="mt-auto pt-4 border-t border-[#EEE8DF] flex items-center justify-between gap-3">
+                    <div class="mt-auto pt-4 border-t border-[#EEE8DF]">
+                        {% if product.stock > 0 %}
                         <p class="text-[#637A63] font-extrabold text-lg">{{ "{:,}".format(product.price|int) }} تومان</p>
-                        <span class="text-[#4A3A35] text-sm font-bold">دیدن محصول ←</span>
+                        {% else %}
+                        <p class="text-gray-500 font-extrabold">ناموجود</p>
+                        {% endif %}
                     </div>
                 </div>
             </a>
             {% endfor %}
         </div>
         {% else %}
-        <div class="bg-white rounded-2xl p-10 text-center shadow-sm"><p class="text-gray-500">هنوز محصولی ثبت نشده است.</p></div>
+        <div class="oc-surface p-10 text-center"><p class="text-gray-500">هنوز محصولی ثبت نشده است.</p></div>
         {% endif %}
 
-        <div class="text-center mt-10">
-            <a href="{{ url_for('shop') }}" class="onlycards-outline-button">رفتن به فروشگاه</a>
+        <div class="text-center mt-9">
+            <a href="{{ url_for('shop') }}" class="oc-secondary-button">رفتن به فروشگاه</a>
+        </div>
+    </section>
+
+    <section class="relative mt-16 md:mt-24">
+        <div class="flex items-end justify-between gap-4 mb-8">
+            <div class="oc-title-frame">
+                <p class="text-sm font-bold text-[#637A63] mb-2">برای استفاده در روزهای واقعی</p>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">کارت‌هایی برای لحظه‌های واقعی زندگی</h2>
+            </div>
+        </div>
+
+        <div class="oc-copy-section oc-surface w-full p-6 sm:p-8 md:p-10" style="max-width: none;">
+            <div class="space-y-5">
+                <p>
+                    گاهی برای آرام‌ترشدن، شروع یک گفت‌وگوی تازه یا دیدن چیزی که در ذهنمان می‌گذرد، به یک قدم کوچک نیاز داریم. Only Cards مجموعه‌هایی می‌سازد که بتوانند در موقعیت‌های واقعی و بدون آماده‌سازی پیچیده وارد زندگی روزمره شوند.
+                </p>
+                <p>
+                    <a href="{{ url_for('product_by_slug', slug='calm-cards') }}">کارت‌های آرامش</a> شامل تمرین‌های کوتاهی برای مکث، توجه به حال و مراقبت روزانه از خود است. <a href="{{ url_for('product_by_slug', slug='couples-conversation-cards') }}">کارت‌های ما</a> برای دو نفر طراحی شده تا با سؤال‌ها و فعالیت‌های مشترک، فضایی برای شناخت بیشتر و گفت‌وگوی نزدیک‌تر بسازد. مجموعه <a href="{{ url_for('product_by_slug', slug='mindfulness-skills-cards') }}">مهارت‌های زندگی</a> نیز تمرین‌های ذهن‌آگاهی و مهارت‌های DBT را به قدم‌هایی ساده‌تر و قابل‌اجرا تبدیل می‌کند.
+                </p>
+                <p>
+                    می‌توانی یک کارت را در شروع روز، میان یک روز شلوغ، در یک قرار دونفره یا زمانی که می‌خواهی کمی روشن‌تر فکر کنی انتخاب کنی. هدف این کارت‌ها ارائه جواب آماده نیست؛ قرار است شروعی برای توجه، تمرین و گفت‌وگو باشند.
+                </p>
+            </div>
         </div>
     </section>
 
     {% if posts %}
-    <section class="relative mt-24 md:mt-32">
+    <section class="relative mt-20 md:mt-28">
         <span class="organic-blob blob-three" aria-hidden="true"></span>
-        <div class="flex items-end justify-between gap-4 mb-9">
-            <div>
+        <div class="flex items-end justify-between gap-4 mb-8">
+            <div class="oc-title-frame">
                 <p class="text-sm font-bold text-[#637A63] mb-2">چند دقیقه برای خودت</p>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">تازه از بلاگ</h2>
             </div>
@@ -92,8 +119,8 @@
             {% endfor %}
         </div>
 
-        <div class="text-center mt-10">
-            <a href="{{ url_for('blog') }}" class="onlycards-outline-button">دیدن همه مقاله‌ها</a>
+        <div class="text-center mt-9">
+            <a href="{{ url_for('blog') }}" class="oc-secondary-button">دیدن همه مقاله‌ها</a>
         </div>
     </section>
     {% endif %}

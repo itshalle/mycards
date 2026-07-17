@@ -1,24 +1,56 @@
 {% extends 'base.html' %}
+{% from '_icons.html' import icon %}
 
 {% block content %}
+<section class="max-w-3xl mx-auto oc-surface p-6 sm:p-9 md:p-11 text-center">
+    <div class="oc-icon-tile mx-auto mb-6">{{ icon('check-circle', 'w-9 h-9') }}</div>
+    <div class="oc-title-frame oc-title-frame-center mb-5"><h1 class="oc-page-title">سفارش شما ثبت شد</h1></div>
 
-<div class="text-center py-24">
-    <div class="text-7xl mb-6">🎉</div>
-    <h1 class="text-3xl font-bold mb-4">سفارش شما ثبت شد!</h1>
-    <p class="text-gray-500 text-lg mb-4 max-w-md mx-auto">
-        ممنون از خرید شما. لطفا، سفارش را به شماره کارت زیر واریز کنید:
-5041 7210 7672 3528
-سپس پیام «واریز شد» را همراه با نام و شماره سفارش به شماره زیر ارسال کنید:
-0935 958 2181
-پس از تأیید پرداخت، سفارش شما آماده‌سازی و ارسال می‌شود.
-
+    <p class="text-[#665A55] leading-8 max-w-xl mx-auto mb-8">
+        ممنون از خرید شما. برای تکمیل فرایند، مراحل زیر را انجام دهید.
     </p>
-    <div class="bg-white rounded-2xl p-6 max-w-sm mx-auto mb-8 text-sm text-gray-500">
-        💳 لطفاً منتظر تماس ما باشید تا اطلاعات پرداخت کارت به کارت برای شما ارسال شود.
-    </div>
-    <a href="/shop" class="btn-primary inline-block font-semibold text-lg">
-        بازگشت به فروشگاه
-    </a>
-</div>
 
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-right mb-8">
+        <div class="oc-soft-surface p-5">
+            <span class="text-xs font-bold text-[#637A63]">مرحله ۱</span>
+            <h2 class="font-extrabold mt-2 mb-3">پرداخت کارت‌به‌کارت</h2>
+            <p class="text-sm text-[#746863] leading-7">مبلغ سفارش را به شماره کارت زیر واریز کنید.</p>
+        </div>
+        <div class="oc-soft-surface p-5">
+            <span class="text-xs font-bold text-[#637A63]">مرحله ۲</span>
+            <h2 class="font-extrabold mt-2 mb-3">ارسال مشخصات</h2>
+            <p class="text-sm text-[#746863] leading-7">پیام «واریز شد» را همراه نام و شماره سفارش ارسال کنید.</p>
+        </div>
+        <div class="oc-soft-surface p-5">
+            <span class="text-xs font-bold text-[#637A63]">مرحله ۳</span>
+            <h2 class="font-extrabold mt-2 mb-3">آماده‌سازی سفارش</h2>
+            <p class="text-sm text-[#746863] leading-7">پس از تأیید پرداخت، سفارش آماده و ارسال می‌شود.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div class="oc-soft-surface p-5">
+            <div class="text-[#637A63] mb-3">{{ icon('payment', 'w-7 h-7 mx-auto') }}</div>
+            <p class="text-xs text-[#8A7E78] mb-2">شماره کارت</p>
+            <p class="font-extrabold tracking-wider" dir="ltr">5041 7210 7672 3528</p>
+        </div>
+        <div class="oc-soft-surface p-5">
+            <div class="text-[#637A63] mb-3">{{ icon('envelope', 'w-7 h-7 mx-auto') }}</div>
+            <p class="text-xs text-[#8A7E78] mb-2">شماره ارسال پیام</p>
+            <p class="font-extrabold tracking-wider" dir="ltr">0935 958 2181</p>
+        </div>
+    </div>
+
+    <div class="bg-[#F8F5EF] border border-[#E9E2D8] rounded-2xl p-5 text-sm text-[#665A55] leading-7 mb-8">
+        لطفاً منتظر تماس ما باشید تا اطلاعات پرداخت کارت به کارت برای شما ارسال شود.
+    </div>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <a href="/shop" class="oc-primary-button">رفتن به فروشگاه</a>
+        <a href="{{ url_for('contact') }}" class="oc-secondary-button">
+            {{ icon('envelope', 'w-5 h-5') }}
+            ارتباط با ما
+        </a>
+    </div>
+</section>
 {% endblock %}
