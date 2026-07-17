@@ -7,10 +7,16 @@
     <span class="organic-blob blob-two" aria-hidden="true"></span>
 
     <section class="home-hero relative overflow-hidden rounded-[2rem] shadow-sm border border-[#E7DED3]">
-        <img src="{{ url_for('static', filename='images/onlycards-home-hero.webp') }}"
+        {% set hero_asset = get_image_asset('images/onlycards-home-hero.webp', 'hero') %}
+        <img src="{{ hero_asset.src }}"
+             {% if hero_asset.srcset %}srcset="{{ hero_asset.srcset }}" sizes="(max-width: 767px) 100vw, 1152px"{% endif %}
              alt="دو کارت Only Cards برای ذهن‌آگاهی و یک قرار دونفره در کنار برگ و فنجان"
              class="w-full h-[520px] md:h-[490px] object-cover object-left"
-             width="1716" height="900" fetchpriority="high" decoding="async">
+             width="{{ hero_asset.width or 1717 }}"
+             height="{{ hero_asset.height or 916 }}"
+             loading="eager"
+             fetchpriority="high"
+             decoding="async">
 
         <div class="absolute inset-0 hero-soft-overlay"></div>
         <div class="absolute inset-y-0 right-0 w-full md:w-[50%] flex items-center px-5 sm:px-10 md:px-12">
@@ -47,10 +53,15 @@
                class="group oc-surface oc-product-card p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
                 <div class="oc-product-media bg-[#F4F0E8] rounded-2xl flex items-center justify-center mb-5 overflow-hidden">
                     {% if preview_image %}
-                    <img src="{{ url_for('static', filename=preview_image if '/' in preview_image else 'images/' ~ preview_image) }}"
+                    {% set product_asset = get_image_asset(preview_image, 'card') %}
+                    <img src="{{ product_asset.src }}"
+                         {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 768px) 33vw, calc(100vw - 3rem)"{% endif %}
                          alt="تصویر محصول {{ product.name }}"
                          class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
-                         loading="lazy" decoding="async">
+                         width="{{ product_asset.width or 480 }}"
+                         height="{{ product_asset.height or 600 }}"
+                         loading="lazy"
+                         decoding="async">
                     {% else %}
                     <span class="oc-product-fallback">{{ icon('card', 'w-14 h-14') }}</span>
                     {% endif %}

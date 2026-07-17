@@ -7,6 +7,7 @@ import os
 import re
 from uuid import uuid4
 from xml.sax.saxutils import escape
+from image_pipeline import delete_image_variants, get_image_asset, optimized_static_path
 
 app = Flask(__name__)
 app.secret_key = 'onlycards2024'
@@ -258,7 +259,7 @@ def product_image_url(product):
     if not preview_image:
         return ''
 
-    filename = preview_image if '/' in preview_image else f"images/{preview_image}"
+    filename = optimized_static_path(preview_image, preset='detail')
     return absolute_static_url(filename)
 
 
@@ -282,6 +283,8 @@ def delete_product_file(image_path):
             os.remove(full_path)
     except OSError:
         pass
+
+    delete_image_variants(image_path)
 
 
 @app.context_processor
@@ -312,6 +315,7 @@ def image_helpers():
         get_product_preview_image=get_product_preview_image,
         get_product_url=get_product_url,
         product_image_url=product_image_url,
+        get_image_asset=get_image_asset,
         organization_schema=organization_schema,
         website_schema=website_schema,
         get_blog_category_url=get_blog_category_url
@@ -530,7 +534,11 @@ def blog_post(slug):
         abort(404)
 
     canonical_url = absolute_url(url_for('blog_post', slug=post['slug']))
-    image_url = absolute_static_url(post['image']) if post['image'] else None
+    image_url = (
+        absolute_static_url(optimized_static_path(post['image'], preset='article'))
+        if post['image']
+        else None
+    )
     category_path = get_blog_category_url(post['category'])
     category_page_url = absolute_url(category_path)
 

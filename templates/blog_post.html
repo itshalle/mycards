@@ -40,9 +40,15 @@
     </header>
 
     {% if post.image %}
-    <img src="{{ url_for('static', filename=post.image) }}"
+    {% set article_asset = get_image_asset(post.image, 'article') %}
+    <img src="{{ article_asset.src }}"
+         {% if article_asset.srcset %}srcset="{{ article_asset.srcset }}" sizes="(min-width: 768px) 768px, calc(100vw - 3rem)"{% endif %}
          alt="{{ post.image_alt }}"
          class="w-full rounded-[1.6rem] mb-10 shadow-sm border border-[#E9E2D8]"
+         width="{{ article_asset.width or 960 }}"
+         height="{{ article_asset.height or 1200 }}"
+         loading="eager"
+         fetchpriority="high"
          decoding="async">
     {% endif %}
 

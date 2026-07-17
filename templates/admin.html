@@ -116,9 +116,15 @@
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
     {% for image in product_images %}
     <div class="border border-gray-200 rounded-xl p-2 bg-[#F7F4F0]">
-        <img src="{{ url_for('static', filename=image if '/' in image else 'images/' ~ image) }}"
+        {% set admin_asset = get_image_asset(image, 'admin') %}
+        <img src="{{ admin_asset.src }}"
+             {% if admin_asset.srcset %}srcset="{{ admin_asset.srcset }}" sizes="96px"{% endif %}
              alt="{{ product.name }}"
-             class="w-full h-24 object-contain rounded-lg bg-white">
+             class="w-full h-24 object-contain rounded-lg bg-white"
+             width="{{ admin_asset.width or 480 }}"
+             height="{{ admin_asset.height or 600 }}"
+             loading="lazy"
+             decoding="async">
 
         <label class="flex items-center gap-2 mt-2 text-xs text-[#7B9E87] cursor-pointer">
             <input type="radio"

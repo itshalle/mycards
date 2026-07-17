@@ -4,10 +4,14 @@
        aria-label="مشاهده مقاله {{ post.title }}"></a>
 
     {% if post.image %}
+    {% set blog_asset = get_image_asset(post.image, 'card') %}
     <div class="bg-[#F4F0E8] h-52 overflow-hidden border-b border-[#EEE8DF]">
-        <img src="{{ url_for('static', filename=post.image) }}"
+        <img src="{{ blog_asset.src }}"
+             {% if blog_asset.srcset %}srcset="{{ blog_asset.srcset }}" sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, calc(100vw - 3rem)"{% endif %}
              alt="{{ post.image_alt }}"
              class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
+             width="{{ blog_asset.width or 480 }}"
+             height="{{ blog_asset.height or 600 }}"
              loading="lazy"
              decoding="async">
     </div>

@@ -54,23 +54,40 @@
         {% set product_images = split_product_images(product.image) %}
         {% if product_images %}
             {% set main_image = product_images[0] %}
-            {% set main_image_url = url_for('static', filename=main_image if '/' in main_image else 'images/' ~ main_image) %}
+            {% set main_asset = get_image_asset(main_image, 'detail') %}
             <div class="oc-surface min-h-[380px] md:min-h-[420px] flex items-center justify-center overflow-hidden p-4 mb-4">
-                <img id="mainProductImage" src="{{ main_image_url }}"
+                <img id="mainProductImage"
+                     src="{{ main_asset.src }}"
+                     {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 768px) 50vw, calc(100vw - 3rem)"{% endif %}
                      alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
                      class="w-full h-full max-h-[540px] object-contain rounded-2xl"
+                     width="{{ main_asset.width or 960 }}"
+                     height="{{ main_asset.height or 1200 }}"
+                     loading="eager"
+                     fetchpriority="high"
                      decoding="async">
             </div>
 
             {% if product_images|length > 1 %}
             <div class="grid grid-cols-4 gap-3">
                 {% for image in product_images %}
-                    {% set image_url = url_for('static', filename=image if '/' in image else 'images/' ~ image) %}
-                    <button type="button" data-image-url="{{ image_url }}"
+                    {% set thumb_asset = get_image_asset(image, 'thumb') %}
+                    {% set detail_asset = get_image_asset(image, 'detail') %}
+                    <button type="button"
+                            data-image-url="{{ detail_asset.src }}"
+                            data-image-srcset="{{ detail_asset.srcset }}"
+                            data-image-width="{{ detail_asset.width or 960 }}"
+                            data-image-height="{{ detail_asset.height or 1200 }}"
                             class="product-thumbnail bg-white rounded-xl border border-[#E0D8CE] p-2 h-20 sm:h-24 hover:border-[#637A63] transition"
                             aria-label="نمایش تصویر {{ loop.index }} از {{ product.name }}">
-                        <img src="{{ image_url }}" alt="نمای دیگر {{ product.name }}، تصویر {{ loop.index }}"
-                             class="w-full h-full object-contain rounded-lg" loading="lazy" decoding="async">
+                        <img src="{{ thumb_asset.src }}"
+                             {% if thumb_asset.srcset %}srcset="{{ thumb_asset.srcset }}" sizes="96px"{% endif %}
+                             alt="نمای دیگر {{ product.name }}، تصویر {{ loop.index }}"
+                             class="w-full h-full object-contain rounded-lg"
+                             width="{{ thumb_asset.width or 480 }}"
+                             height="{{ thumb_asset.height or 600 }}"
+                             loading="lazy"
+                             decoding="async">
                     </button>
                 {% endfor %}
             </div>
@@ -186,7 +203,19 @@
     thumbnails.forEach(function(button) {
         button.addEventListener('click', function() {
             const newImageUrl = button.getAttribute('data-image-url');
-            if (mainImage && newImageUrl) mainImage.src = newImageUrl;
+            const newImageSrcset = button.getAttribute('data-image-srcset');
+            const newImageWidth = button.getAttribute('data-image-width');
+            const newImageHeight = button.getAttribute('data-image-height');
+            if (mainImage && newImageUrl) {
+                mainImage.src = newImageUrl;
+                if (newImageSrcset) {
+                    mainImage.srcset = newImageSrcset;
+                } else {
+                    mainImage.removeAttribute('srcset');
+                }
+                if (newImageWidth) mainImage.width = Number(newImageWidth);
+                if (newImageHeight) mainImage.height = Number(newImageHeight);
+            }
             thumbnails.forEach(function(item) {
                 item.classList.remove('border-[#637A63]');
                 item.classList.add('border-[#E0D8CE]');
