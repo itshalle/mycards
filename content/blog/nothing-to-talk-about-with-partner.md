@@ -4,7 +4,7 @@ slug: "nothing-to-talk-about-with-partner"
 description: "کم‌شدن حرف‌های تازه همیشه نشانه دورشدن نیست. چند راه طبیعی برای بیرون‌آمدن از گفت‌وگوهای تکراری و نزدیک‌شدن دوباره."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "گفت‌وگو و رابطه"
+category: "رابطه و گفت‌وگو"
 draft: false
 ---
 

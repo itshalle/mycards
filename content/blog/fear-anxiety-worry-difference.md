@@ -4,7 +4,7 @@ slug: "fear-anxiety-worry-difference"
 description: "ترس، اضطراب و نگرانی شبیه‌اند اما دقیقاً یکی نیستند. تفاوتشان را با مثال‌های روزمره و بدون تشخیص‌گذاری عجولانه مرور کنیم."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "احساسات و آرامش"
+category: "احساسات و خودشناسی"
 draft: false
 ---
 

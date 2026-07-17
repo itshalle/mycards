@@ -4,7 +4,7 @@ slug: "date-ideas-at-home"
 description: "ایده‌های ساده و متفاوت برای دیت در خانه؛ از قرار خوشمزه و شب خاطره‌ها تا بازی و فعالیت دونفره بدون موبایل."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "وقت دونفره"
+category: "زمان دو نفره و هدیه"
 draft: false
 ---
 

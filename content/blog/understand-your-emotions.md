@@ -4,7 +4,7 @@ slug: "understand-your-emotions"
 description: "شناخت احساسات از کجا شروع می‌شود؟ راهی ساده برای دیدن نشانه‌های بدن، نام‌گذاشتن روی احساس و فهمیدن نیاز پشت آن."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "احساسات و آرامش"
+category: "احساسات و خودشناسی"
 draft: false
 ---
 

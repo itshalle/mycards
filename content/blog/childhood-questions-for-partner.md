@@ -4,7 +4,7 @@ slug: "childhood-questions-for-partner"
 description: "سؤال‌هایی گرم و بدون فشار درباره کودکی پارتنر؛ برای شنیدن خاطره‌ها، شناخت دنیای گذشته و ساختن گفت‌وگویی نزدیک‌تر."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "گفت‌وگو و رابطه"
+category: "رابطه و گفت‌وگو"
 draft: false
 ---
 

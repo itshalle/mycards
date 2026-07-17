@@ -4,18 +4,27 @@
 <script type="application/ld+json">
     {{ article_schema | tojson | safe }}
 </script>
+<script type="application/ld+json">
+    {{ breadcrumb_schema | tojson | safe }}
+</script>
 {% endblock %}
 
 {% block content %}
 <article class="max-w-3xl mx-auto">
     <nav class="text-sm text-gray-500 mb-7" aria-label="مسیر صفحه">
+        <a href="{{ url_for('index') }}" class="hover:text-[#637A63]">خانه</a>
+        <span class="mx-2">/</span>
         <a href="{{ url_for('blog') }}" class="hover:text-[#637A63]">بلاگ</a>
         <span class="mx-2">/</span>
-        <span>{{ post.category }}</span>
+        <a href="{{ category_path }}" class="hover:text-[#637A63]">{{ post.category }}</a>
     </nav>
 
     <header class="mb-9">
-        <p class="text-[#637A63] font-semibold mb-3">{{ post.category }}</p>
+        <a href="{{ category_path }}"
+           class="inline-flex items-center rounded-full bg-[#F4F0E8] px-3 py-1.5 text-sm font-bold text-[#637A63] hover:bg-[#E4EADF] hover:text-[#4A3A35] transition mb-4">
+            {{ post.category }}
+        </a>
+
         <h1 class="text-3xl md:text-4xl font-bold text-[#4A3A35] leading-[1.6] mb-5">{{ post.title }}</h1>
         <p class="text-lg text-gray-600 leading-9">{{ post.description }}</p>
         <p class="text-sm text-gray-400 mt-4">
@@ -37,7 +46,10 @@
         {{ post.body_html | safe }}
     </div>
 
-    <div class="mt-10 pt-7 border-t border-[#E5DED5] flex items-center justify-between gap-4">
+    <div class="mt-10 pt-7 border-t border-[#E5DED5] flex flex-wrap items-center justify-between gap-4">
+        <a href="{{ category_path }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">
+            مقاله‌های {{ post.category }}
+        </a>
         <a href="{{ url_for('blog') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">
             بازگشت به بلاگ
         </a>

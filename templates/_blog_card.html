@@ -1,0 +1,32 @@
+<article class="group relative bg-white rounded-[1.6rem] border border-[#E9E2D8] shadow-sm overflow-hidden flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md">
+    <a href="{{ url_for('blog_post', slug=post.slug) }}"
+       class="absolute inset-0 z-10 rounded-[1.6rem]"
+       aria-label="مشاهده مقاله {{ post.title }}"></a>
+
+    {% if post.image %}
+    <div class="bg-[#F4F0E8] h-52 overflow-hidden">
+        <img src="{{ url_for('static', filename=post.image) }}"
+             alt="{{ post.image_alt }}"
+             class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
+             loading="lazy"
+             decoding="async">
+    </div>
+    {% endif %}
+
+    <div class="relative z-20 pointer-events-none p-6 flex flex-col flex-1">
+        <div class="mb-4">
+            <a href="{{ get_blog_category_url(post.category) }}"
+               class="relative z-30 pointer-events-auto inline-flex items-center rounded-full bg-[#F4F0E8] px-3 py-1.5 text-xs font-bold text-[#637A63] hover:bg-[#E4EADF] hover:text-[#4A3A35] transition">
+                {{ post.category }}
+            </a>
+        </div>
+
+        <h3 class="text-xl font-extrabold text-[#4A3A35] leading-8 mb-4">
+            {{ post.title }}
+        </h3>
+
+        <p class="text-[#746863] text-sm leading-7 line-clamp-3">
+            {{ post.description }}
+        </p>
+    </div>
+</article>

@@ -4,7 +4,7 @@ slug: "listen-without-judgment-to-partner"
 description: "گوش‌دادن بدون قضاوت یعنی پیش از دفاع، نصیحت یا حل مسئله، بفهمیم پارتنرمان چه چیزی را تجربه کرده و از ما چه می‌خواهد."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "گفت‌وگو و رابطه"
+category: "رابطه و گفت‌وگو"
 draft: false
 ---
 

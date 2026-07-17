@@ -4,7 +4,7 @@ slug: "deep-conversation-with-partner"
 description: "گفت‌وگوی عمیق با پارتنر از سؤال‌های عجیب شروع نمی‌شود؛ از کنجکاوی، گوش‌دادن و ساختن فضایی امن برای جواب‌های واقعی شروع می‌شود."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "گفت‌وگو و رابطه"
+category: "رابطه و گفت‌وگو"
 draft: false
 ---
 

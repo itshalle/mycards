@@ -22,6 +22,38 @@ ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 SITE_URL = os.environ.get('SITE_URL', 'https://onlycards.ir').rstrip('/')
 BLOG_CONTENT_DIR = os.path.join(app.root_path, 'content', 'blog')
 
+BLOG_CATEGORIES = {
+    'emotions-self-awareness': {
+        'name': 'احساسات و خودشناسی',
+        'intro': 'مقاله‌هایی برای شناخت دقیق‌تر احساسات، پیدا کردن واژه‌های مناسب برای حال درونی و فرق‌گذاشتن میان تجربه‌هایی مثل ترس، اضطراب و نگرانی.',
+        'meta_title': 'احساسات و خودشناسی | راهنمای شناخت احساسات | Only Cards',
+        'meta_description': 'مقاله‌های کاربردی درباره شناخت احساسات، چرخ احساسات، خودشناسی و تفاوت ترس، اضطراب و نگرانی در زندگی روزمره.'
+    },
+    'calm-mindfulness': {
+        'name': 'آرامش و ذهن‌آگاهی',
+        'intro': 'تمرین‌ها و توضیح‌های روشن درباره آرام‌کردن ذهن، ذهن‌آگاهی و مهارت‌های DBT؛ برای استفاده در روزهای شلوغ و موقعیت‌های واقعی.',
+        'meta_title': 'آرامش و ذهن‌آگاهی | تمرین‌ها و مهارت‌های DBT | Only Cards',
+        'meta_description': 'تمرین‌های کوتاه آرامش، ذهن‌آگاهی و مهارت‌های DBT برای مکث، توجه به لحظه و استفاده در موقعیت‌های واقعی روزمره.'
+    },
+    'relationships-conversation': {
+        'name': 'رابطه و گفت‌وگو',
+        'intro': 'مقاله‌هایی درباره سؤال‌پرسیدن، شنیدن بدون قضاوت و ساختن گفت‌وگویی نزدیک‌تر در رابطه؛ بدون تبدیل گفت‌وگو به بازجویی یا تمرینی مصنوعی.',
+        'meta_title': 'رابطه و گفت‌وگو | سؤال‌ها و مهارت‌های ارتباطی | Only Cards',
+        'meta_description': 'راهنمای گفت‌وگوی عمیق، سؤال برای شناخت پارتنر، گوش‌دادن بدون قضاوت و ساختن ارتباطی نزدیک‌تر و امن‌تر.'
+    },
+    'quality-time-gifts': {
+        'name': 'زمان دو نفره و هدیه',
+        'intro': 'ایده‌هایی برای ساختن زمان مشترک، فعالیت‌های دونفره بدون موبایل و انتخاب هدیه‌های شخصی‌تر؛ از قرار در خانه تا هدیه‌ای که واقعاً به علایق طرف مقابل توجه دارد.',
+        'meta_title': 'زمان دو نفره و هدیه | ایده برای زوج‌ها | Only Cards',
+        'meta_description': 'ایده‌های زمان دونفره، دیت در خانه، سرگرمی بدون موبایل و انتخاب هدیه‌ای شخصی‌تر و معنادار برای آدم‌های مهم زندگی.'
+    },
+}
+
+BLOG_CATEGORY_BY_NAME = {
+    category['name']: slug
+    for slug, category in BLOG_CATEGORIES.items()
+}
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -47,6 +79,7 @@ def load_blog_post(file_path):
     metadata['published_at'] = str(metadata['published_at'])
     metadata['updated_at'] = str(metadata.get('updated_at') or metadata['published_at'])
     metadata['category'] = metadata.get('category', 'بلاگ Only Cards')
+    metadata['category_slug'] = BLOG_CATEGORY_BY_NAME.get(metadata['category'])
     metadata['image'] = str(metadata.get('image') or '').strip().lstrip('/')
     metadata['image_alt'] = metadata.get('image_alt') or metadata['title']
     metadata['draft'] = bool(metadata.get('draft', False))
@@ -74,7 +107,9 @@ def get_blog_posts(include_drafts=False):
 
         posts.append(post)
 
-    return sorted(posts, key=lambda post: post['published_at'], reverse=True)
+    posts.sort(key=lambda post: post['slug'])
+    posts.sort(key=lambda post: post['published_at'], reverse=True)
+    return posts
 
 
 def get_blog_post(slug):
@@ -82,6 +117,26 @@ def get_blog_post(slug):
         if post['slug'] == slug:
             return post
     return None
+
+
+def get_blog_category_url(category_name):
+    category_slug = BLOG_CATEGORY_BY_NAME.get(category_name)
+    if not category_slug:
+        return url_for('blog')
+    return url_for('blog_category', category_slug=category_slug)
+
+
+def get_blog_category_cards(posts):
+    cards = []
+    for category_slug, category in BLOG_CATEGORIES.items():
+        card = dict(category)
+        card['slug'] = category_slug
+        card['count'] = sum(
+            1 for post in posts
+            if post.get('category_slug') == category_slug
+        )
+        cards.append(card)
+    return cards
 
 
 @app.after_request
@@ -242,7 +297,8 @@ def image_helpers():
         get_product_url=get_product_url,
         product_image_url=product_image_url,
         organization_schema=organization_schema,
-        website_schema=website_schema
+        website_schema=website_schema,
+        get_blog_category_url=get_blog_category_url
     )
 
 
@@ -324,13 +380,120 @@ def shop():
 
 @app.route('/blog')
 def blog():
-    posts = get_blog_posts()
+    all_posts = get_blog_posts()
+    latest_posts = all_posts[:4]
+    latest_slugs = {post['slug'] for post in latest_posts}
+    remaining_posts = [
+        post for post in all_posts
+        if post['slug'] not in latest_slugs
+    ]
+
     return render_template(
         'blog.html',
-        posts=posts,
-        meta_title='بلاگ Only Cards | آرامش، رابطه و مهارت‌های زندگی',
-        meta_description='مقاله‌های Only Cards درباره استفاده روزمره از کارت‌ها، ذهن‌آگاهی، مهارت‌های DBT، آرامش، گفت‌وگو و رابطه.',
+        latest_posts=latest_posts,
+        posts=remaining_posts,
+        categories=get_blog_category_cards(all_posts),
+        meta_title='راهنمای آرامش، خودشناسی و گفت‌وگوی عمیق | Only Cards',
+        meta_description='مقاله‌های کاربردی Only Cards درباره شناخت احساسات، ذهن‌آگاهی، رابطه و زمان دو نفره؛ با توضیح‌های روشن و تمرین‌های قابل استفاده.',
         canonical_url=absolute_url(url_for('blog'))
+    )
+
+
+
+@app.route('/blog/category/<category_slug>')
+def blog_category(category_slug):
+    category_data = BLOG_CATEGORIES.get(category_slug)
+    if not category_data:
+        abort(404)
+
+    all_posts = get_blog_posts()
+    posts = [
+        post for post in all_posts
+        if post.get('category_slug') == category_slug
+    ]
+    category = dict(category_data)
+    category['slug'] = category_slug
+
+    category_url = absolute_url(
+        url_for('blog_category', category_slug=category_slug)
+    )
+    blog_url = absolute_url(url_for('blog'))
+    item_list_id = f"{category_url}#articles"
+
+    category_schema = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'CollectionPage',
+                '@id': category_url,
+                'url': category_url,
+                'name': category['name'],
+                'description': category['meta_description'],
+                'inLanguage': 'fa-IR',
+                'isPartOf': {
+                    '@type': 'Blog',
+                    '@id': blog_url,
+                    'name': 'بلاگ Only Cards'
+                },
+                'mainEntity': {'@id': item_list_id}
+            },
+            {
+                '@type': 'ItemList',
+                '@id': item_list_id,
+                'numberOfItems': len(posts),
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': position,
+                        'name': post['title'],
+                        'url': absolute_url(
+                            url_for('blog_post', slug=post['slug'])
+                        )
+                    }
+                    for position, post in enumerate(posts, start=1)
+                ]
+            },
+            {
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': 1,
+                        'name': 'خانه',
+                        'item': absolute_url(url_for('index'))
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 2,
+                        'name': 'بلاگ',
+                        'item': blog_url
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 3,
+                        'name': category['name'],
+                        'item': category_url
+                    }
+                ]
+            }
+        ]
+    }
+
+    category_cards = get_blog_category_cards(all_posts)
+    other_categories = [
+        item for item in category_cards
+        if item['slug'] != category_slug
+    ]
+
+    return render_template(
+        'blog_category.html',
+        category=category,
+        posts=posts,
+        other_categories=other_categories,
+        category_schema=category_schema,
+        meta_title=category['meta_title'],
+        meta_description=category['meta_description'],
+        canonical_url=category_url
     )
 
 
@@ -342,6 +505,8 @@ def blog_post(slug):
 
     canonical_url = absolute_url(url_for('blog_post', slug=post['slug']))
     image_url = absolute_static_url(post['image']) if post['image'] else None
+    category_path = get_blog_category_url(post['category'])
+    category_page_url = absolute_url(category_path)
 
     article_schema = {
         '@context': 'https://schema.org',
@@ -351,6 +516,12 @@ def blog_post(slug):
         'datePublished': post['published_at'],
         'dateModified': post['updated_at'],
         'mainEntityOfPage': canonical_url,
+        'articleSection': post['category'],
+        'isPartOf': {
+            '@type': 'CollectionPage',
+            '@id': category_page_url,
+            'name': post['category']
+        },
         'publisher': {
             '@type': 'Organization',
             'name': 'Only Cards',
@@ -364,10 +535,43 @@ def blog_post(slug):
     if image_url:
         article_schema['image'] = [image_url]
 
+    breadcrumb_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'خانه',
+                'item': absolute_url(url_for('index'))
+            },
+            {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'بلاگ',
+                'item': absolute_url(url_for('blog'))
+            },
+            {
+                '@type': 'ListItem',
+                'position': 3,
+                'name': post['category'],
+                'item': category_page_url
+            },
+            {
+                '@type': 'ListItem',
+                'position': 4,
+                'name': post['title'],
+                'item': canonical_url
+            }
+        ]
+    }
+
     return render_template(
         'blog_post.html',
         post=post,
         article_schema=article_schema,
+        breadcrumb_schema=breadcrumb_schema,
+        category_path=category_path,
         meta_title=f"{post['title']} | Only Cards",
         meta_description=clean_meta_description(post['description']),
         canonical_url=canonical_url,
@@ -445,7 +649,7 @@ def get_product_page_content(product):
             'suitable_for': [
                 'زوج‌هایی که می‌خواهند گفت‌وگوی نزدیک‌تری داشته باشند',
                 'یک شب دونفره آرام در خانه یا بیرون',
-                'هدیه‌ای معنادار برای پارتنر یا سالگرد رابطه',
+                'هدیه برای یک زوج که دوست دارند زمان مشترک متفاوتی بسازند',
             ],
             'faqs': [
                 {
@@ -687,6 +891,26 @@ def sitemap():
         },
     ]
 
+    blog_posts = get_blog_posts()
+
+    for category_slug, _category in BLOG_CATEGORIES.items():
+        category_posts = [
+            post for post in blog_posts
+            if post.get('category_slug') == category_slug
+        ]
+        category_page = {
+            'loc': absolute_url(
+                url_for('blog_category', category_slug=category_slug)
+            ),
+            'priority': '0.7',
+            'changefreq': 'weekly'
+        }
+        if category_posts:
+            category_page['lastmod'] = max(
+                post['updated_at'] for post in category_posts
+            )
+        pages.append(category_page)
+
     for product in Product.query.all():
         pages.append({
             'loc': absolute_url(get_product_url(product)),
@@ -694,7 +918,7 @@ def sitemap():
             'changefreq': 'weekly'
         })
 
-    for post in get_blog_posts():
+    for post in blog_posts:
         pages.append({
             'loc': absolute_url(url_for('blog_post', slug=post['slug'])),
             'priority': '0.7',

@@ -4,7 +4,7 @@ slug: "two-person-activities-without-phone"
 description: "ایده‌های ساده و غیررقابتی برای وقت‌گذرانی دونفره در خانه بدون موبایل؛ از گفت‌وگو و بازی تا آشپزی و ساختن چیزی مشترک."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "وقت دونفره"
+category: "زمان دو نفره و هدیه"
 draft: false
 ---
 

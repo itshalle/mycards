@@ -4,7 +4,7 @@ slug: "dbt-mindfulness"
 description: "ذهن‌آگاهی در DBT یعنی دیدن فکرها، احساسات و اتفاق‌های همین لحظه بدون قضاوت و واکنش عجولانه؛ نه خالی‌کردن ذهن."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "مهارت‌های زندگی"
+category: "آرامش و ذهن‌آگاهی"
 draft: false
 ---
 

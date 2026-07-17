@@ -4,7 +4,7 @@ slug: "questions-to-know-your-partner"
 description: "سؤال‌هایی برای شناخت بهتر پارتنر؛ از روزهای معمولی و کودکی تا احساسات، ارزش‌ها و آینده، بدون اینکه گفت‌وگو شبیه بازجویی شود."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "گفت‌وگو و رابطه"
+category: "رابطه و گفت‌وگو"
 draft: false
 ---
 

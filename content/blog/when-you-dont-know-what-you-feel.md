@@ -4,7 +4,7 @@ slug: "when-you-dont-know-what-you-feel"
 description: "وقتی فقط می‌دانیم حالمان خوب نیست، چطور به احساسمان نزدیک شویم؟ چند قدم ساده و بدون فشار برای پیدا کردن سرنخ‌ها."
 published_at: "2026-07-16"
 updated_at: "2026-07-16"
-category: "احساسات و آرامش"
+category: "احساسات و خودشناسی"
 draft: false
 ---
 
