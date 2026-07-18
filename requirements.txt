@@ -4,3 +4,4 @@ gunicorn
 Markdown
 PyYAML
 Pillow
+psycopg[binary]>=3.2,<4

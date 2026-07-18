@@ -1,22 +1,52 @@
 from flask import Flask, render_template, request, redirect, url_for, session, Response, abort
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from werkzeug.utils import secure_filename
 import markdown
 import yaml
 import os
 import re
+import hmac
+from datetime import datetime, timezone
 from uuid import uuid4
 from xml.sax.saxutils import escape
 from image_pipeline import delete_image_variants, get_image_asset, optimized_static_path
 
 app = Flask(__name__)
-app.secret_key = 'onlycards2024'
+app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
 
-ADMIN_USERNAME = 'itshalle'
-ADMIN_PASSWORD = '121299'
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', uuid4().hex)
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', uuid4().hex)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onlycards.db'
+
+def normalize_database_url(database_url):
+    database_url = (database_url or '').strip()
+
+    if database_url.startswith('postgres://'):
+        database_url = 'postgresql://' + database_url[len('postgres://'):]
+
+    if database_url.startswith('postgresql://'):
+        database_url = (
+            'postgresql+psycopg://'
+            + database_url[len('postgresql://'):]
+        )
+
+    return database_url
+
+
+DATABASE_URL = normalize_database_url(
+    os.environ.get('DATABASE_URL', 'sqlite:///onlycards_local.db')
+)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+}
 db = SQLAlchemy(app)
+
+# ONLYCARDS_PERSISTENT_DATABASE_V1
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'products')
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
@@ -322,24 +352,82 @@ def image_helpers():
     )
 
 
+def utc_now():
+    return datetime.now(timezone.utc)
+
+
 class Product(db.Model):
+    __tablename__ = 'products'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     short_description = db.Column(db.String(300), nullable=False, default='')
     description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     image = db.Column(db.Text, nullable=False, default='')
 
+    order_items = db.relationship('OrderItem', back_populates='product')
+
 
 class Order(db.Model):
+    __tablename__ = 'orders'
+
     id = db.Column(db.Integer, primary_key=True)
     customer_name = db.Column(db.String(200), nullable=False)
-    customer_phone = db.Column(db.String(20), nullable=False)
+    customer_phone = db.Column(db.String(30), nullable=False)
     customer_address = db.Column(db.Text, nullable=False)
-    items = db.Column(db.Text, nullable=False)
-    total = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), default='pending')
+    total = db.Column(db.Integer, nullable=False, default=0)
+    status = db.Column(db.String(30), nullable=False, default='pending')
+    payment_status = db.Column(db.String(30), nullable=False, default='pending')
+    shipping_status = db.Column(
+        db.String(30),
+        nullable=False,
+        default='not_shipped'
+    )
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=utc_now
+    )
+    updated_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+        onupdate=utc_now
+    )
+    admin_note = db.Column(db.Text, nullable=False, default='')
+
+    order_items = db.relationship(
+        'OrderItem',
+        back_populates='order',
+        cascade='all, delete-orphan',
+        order_by='OrderItem.id'
+    )
+
+
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(
+        db.Integer,
+        db.ForeignKey('orders.id', ondelete='CASCADE'),
+        nullable=False,
+        index=True
+    )
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey('products.id', ondelete='SET NULL'),
+        nullable=True
+    )
+    product_name = db.Column(db.String(200), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Integer, nullable=False)
+    line_total = db.Column(db.Integer, nullable=False)
+
+    order = db.relationship('Order', back_populates='order_items')
+    product = db.relationship('Product', back_populates='order_items')
 
 
 @app.route('/')
@@ -845,29 +933,75 @@ def checkout():
     if request.method == 'POST':
         cart_items = session.get('cart', [])
 
-        items_text = ', '.join([
-            f"Product {item['id']} x{item['quantity']}"
-            for item in cart_items
-        ])
+        if not cart_items:
+            return redirect(url_for('cart'))
 
-        total = 0
-        for item in cart_items:
-            product = Product.query.get(item['id'])
-            if product:
-                total += product.price * item['quantity']
+        customer_name = request.form.get('name', '').strip()
+        customer_phone = request.form.get('phone', '').strip()
+        customer_address = request.form.get('address', '').strip()
+
+        if not customer_name or not customer_phone or not customer_address:
+            return 'اطلاعات سفارش کامل نیست.', 400
 
         order = Order(
-            customer_name=request.form['name'],
-            customer_phone=request.form['phone'],
-            customer_address=request.form['address'],
-            items=items_text,
-            total=total
+            customer_name=customer_name,
+            customer_phone=customer_phone,
+            customer_address=customer_address,
+            total=0,
+            status='pending',
+            payment_status='pending',
+            shipping_status='not_shipped'
         )
 
-        db.session.add(order)
-        db.session.commit()
+        try:
+            db.session.add(order)
+            db.session.flush()
+
+            total = 0
+            valid_item_count = 0
+
+            for item in cart_items:
+                try:
+                    product_id = int(item.get('id'))
+                    quantity = int(item.get('quantity', 1))
+                except (TypeError, ValueError):
+                    continue
+
+                if quantity < 1:
+                    continue
+
+                product = db.session.get(Product, product_id)
+                if not product:
+                    continue
+
+                unit_price = int(product.price)
+                line_total = unit_price * quantity
+
+                order.order_items.append(
+                    OrderItem(
+                        product_id=product.id,
+                        product_name=product.name,
+                        quantity=quantity,
+                        unit_price=unit_price,
+                        line_total=line_total
+                    )
+                )
+
+                total += line_total
+                valid_item_count += 1
+
+            if valid_item_count == 0:
+                db.session.rollback()
+                return redirect(url_for('cart'))
+
+            order.total = total
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
 
         session['cart'] = []
+        session['last_order_id'] = order.id
         return redirect(url_for('confirmation'))
 
     return render_template(
@@ -883,11 +1017,28 @@ def checkout():
 def confirmation():
     return render_template(
         'confirmation.html',
+        order_id=session.get('last_order_id'),
         meta_title='ثبت سفارش | Only Cards',
         meta_description='تأیید ثبت سفارش در فروشگاه Only Cards.',
         meta_robots='noindex, follow',
         canonical_url=absolute_url(url_for('confirmation'))
     )
+
+
+@app.route('/internal/db-keepalive')
+def database_keepalive():
+    expected_token = os.environ.get('KEEPALIVE_TOKEN', '')
+    supplied_token = request.headers.get('X-Keepalive-Token', '')
+
+    if (
+        not expected_token
+        or not supplied_token
+        or not hmac.compare_digest(expected_token, supplied_token)
+    ):
+        abort(404)
+
+    db.session.execute(text('SELECT 1'))
+    return {'ok': True}, 200
 
 
 @app.route('/sitemap.xml')
@@ -1024,7 +1175,10 @@ def admin():
         )
 
     products = Product.query.all()
-    orders = Order.query.all()
+    orders = Order.query.order_by(
+        Order.created_at.desc(),
+        Order.id.desc()
+    ).all()
 
     return render_template(
         'admin.html',
@@ -1054,7 +1208,7 @@ def add_product():
         name=request.form['name'],
         short_description=request.form.get('short_description', ''),
         description=request.form['description'],
-        price=float(request.form['price']),
+        price=int(request.form['price']),
         stock=int(request.form['stock']),
         image='||'.join(image_paths)
     )
@@ -1072,7 +1226,7 @@ def edit_product(id):
     product.name = request.form['name']
     product.short_description = request.form.get('short_description', '')
     product.description = request.form['description']
-    product.price = float(request.form['price'])
+    product.price = int(request.form['price'])
     product.stock = int(request.form['stock'])
 
     existing_images = split_product_images(product.image)
@@ -1139,10 +1293,38 @@ def delete_product(id):
 @app.route('/admin/update-order/<int:id>', methods=['POST'])
 def update_order(id):
     order = Order.query.get_or_404(id)
-    order.status = request.form['status']
+
+    allowed_order_statuses = {
+        'pending', 'processing', 'completed', 'cancelled'
+    }
+    allowed_payment_statuses = {
+        'pending', 'paid', 'failed', 'refunded'
+    }
+    allowed_shipping_statuses = {
+        'not_shipped', 'preparing', 'shipped', 'delivered', 'returned'
+    }
+
+    order_status = request.form.get('status', order.status)
+    payment_status = request.form.get(
+        'payment_status',
+        order.payment_status
+    )
+    shipping_status = request.form.get(
+        'shipping_status',
+        order.shipping_status
+    )
+
+    if order_status in allowed_order_statuses:
+        order.status = order_status
+    if payment_status in allowed_payment_statuses:
+        order.payment_status = payment_status
+    if shipping_status in allowed_shipping_statuses:
+        order.shipping_status = shipping_status
+
+    order.admin_note = request.form.get('admin_note', '').strip()
+    order.updated_at = utc_now()
 
     db.session.commit()
-
     return redirect(url_for('admin'))
 
 

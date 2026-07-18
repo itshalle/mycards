@@ -5,3 +5,18 @@ onlycards-image-audit-v1/
 onlycards-image-audit-v1.zip
 onlycards-image-pipeline-v1/
 onlycards-image-pipeline-v1.zip
+
+# Local/private database files and backups
+instance/*.db
+_onlycards_db_backups/
+_onlycards_db_diagnostics/
+__pycache__/
+*.py[cod]
+local-sqlite-migration-error.txt
+supabase-preflight-log.txt
+.env
+.env.*
+onlycards-supabase-preflight-v*/
+onlycards-supabase-preflight-v*.zip
+onlycards-supabase-migration-v*/
+onlycards-supabase-migration-v*.zip
