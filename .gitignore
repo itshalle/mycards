@@ -20,3 +20,5 @@ onlycards-supabase-preflight-v*/
 onlycards-supabase-preflight-v*.zip
 onlycards-supabase-migration-v*/
 onlycards-supabase-migration-v*.zip
+.venv/
+venv/

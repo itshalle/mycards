@@ -111,11 +111,21 @@
             display: none;
         }
 
-        @media (min-width: 640px) {
-            .oc-shell {
-                padding-inline: 1.5rem;
-            }
-        }
+       @media (max-width: 767px) {
+    .home-hero img {
+        opacity: .9;
+        object-position: 32% center;
+    }
+
+    .hero-soft-overlay {
+        background: linear-gradient(
+            180deg,
+            rgba(244, 240, 232, .08) 0%,
+            rgba(244, 240, 232, .2) 35%,
+            rgba(244, 240, 232, .82) 68%,
+            rgba(244, 240, 232, .97) 100%
+        );
+    }
 
         @media (min-width: 1280px) {
             .oc-shell {
