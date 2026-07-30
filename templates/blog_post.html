@@ -22,7 +22,7 @@
         <span class="current">{{ post.title }}</span>
     </nav>
 
-    <header class="oc-page-hero oc-page-title-card mb-10">
+    <header class="oc-page-hero oc-page-title-card mb-7 sm:mb-10">
         <a href="{{ category_path }}" class="oc-page-eyebrow hover:text-[#4A3A35] transition">
             {{ post.category }}
         </a>
@@ -41,7 +41,7 @@
     <img src="{{ article_asset.src }}"
          {% if article_asset.srcset %}srcset="{{ article_asset.srcset }}" sizes="(min-width: 768px) 768px, calc(100vw - 3rem)"{% endif %}
          alt="{{ post.image_alt }}"
-         class="w-full rounded-[1.6rem] mb-10 shadow-sm border border-[#E9E2D8]"
+         class="w-full rounded-[1.35rem] sm:rounded-[1.6rem] mb-7 sm:mb-10 shadow-sm border border-[#E9E2D8]"
          width="{{ article_asset.width or 960 }}"
          height="{{ article_asset.height or 1200 }}"
          loading="eager"
@@ -49,27 +49,38 @@
          decoding="async">
     {% endif %}
 
-    <div class="blog-content oc-surface p-6 md:p-10 text-[#4A3A35] leading-9">
+    <div class="blog-content oc-surface p-5 sm:p-7 md:p-10 text-[1rem] sm:text-[1.04rem] text-[#4A3A35] leading-8 sm:leading-9">
         {{ post.body_html | safe }}
     </div>
 
-    <div class="mt-10 pt-7 border-t border-[#E5DED5] flex flex-wrap items-center justify-between gap-4">
-        <a href="{{ category_path }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">مقاله‌های {{ post.category }}</a>
-        <a href="{{ url_for('blog') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">بازگشت به بلاگ</a>
-        <a href="{{ url_for('shop') }}" class="text-[#637A63] font-semibold hover:text-[#4A3A35]">دیدن کارت‌ها</a>
-    </div>
+    <nav class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="لینک‌های بعد از مقاله">
+        <a href="{{ category_path }}" class="oc-soft-surface oc-reading-link">مقاله‌های {{ post.category }}</a>
+        <a href="{{ url_for('blog') }}" class="oc-soft-surface oc-reading-link">بازگشت به بلاگ</a>
+        <a href="{{ url_for('shop') }}" class="oc-soft-surface oc-reading-link">دیدن کارت‌ها</a>
+    </nav>
 </article>
 
 <style>
-    .blog-content h2 { font-size: 1.55rem; font-weight: 800; margin: 2.2rem 0 .9rem; }
-    .blog-content h3 { font-size: 1.25rem; font-weight: 700; margin: 1.8rem 0 .7rem; }
+    .blog-content h2 { font-size: clamp(1.3rem, 4.8vw, 1.55rem); font-weight: 800; line-height: 1.7; margin: 2.2rem 0 .9rem; scroll-margin-top: 6rem; overflow-wrap: anywhere; }
+    .blog-content h3 { font-size: clamp(1.12rem, 4.2vw, 1.25rem); font-weight: 700; line-height: 1.75; margin: 1.8rem 0 .7rem; scroll-margin-top: 6rem; overflow-wrap: anywhere; }
     .blog-content p { margin: 1rem 0; }
-    .blog-content ul, .blog-content ol { margin: 1rem 1.4rem 1rem 0; }
+    .blog-content ul, .blog-content ol { margin: 1rem 1.25rem 1rem 0; padding-right: .7rem; }
     .blog-content ul { list-style: disc; }
     .blog-content ol { list-style: decimal; }
-    .blog-content li { margin: .45rem 0; }
-    .blog-content a { color: #637A63; text-decoration: underline; text-underline-offset: 4px; }
-    .blog-content blockquote { border-right: 3px solid #637A63; background: #F4F0E8; padding: .8rem 1rem; margin: 1.4rem 0; border-radius: .7rem; }
+    .blog-content li { margin: .5rem 0; padding-right: .2rem; }
+    .blog-content a { color: #637A63; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+    .blog-content strong { color: #4A3A35; font-weight: 800; }
+    .blog-content blockquote { border-right: 3px solid #637A63; background: #F4F0E8; padding: 1rem 1.1rem; margin: 1.5rem 0; border-radius: .85rem; }
     .blog-content hr { margin: 2rem 0; border-color: #E5DED5; }
+    .blog-content img { display: block; margin: 1.5rem auto; border-radius: 1rem; }
+    .blog-content table { border-collapse: collapse; }
+    .blog-content th, .blog-content td { min-width: 8rem; padding: .7rem .8rem; border: 1px solid #E5DED5; text-align: right; }
+    .blog-content pre { direction: ltr; padding: 1rem; border-radius: .85rem; background: #2F2927; color: #fff; }
+    .blog-content code { overflow-wrap: anywhere; }
+
+    @media (max-width: 639px) {
+        .blog-content blockquote { margin-inline: 0; }
+        .blog-content ul, .blog-content ol { margin-right: .85rem; }
+    }
 </style>
 {% endblock %}

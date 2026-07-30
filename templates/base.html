@@ -399,6 +399,66 @@
             overflow-x: auto;
         }
 
+        a,
+        button,
+        summary {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid rgba(99, 122, 99, .28);
+            outline-offset: 3px;
+        }
+
+        .oc-mobile-menu[open] > summary {
+            color: var(--oc-green);
+            background: var(--oc-cream);
+        }
+
+        .oc-mobile-menu > nav {
+            max-height: calc(100vh - 6rem);
+            overflow-y: auto;
+            transform-origin: top left;
+            animation: oc-menu-in .16s ease-out;
+        }
+
+        @keyframes oc-menu-in {
+            from { opacity: 0; transform: translateY(-.35rem) scale(.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .oc-horizontal-scroll {
+            scrollbar-width: none;
+            overscroll-behavior-inline: contain;
+        }
+
+        .oc-horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .oc-reading-link {
+            display: flex;
+            min-height: 3.5rem;
+            align-items: center;
+            justify-content: center;
+            padding: .9rem 1rem;
+            color: var(--oc-green);
+            font-weight: 800;
+            text-align: center;
+            transition: .2s ease;
+        }
+
+        .oc-reading-link:hover {
+            color: var(--oc-brown);
+            background: #fff;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 767px) {
             .home-hero img {
                 opacity: .9;
@@ -422,6 +482,12 @@
             .oc-breadcrumb { padding: .7rem .85rem; border-radius: 1rem; }
             .oc-hero-copy { line-height: 2.05; }
             .oc-mobile-full { width: 100%; }
+            .oc-reading-link { width: 100%; }
+        }
+
+        @media (max-width: 639px) {
+            .oc-page-hero .oc-primary-button,
+            .oc-page-hero .oc-secondary-button { width: 100%; }
         }
     </style>
 </head>
@@ -457,7 +523,7 @@
                 </div>
 
                 <div class="flex md:hidden items-center gap-1">
-                    <a href="/cart" aria-label="سبد خرید" class="oc-touch-target relative inline-flex items-center justify-center rounded-full text-gray-600 hover:bg-[#F4F0E8] hover:text-[#637A63] transition">
+                    <a href="/cart" aria-label="سبد خرید" class="oc-touch-target relative inline-flex items-center justify-center rounded-full border border-[#E9E2D8] bg-white text-gray-600 hover:bg-[#F4F0E8] hover:text-[#637A63] transition">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M4 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H7"></path>
                             <circle cx="10" cy="19" r="1.2"></circle>
@@ -469,7 +535,7 @@
                     </a>
 
                     <details class="oc-mobile-menu relative">
-                        <summary class="oc-touch-target cursor-pointer inline-flex items-center justify-center rounded-full text-[#4A3A35] hover:bg-[#F4F0E8] transition" aria-label="بازکردن منوی سایت">
+                        <summary class="oc-touch-target cursor-pointer inline-flex items-center justify-center rounded-full border border-[#E9E2D8] bg-white text-[#4A3A35] hover:bg-[#F4F0E8] transition" aria-label="بازکردن منوی سایت">
                             <span class="sr-only">منوی سایت</span>
                             <span aria-hidden="true" class="flex w-5 flex-col gap-1.5">
                                 <span class="block h-0.5 w-5 rounded-full bg-current"></span>
@@ -497,7 +563,7 @@
     <footer class="bg-white/90 border-t border-[#E9E2D8] mt-14 sm:mt-20">
         <div class="oc-shell py-8 sm:py-10">
             <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.5fr_1fr] items-start gap-7 lg:gap-8">
-                <a href="{{ url_for('index') }}" class="flex items-center justify-start gap-3 text-right" aria-label="صفحه اصلی Only Cards">
+                <a href="{{ url_for('index') }}" class="flex items-center justify-center sm:justify-start gap-3 text-center sm:text-right" aria-label="صفحه اصلی Only Cards">
                     <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
                          alt="لوگوی درخت Only Cards"
                          class="w-12 h-12 sm:w-14 sm:h-14 rounded-full"

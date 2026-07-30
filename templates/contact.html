@@ -9,7 +9,7 @@
 </nav>
 
 <section class="oc-page-hero oc-page-title-card overflow-hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-12 items-center">
         <div>
             <p class="oc-page-eyebrow">ارتباط با Only Cards</p>
             <h1 class="oc-page-title mb-5">از اینجا با ما در ارتباط باش</h1>
@@ -22,7 +22,7 @@
             </a>
         </div>
 
-        <div class="oc-soft-surface p-7 sm:p-9 text-center">
+        <div class="oc-soft-surface p-5 sm:p-9 text-center">
             <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
                  alt="لوگوی درخت Only Cards"
                  class="w-24 h-24 rounded-full mx-auto mb-6"
@@ -34,14 +34,14 @@
     </div>
 </section>
 
-<section class="mt-14 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-7">
-    <a href="{{ url_for('shipping') }}" class="oc-surface p-7 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
+<section class="mt-10 sm:mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-7">
+    <a href="{{ url_for('shipping') }}" class="oc-surface p-5 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
         <div class="oc-icon-tile mb-5">{{ icon('box', 'w-8 h-8') }}</div>
         <h2 class="text-xl font-extrabold text-[#4A3A35] mb-3">ارسال و تحویل</h2>
         <p class="text-[#665A55] leading-8">زمان آماده‌سازی، روش ارسال و هزینه تحویل سفارش‌ها را ببین.</p>
     </a>
 
-    <a href="{{ url_for('faq') }}" class="oc-surface p-7 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
+    <a href="{{ url_for('faq') }}" class="oc-surface p-5 sm:p-8 transition hover:-translate-y-1 hover:shadow-md">
         <div class="oc-icon-tile mb-5">{{ icon('chat', 'w-8 h-8') }}</div>
         <h2 class="text-xl font-extrabold text-[#4A3A35] mb-3">سوالات پرتکرار</h2>
         <p class="text-[#665A55] leading-8">پاسخ سوال‌های رایج درباره سفارش، پرداخت، ارسال و کاربرد کارت‌ها را بخوان.</p>

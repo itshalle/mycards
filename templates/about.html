@@ -2,7 +2,7 @@
 
 {% block content %}
 <section class="oc-page-hero oc-page-title-card overflow-hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-12 items-center">
         <div>
             <p class="oc-page-eyebrow">درباره Only Cards</p>
             <h1 class="oc-page-title text-[clamp(1.25rem,6vw,2.2rem)] mb-5">کارت‌هایی برای هر روز</h1>
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="oc-soft-surface p-7 sm:p-9 text-center">
+        <div class="oc-soft-surface p-5 sm:p-9 text-center">
             <img src="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
                  alt="لوگوی درخت Only Cards"
                  class="w-24 h-24 rounded-full mx-auto mb-6"
@@ -29,8 +29,8 @@
     </div>
 </section>
 
-<section class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-3 gap-7">
-    <div class="lg:col-span-2 oc-surface p-7 sm:p-9">
+<section class="mt-10 sm:mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-7">
+    <div class="lg:col-span-2 oc-surface p-5 sm:p-9">
         <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-6">داستان ما</h2>
         <div class="space-y-5 text-[#665A55] leading-9">
             <p>
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <aside class="oc-soft-surface p-7 sm:p-8">
+    <aside class="oc-soft-surface p-5 sm:p-8">
         <h2 class="text-2xl font-extrabold text-[#4A3A35] mb-6">ما چه می‌سازیم؟</h2>
         <div class="space-y-4 text-[#665A55] leading-8">
             <a href="{{ url_for('product_by_slug', slug='calm-cards') }}" class="block font-extrabold text-[#637A63] hover:text-[#4A3A35] transition">کارت‌های آرامش</a>
@@ -61,12 +61,12 @@
     </aside>
 </section>
 
-<section class="mt-14 md:mt-16 bg-[#637A63] rounded-[1.75rem] p-8 sm:p-10 text-center text-white shadow-sm">
+<section class="mt-10 sm:mt-14 md:mt-16 bg-[#637A63] rounded-[1.75rem] p-6 sm:p-10 text-center text-white shadow-sm">
     <h2 class="text-2xl md:text-3xl font-extrabold mb-4">کارت‌های آرامش را ببین</h2>
     <p class="leading-8 mb-7 text-white/90">
         مجموعه‌ای برای مکث‌های کوتاه، روزهای شلوغ و برگشتن به حال همین لحظه.
     </p>
-    <a href="{{ url_for('product_by_slug', slug='calm-cards') }}" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-[#637A63] font-extrabold hover:bg-[#F7F4F0] transition">
+    <a href="{{ url_for('product_by_slug', slug='calm-cards') }}" class="oc-mobile-full inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-[#637A63] font-extrabold hover:bg-[#F7F4F0] transition">
         دیدن کارت‌های آرامش
     </a>
 </section>

@@ -38,10 +38,10 @@
             مقاله‌ها و راهنماهای کاربردی برای شناخت بهتر احساسات، گفت‌وگوی سالم‌تر، ذهن‌آگاهی و مراقبت از خود.
         </p>
 
-        <nav class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-8" aria-label="دسته‌بندی مقاله‌ها">
+        <nav class="oc-horizontal-scroll -mx-1 mt-7 flex gap-3 overflow-x-auto px-1 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4" aria-label="دسته‌بندی مقاله‌ها">
             {% for category in categories %}
             <a href="{{ url_for('blog_category', category_slug=category.slug) }}"
-               class="oc-soft-surface px-4 py-4 transition hover:bg-white hover:-translate-y-0.5">
+               class="oc-soft-surface min-w-[13rem] px-4 py-4 transition hover:bg-white hover:-translate-y-0.5 sm:min-w-0">
                 <span class="block font-extrabold text-[#4A3A35] mb-1">{{ category.name }}</span>
                 <span class="text-xs text-[#7A6D67]">{{ category.count }} مقاله</span>
             </a>
@@ -50,12 +50,12 @@
     </header>
 
     {% if latest_posts %}
-    <section class="mt-14 md:mt-16">
+    <section class="mt-10 sm:mt-14 md:mt-16">
         <div class="oc-title-frame mb-8">
             <p class="text-sm font-bold text-[#637A63] mb-2">تازه‌ترین‌ها</p>
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">تازه‌ترین مقاله‌ها</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6 items-stretch">
             {% for post in latest_posts %}
                 {% include '_blog_card.html' %}
             {% endfor %}
@@ -64,12 +64,12 @@
     {% endif %}
 
     {% if posts %}
-    <section class="mt-14 md:mt-16">
+    <section class="mt-10 sm:mt-14 md:mt-16">
         <div class="oc-title-frame mb-8">
             <p class="text-sm font-bold text-[#637A63] mb-2">برای خواندن بیشتر</p>
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35]">همه مقاله‌ها</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 items-stretch">
             {% for post in posts %}
                 {% include '_blog_card.html' %}
             {% endfor %}
@@ -78,7 +78,7 @@
     {% endif %}
 
     {% if not latest_posts and not posts %}
-    <div class="mt-10 oc-surface p-8 text-[#746863]">اولین مقاله‌ها به‌زودی اینجا منتشر می‌شوند.</div>
+    <div class="mt-10 oc-surface p-6 sm:p-8 text-center text-[#746863]">اولین مقاله‌ها به‌زودی اینجا منتشر می‌شوند.</div>
     {% endif %}
 </section>
 {% endblock %}

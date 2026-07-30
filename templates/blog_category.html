@@ -27,8 +27,8 @@
     </header>
 
     {% if posts %}
-    <section class="mt-14">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 items-stretch">
+    <section class="mt-10 sm:mt-14">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 items-stretch">
             {% for post in posts %}
                 {% include '_blog_card.html' %}
             {% endfor %}
@@ -38,7 +38,7 @@
     <div class="mt-10 oc-surface p-8 text-[#746863]">هنوز مقاله‌ای در این دسته منتشر نشده است.</div>
     {% endif %}
 
-    <nav class="mt-14 pt-8 border-t border-[#DED6CC]" aria-label="دسته‌های دیگر بلاگ">
+    <nav class="mt-10 sm:mt-14 oc-soft-surface p-5 sm:p-7" aria-label="دسته‌های دیگر بلاگ">
         <p class="font-extrabold text-[#4A3A35] mb-5">دسته‌های دیگر</p>
         <div class="flex flex-wrap gap-3">
             <a href="{{ url_for('blog') }}" class="oc-secondary-button text-sm">همه مقاله‌ها</a>
