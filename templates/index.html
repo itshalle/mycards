@@ -2,16 +2,16 @@
 {% from '_icons.html' import icon %}
 
 {% block content %}
-<div class="home-page relative">
+<div class="home-page relative min-w-0">
     <span class="organic-blob blob-one" aria-hidden="true"></span>
     <span class="organic-blob blob-two" aria-hidden="true"></span>
 
-    <section class="home-hero relative overflow-hidden rounded-[2rem] shadow-sm border border-[#E7DED3]">
+    <section class="home-hero relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border border-[#E7DED3]">
         {% set hero_asset = get_image_asset('images/onlycards-home-hero.webp', 'hero') %}
         <img src="{{ hero_asset.src }}"
              {% if hero_asset.srcset %}srcset="{{ hero_asset.srcset }}" sizes="(max-width: 767px) 100vw, 1152px"{% endif %}
              alt="دو کارت Only Cards برای ذهن‌آگاهی و یک قرار دونفره در کنار برگ و فنجان"
-             class="w-full h-[520px] md:h-[490px] object-cover object-left"
+             class="w-full h-[430px] sm:h-[480px] md:h-[490px] object-cover object-left"
              width="{{ hero_asset.width or 1717 }}"
              height="{{ hero_asset.height or 916 }}"
              loading="eager"
@@ -19,7 +19,7 @@
              decoding="async">
 
         <div class="absolute inset-0 hero-soft-overlay"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[50%] flex items-center px-5 sm:px-10 md:px-12">
+        <div class="absolute inset-0 md:inset-y-0 md:right-0 md:left-auto md:w-[52%] flex items-end md:items-center px-5 sm:px-8 md:px-12 py-7 sm:py-9 md:py-0">
             <div class="max-w-lg">
                 <p class="text-sm font-bold tracking-wide text-[#637A63] mb-4">Only Cards</p>
                 <h1 class="text-[clamp(1.55rem,5.8vw,2.25rem)] font-extrabold text-[#4A3A35] leading-[1.65] mb-5">
@@ -29,7 +29,7 @@
                     برای مکث‌های آرام، گفت‌وگوهای نزدیک‌تر و تمرین‌های کوچک و معنادار در زندگی روزمره.
                 </p>
 
-                <div class="hero-notes flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-[#4A3A35]">
+                <div class="hero-notes flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-2.5 text-sm font-bold text-[#4A3A35]">
                     <span><i></i>ساده برای استفاده</span>
                     <span><i></i>برای لحظه‌های واقعی</span>
                 </div>
@@ -46,16 +46,16 @@
         </div>
 
         {% if products %}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-7 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 items-stretch">
             {% for product in products %}
             {% set preview_image = get_product_preview_image(product) %}
             <a href="{{ get_product_url(product) }}"
-               class="group oc-surface oc-product-card p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
+               class="group oc-surface oc-product-card p-4 sm:p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
                 <div class="oc-product-media bg-[#F4F0E8] rounded-2xl flex items-center justify-center mb-5 overflow-hidden">
                     {% if preview_image %}
                     {% set product_asset = get_image_asset(preview_image, 'card') %}
                     <img src="{{ product_asset.src }}"
-                         {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 768px) 33vw, calc(100vw - 3rem)"{% endif %}
+                         {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, calc(100vw - 2rem)"{% endif %}
                          alt="تصویر محصول {{ product.name }}"
                          class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
                          width="{{ product_asset.width or 480 }}"
@@ -87,7 +87,7 @@
         {% endif %}
 
         <div class="text-center mt-9">
-            <a href="{{ url_for('shop') }}" class="oc-secondary-button">رفتن به فروشگاه</a>
+            <a href="{{ url_for('shop') }}" class="oc-secondary-button oc-mobile-full">رفتن به فروشگاه</a>
         </div>
     </section>
 
@@ -115,7 +115,7 @@
     </section>
 
     {% if posts %}
-    <section class="relative mt-20 md:mt-28">
+    <section class="relative mt-16 md:mt-24">
         <span class="organic-blob blob-three" aria-hidden="true"></span>
         <div class="flex items-end justify-between gap-4 mb-8">
             <div class="oc-title-frame">
@@ -124,14 +124,14 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-7 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 items-stretch">
             {% for post in posts %}
                 {% include '_blog_card.html' %}
             {% endfor %}
         </div>
 
         <div class="text-center mt-9">
-            <a href="{{ url_for('blog') }}" class="oc-secondary-button">دیدن همه مقاله‌ها</a>
+            <a href="{{ url_for('blog') }}" class="oc-secondary-button oc-mobile-full">دیدن همه مقاله‌ها</a>
         </div>
     </section>
     {% endif %}

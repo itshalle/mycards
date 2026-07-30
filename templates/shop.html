@@ -10,16 +10,16 @@
     </header>
 
     {% if products %}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-7 items-stretch">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 items-stretch">
         {% for product in products %}
         {% set preview_image = get_product_preview_image(product) %}
         <a href="{{ get_product_url(product) }}"
-           class="group oc-surface oc-product-card p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
+           class="group oc-surface oc-product-card p-4 sm:p-5 flex flex-col h-full transition duration-300 hover:-translate-y-1 hover:shadow-md {% if product.id == 1 %}oc-featured-product{% endif %}">
             <div class="oc-product-media bg-[#F4F0E8] rounded-2xl flex items-center justify-center mb-5 overflow-hidden">
                 {% if preview_image %}
                 {% set product_asset = get_image_asset(preview_image, 'card') %}
                 <img src="{{ product_asset.src }}"
-                     {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 768px) 33vw, calc(100vw - 3rem)"{% endif %}
+                     {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, calc(100vw - 2rem)"{% endif %}
                      alt="تصویر محصول {{ product.name }}"
                      class="w-full h-full object-contain rounded-xl p-3 transition duration-500 group-hover:scale-[1.02]"
                      width="{{ product_asset.width or 480 }}"

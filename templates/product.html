@@ -49,7 +49,7 @@
     <span class="current">{{ product.name }}</span>
 </nav>
 
-<header class="oc-page-hero oc-page-title-card mb-10">
+<header class="oc-page-hero oc-page-title-card mb-8 sm:mb-10">
     {% if page_content %}
     <p class="oc-page-eyebrow">{{ page_content.eyebrow }}</p>
     {% else %}
@@ -61,16 +61,16 @@
     {% endif %}
 </header>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-10 items-start">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-10 items-start">
     <div>
         {% set product_images = split_product_images(product.image) %}
         {% if product_images %}
             {% set main_image = product_images[0] %}
             {% set main_asset = get_image_asset(main_image, 'detail') %}
-            <div class="oc-surface min-h-[380px] md:min-h-[420px] flex items-center justify-center overflow-hidden p-4 mb-4">
+            <div class="oc-surface min-h-[280px] sm:min-h-[360px] lg:min-h-[420px] flex items-center justify-center overflow-hidden p-3 sm:p-4 mb-4">
                 <img id="mainProductImage"
                      src="{{ main_asset.src }}"
-                     {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 768px) 50vw, calc(100vw - 3rem)"{% endif %}
+                     {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"{% endif %}
                      alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
                      class="w-full h-full max-h-[540px] object-contain rounded-2xl"
                      width="{{ main_asset.width or 960 }}"
@@ -81,7 +81,7 @@
             </div>
 
             {% if product_images|length > 1 %}
-            <div class="grid grid-cols-4 gap-3">
+            <div class="grid grid-cols-4 gap-2 sm:gap-3">
                 {% for image in product_images %}
                     {% set thumb_asset = get_image_asset(image, 'thumb') %}
                     {% set detail_asset = get_image_asset(image, 'detail') %}
@@ -90,7 +90,7 @@
                             data-image-srcset="{{ detail_asset.srcset }}"
                             data-image-width="{{ detail_asset.width or 960 }}"
                             data-image-height="{{ detail_asset.height or 1200 }}"
-                            class="product-thumbnail bg-white rounded-xl border border-[#E0D8CE] p-2 h-20 sm:h-24 hover:border-[#637A63] transition"
+                            class="product-thumbnail oc-touch-target min-w-0 bg-white rounded-xl border border-[#E0D8CE] p-1.5 sm:p-2 h-20 sm:h-24 hover:border-[#637A63] transition"
                             aria-label="نمایش تصویر {{ loop.index }} از {{ product.name }}">
                         <img src="{{ thumb_asset.src }}"
                              {% if thumb_asset.srcset %}srcset="{{ thumb_asset.srcset }}" sizes="96px"{% endif %}
@@ -105,13 +105,13 @@
             </div>
             {% endif %}
         {% else %}
-            <div class="oc-surface min-h-[380px] md:min-h-[420px] flex items-center justify-center">
+            <div class="oc-surface min-h-[280px] sm:min-h-[360px] lg:min-h-[420px] flex items-center justify-center">
                 <span class="oc-product-fallback">{{ icon('card', 'w-16 h-16') }}</span>
             </div>
         {% endif %}
     </div>
 
-    <div class="oc-surface p-6 sm:p-8 md:sticky md:top-28">
+    <div class="oc-surface p-5 sm:p-8 lg:sticky lg:top-24">
         <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ product.description }}</p>
 
         <div class="border-y border-[#EEE8DF] py-5 mb-7">
