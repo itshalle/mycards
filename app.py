@@ -449,7 +449,7 @@ def index():
         meta_title='خرید کارت‌های گفت‌وگو و خودشناسی فارسی | Only Cards',
         meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، خودشناسی، گفت‌وگوی عمیق، رابطه عاطفی و وقت‌گذرانی دونفره معنادار بدون موبایل.',
         canonical_url=absolute_url(url_for('index')),
-        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home.webp')
+        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home-final.webp')
     )
 
 
@@ -523,7 +523,7 @@ def blog():
         meta_title='راهنمای آرامش، خودشناسی و گفت‌وگوی عمیق | Only Cards',
         meta_description='مقاله‌های کاربردی Only Cards درباره شناخت احساسات، ذهن‌آگاهی، رابطه و زمان دو نفره؛ با توضیح‌های روشن و تمرین‌های قابل استفاده.',
         canonical_url=absolute_url(url_for('blog')),
-        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home.webp')
+        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home-final.webp')
     )
 
 
