@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-17"
 category: "زمان دو نفره و هدیه"
 draft: false
+image: "images/blog/articles/meaningful-gift-for-partner.webp"
+image_alt: "لحظه هدیه‌دادن یک هدیه شخصی و معنادار به پارتنر"
 ---
 
 # هدیه معنادار برای پارتنر؛ چه چیزی واقعاً شخصی است؟

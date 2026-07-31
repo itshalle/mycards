@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "آرامش و ذهن‌آگاهی"
 draft: false
+image: "images/blog/articles/dbt-mindfulness.webp"
+image_alt: "لحظه‌ای روزمره برای تمرین ذهن‌آگاهی و توجه به زمان حال"
 ---
 
 # ذهن‌آگاهی در DBT چیست و چه فرقی با خالی‌کردن ذهن دارد؟

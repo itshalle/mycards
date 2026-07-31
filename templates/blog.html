@@ -41,9 +41,22 @@
         <nav class="oc-horizontal-scroll -mx-1 mt-7 flex gap-3 overflow-x-auto px-1 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4" aria-label="دسته‌بندی مقاله‌ها">
             {% for category in categories %}
             <a href="{{ url_for('blog_category', category_slug=category.slug) }}"
-               class="oc-soft-surface min-w-[13rem] px-4 py-4 transition hover:bg-white hover:-translate-y-0.5 sm:min-w-0">
-                <span class="block font-extrabold text-[#4A3A35] mb-1">{{ category.name }}</span>
-                <span class="text-xs text-[#7A6D67]">{{ category.count }} مقاله</span>
+               class="oc-soft-surface group min-w-[13rem] overflow-hidden flex flex-col transition hover:bg-white hover:-translate-y-0.5 sm:min-w-0">
+                {% if category.image %}
+                {% set category_asset = get_image_asset(category.image, 'card') %}
+                <div class="h-36 overflow-hidden border-b border-[#EEE8DF] bg-[#F4F0E8]">
+                    <img src="{{ category_asset.src }}"
+                         {% if category_asset.srcset %}srcset="{{ category_asset.srcset }}" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 13rem"{% endif %}
+                         alt="{{ category.image_alt }}"
+                         class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                         width="{{ category_asset.width or 1200 }}"
+                         height="{{ category_asset.height or 900 }}"
+                         loading="lazy"
+                         decoding="async">
+                </div>
+                {% endif %}
+                <span class="block px-4 pt-4 font-extrabold text-[#4A3A35] mb-1">{{ category.name }}</span>
+                <span class="px-4 pb-4 text-xs text-[#7A6D67]">{{ category.count }} مقاله</span>
             </a>
             {% endfor %}
         </nav>

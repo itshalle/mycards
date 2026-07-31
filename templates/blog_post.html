@@ -42,8 +42,8 @@
          {% if article_asset.srcset %}srcset="{{ article_asset.srcset }}" sizes="(min-width: 768px) 768px, calc(100vw - 3rem)"{% endif %}
          alt="{{ post.image_alt }}"
          class="w-full rounded-[1.35rem] sm:rounded-[1.6rem] mb-7 sm:mb-10 shadow-sm border border-[#E9E2D8]"
-         width="{{ article_asset.width or 960 }}"
-         height="{{ article_asset.height or 1200 }}"
+         width="{{ article_asset.width or 1200 }}"
+         height="{{ article_asset.height or 900 }}"
          loading="eager"
          fetchpriority="high"
          decoding="async">

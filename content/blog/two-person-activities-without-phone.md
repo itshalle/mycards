@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "زمان دو نفره و هدیه"
 draft: false
+image: "images/blog/articles/two-person-activities-without-phone.webp"
+image_alt: "زوجی در حال انجام کاردستی و فعالیت خلاقانه دونفره بدون موبایل"
 ---
 
 # سرگرمی دونفره در خانه بدون موبایل

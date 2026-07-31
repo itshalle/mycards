@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "احساسات و خودشناسی"
 draft: false
+image: "images/blog/articles/fear-anxiety-worry-difference.webp"
+image_alt: "فردی در حال نوشتن و تأمل برای شناخت تفاوت ترس، اضطراب و نگرانی"
 ---
 
 # فرق اضطراب، ترس و نگرانی چیست؟

@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "آرامش و ذهن‌آگاهی"
 draft: false
+image: "images/blog/articles/five-minute-calm.webp"
+image_alt: "مکث کوتاه پنج‌دقیقه‌ای با دفتر، نوشیدنی و نور طبیعی"
 ---
 
 بعضی روزها حتی وقتی بالاخره می‌نشینی، ذهنت هنوز نشسته نیست.

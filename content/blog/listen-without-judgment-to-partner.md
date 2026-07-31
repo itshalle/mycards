@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "رابطه و گفت‌وگو"
 draft: false
+image: "images/blog/articles/listen-without-judgment.webp"
+image_alt: "فردی که با توجه و بدون قضاوت به صحبت پارتنرش گوش می‌دهد"
 ---
 
 # چطور بدون قضاوت به حرف پارتنر گوش بدهیم؟

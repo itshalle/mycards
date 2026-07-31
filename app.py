@@ -56,6 +56,8 @@ BLOG_CONTENT_DIR = os.path.join(app.root_path, 'content', 'blog')
 BLOG_CATEGORIES = {
     'emotions-self-awareness': {
         'name': 'احساسات و خودشناسی',
+        'image': 'images/blog/categories/emotions-self-awareness.webp',
+        'image_alt': 'فردی در حال نوشتن و تأمل برای شناخت احساسات',
         'intro': 'شناخت احساسات همیشه از یک جواب روشن شروع نمی‌شود.',
         'intro_paragraphs': [
             'شناخت احساسات همیشه از یک جواب روشن شروع نمی‌شود. گاهی فقط می‌دانیم حالمان خوب نیست، اما نمی‌توانیم بفهمیم ناراحتیم، مضطربیم، عصبانی هستیم یا از چیزی می‌ترسیم. در این بخش درباره شناخت احساسات، پیدا کردن واژه دقیق‌تر برای حال درونی و تفاوت تجربه‌هایی مثل ترس، اضطراب و نگرانی می‌خوانی.',
@@ -66,6 +68,8 @@ BLOG_CATEGORIES = {
     },
     'calm-mindfulness': {
         'name': 'آرامش و ذهن‌آگاهی',
+        'image': 'images/blog/categories/mindfulness-calm.webp',
+        'image_alt': 'میزی آرام کنار پنجره با دفتر، فنجان و گیاه برای ذهن‌آگاهی',
         'intro': 'آرامش همیشه به معنای خالی‌شدن ذهن یا ازبین‌رفتن تمام فکرها نیست.',
         'intro_paragraphs': [
             'آرامش همیشه به معنای خالی‌شدن ذهن یا ازبین‌رفتن تمام فکرها نیست. گاهی آرام‌ترشدن یعنی برای چند لحظه سرعت را کم کنیم، متوجه بدن و ذهنمان شویم و پیش از واکنش عجولانه، ببینیم همین حالا چه اتفاقی در جریان است.',
@@ -76,6 +80,8 @@ BLOG_CATEGORIES = {
     },
     'relationships-conversation': {
         'name': 'رابطه و گفت‌وگو',
+        'image': 'images/blog/categories/relationship-communication.webp',
+        'image_alt': 'زوجی در حال گفت‌وگو و گوش‌دادن به یکدیگر در خانه',
         'intro': 'گفت‌وگوی نزدیک فقط با پرسیدن سؤال‌های عمیق ساخته نمی‌شود.',
         'intro_paragraphs': [
             'گفت‌وگوی نزدیک فقط با پرسیدن سؤال‌های عمیق ساخته نمی‌شود. احساس امنیت، کنجکاوی واقعی، شنیدن بدون قضاوت و احترام به مرزهای طرف مقابل هم بخشی از یک گفت‌وگوی سالم‌اند. در این بخش درباره راه‌های طبیعی‌تر برای شناخت پارتنر، شروع صحبت و شنیدن جواب‌های واقعی می‌خوانی.',
@@ -86,6 +92,8 @@ BLOG_CATEGORIES = {
     },
     'quality-time-gifts': {
         'name': 'زمان دو نفره و هدیه',
+        'image': 'images/blog/categories/couple-time-gifts.webp',
+        'image_alt': 'زوجی در حال ساختن یک وقت دونفره گرم با کارت‌ها و هدیه‌های کوچک',
         'intro': 'زمان باهم‌بودن همیشه به برنامه‌ای پرهزینه یا یک قرار مفصل نیاز ندارد.',
         'intro_paragraphs': [
             'زمان باهم‌بودن همیشه به برنامه‌ای پرهزینه یا یک قرار مفصل نیاز ندارد. گاهی یک شب در خانه، یک فعالیت بدون موبایل یا تصمیم برای انجام‌دادن کاری تازه کنار هم می‌تواند حال‌وهوای رابطه را تغییر دهد. در این دسته ایده‌هایی برای ساختن زمان دو نفره، دیت در خانه و فعالیت‌های مشترک پیدا می‌کنی.',
@@ -440,7 +448,8 @@ def index():
         posts=posts,
         meta_title='خرید کارت‌های گفت‌وگو و خودشناسی فارسی | Only Cards',
         meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، خودشناسی، گفت‌وگوی عمیق، رابطه عاطفی و وقت‌گذرانی دونفره معنادار بدون موبایل.',
-        canonical_url=absolute_url(url_for('index'))
+        canonical_url=absolute_url(url_for('index')),
+        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home.webp')
     )
 
 
@@ -513,7 +522,8 @@ def blog():
         categories=get_blog_category_cards(all_posts),
         meta_title='راهنمای آرامش، خودشناسی و گفت‌وگوی عمیق | Only Cards',
         meta_description='مقاله‌های کاربردی Only Cards درباره شناخت احساسات، ذهن‌آگاهی، رابطه و زمان دو نفره؛ با توضیح‌های روشن و تمرین‌های قابل استفاده.',
-        canonical_url=absolute_url(url_for('blog'))
+        canonical_url=absolute_url(url_for('blog')),
+        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home.webp')
     )
 
 
@@ -531,6 +541,11 @@ def blog_category(category_slug):
     ]
     category = dict(category_data)
     category['slug'] = category_slug
+    category_image_url = (
+        absolute_static_url(category['image'])
+        if category.get('image')
+        else None
+    )
 
     category_url = absolute_url(
         url_for('blog_category', category_slug=category_slug)
@@ -597,6 +612,12 @@ def blog_category(category_slug):
         ]
     }
 
+    if category_image_url:
+        category_schema['@graph'][0]['primaryImageOfPage'] = {
+            '@type': 'ImageObject',
+            'url': category_image_url
+        }
+
     category_cards = get_blog_category_cards(all_posts)
     other_categories = [
         item for item in category_cards
@@ -611,7 +632,8 @@ def blog_category(category_slug):
         category_schema=category_schema,
         meta_title=category['meta_title'],
         meta_description=category['meta_description'],
-        canonical_url=category_url
+        canonical_url=category_url,
+        og_image=category_image_url
     )
 
 

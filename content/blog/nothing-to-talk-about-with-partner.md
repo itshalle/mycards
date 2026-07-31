@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "رابطه و گفت‌وگو"
 draft: false
+image: "images/blog/articles/nothing-to-talk-about-with-partner.webp"
+image_alt: "زوجی که با کارت‌های گفت‌وگو دوباره برای ارتباط با هم وقت می‌گذارند"
 ---
 
 # وقتی با پارتنر حرفی نداریم چه کار کنیم؟

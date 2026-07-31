@@ -16,13 +16,32 @@
         <span class="current">{{ category.name }}</span>
     </nav>
 
-    <header class="oc-page-hero oc-page-title-card">
-        <p class="oc-page-eyebrow">دسته‌بندی بلاگ</p>
-        <h1 class="oc-page-title mb-5">{{ category.name }}</h1>
-        <div class="oc-hero-copy space-y-5">
-            {% for paragraph in category.intro_paragraphs %}
-            <p>{{ paragraph }}</p>
-            {% endfor %}
+    <header class="oc-page-hero oc-page-title-card overflow-hidden">
+        <div class="grid gap-7 md:grid-cols-[minmax(0,1.15fr)_minmax(260px,.85fr)] md:items-center">
+            <div class="min-w-0">
+                <p class="oc-page-eyebrow">دسته‌بندی بلاگ</p>
+                <h1 class="oc-page-title mb-5">{{ category.name }}</h1>
+                <div class="oc-hero-copy space-y-5">
+                    {% for paragraph in category.intro_paragraphs %}
+                    <p>{{ paragraph }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if category.image %}
+            {% set category_asset = get_image_asset(category.image, 'article') %}
+            <div class="overflow-hidden rounded-[1.35rem] border border-[#E9E2D8] bg-[#F4F0E8] shadow-sm">
+                <img src="{{ category_asset.src }}"
+                     {% if category_asset.srcset %}srcset="{{ category_asset.srcset }}" sizes="(min-width: 768px) 36vw, calc(100vw - 3rem)"{% endif %}
+                     alt="{{ category.image_alt }}"
+                     class="w-full aspect-[4/3] object-cover"
+                     width="{{ category_asset.width or 1200 }}"
+                     height="{{ category_asset.height or 900 }}"
+                     loading="eager"
+                     fetchpriority="high"
+                     decoding="async">
+            </div>
+            {% endif %}
         </div>
     </header>
 

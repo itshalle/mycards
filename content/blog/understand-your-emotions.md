@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "احساسات و خودشناسی"
 draft: false
+image: "images/blog/articles/understand-your-emotions.webp"
+image_alt: "فردی در حال نوشتن برای شناخت بهتر احساسات خود"
 ---
 
 # چطور احساسات خود را بهتر بشناسیم؟

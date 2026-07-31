@@ -9,9 +9,9 @@
         <img src="{{ blog_asset.src }}"
              {% if blog_asset.srcset %}srcset="{{ blog_asset.srcset }}" sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, calc(100vw - 3rem)"{% endif %}
              alt="{{ post.image_alt }}"
-             class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
-             width="{{ blog_asset.width or 480 }}"
-             height="{{ blog_asset.height or 600 }}"
+             class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.02]"
+             width="{{ blog_asset.width or 1200 }}"
+             height="{{ blog_asset.height or 900 }}"
              loading="lazy"
              decoding="async">
     </div>

@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "زمان دو نفره و هدیه"
 draft: false
+image: "images/blog/articles/date-ideas-at-home.webp"
+image_alt: "زوجی در یک قرار ساده خانگی با کارت‌های گفت‌وگو و نوشیدنی"
 ---
 
 # ایده دیت در خانه برای زوج‌ها؛ یک شب دونفره بدون برنامه‌ریزی سخت

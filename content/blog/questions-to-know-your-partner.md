@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "رابطه و گفت‌وگو"
 draft: false
+image: "images/blog/articles/questions-to-know-your-partner.webp"
+image_alt: "زوجی در حال استفاده از کارت‌های گفت‌وگو برای شناخت بیشتر یکدیگر"
 ---
 
 # برای شناخت بیشتر پارتنر چه سؤال‌هایی بپرسیم؟

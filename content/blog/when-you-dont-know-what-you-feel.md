@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "احساسات و خودشناسی"
 draft: false
+image: "images/blog/articles/when-you-dont-know-what-you-feel.webp"
+image_alt: "فردی در حال نوشتن و تلاش برای نام‌گذاری احساسات خود"
 ---
 
 # وقتی نمی‌دانیم چه احساسی داریم چه کار کنیم؟

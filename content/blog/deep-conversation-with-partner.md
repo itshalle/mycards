@@ -6,6 +6,8 @@ published_at: "2026-07-16"
 updated_at: "2026-07-16"
 category: "رابطه و گفت‌وگو"
 draft: false
+image: "images/blog/articles/deep-conversation-with-partner.webp"
+image_alt: "زوجی در حال گفت‌وگویی عمیق و صمیمی در فضای آرام خانه"
 ---
 
 # چطور با پارتنر گفت‌وگوی عمیق داشته باشیم؟

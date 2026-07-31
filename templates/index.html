@@ -7,19 +7,19 @@
     <span class="organic-blob blob-two" aria-hidden="true"></span>
 
     <section class="home-hero relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border border-[#E7DED3]">
-        {% set hero_asset = get_image_asset('images/onlycards-home-hero.webp', 'hero') %}
+        {% set hero_asset = get_image_asset('images/blog/hero/conversation-cards-couples-home.webp', 'hero') %}
         <img src="{{ hero_asset.src }}"
              {% if hero_asset.srcset %}srcset="{{ hero_asset.srcset }}" sizes="(max-width: 767px) 100vw, 1152px"{% endif %}
-             alt="دو کارت Only Cards برای ذهن‌آگاهی و یک قرار دونفره در کنار برگ و فنجان"
-             class="w-full h-[430px] sm:h-[480px] md:h-[490px] object-cover object-left"
-             width="{{ hero_asset.width or 1717 }}"
-             height="{{ hero_asset.height or 916 }}"
+             alt="زوجی در حال استفاده از کارت‌های Only Cards در فضای آرام خانه"
+             class="w-full h-[430px] sm:h-[480px] md:h-[490px] object-cover object-center"
+             width="{{ hero_asset.width or 1200 }}"
+             height="{{ hero_asset.height or 675 }}"
              loading="eager"
              fetchpriority="high"
              decoding="async">
 
         <div class="absolute inset-0 hero-soft-overlay"></div>
-        <div class="absolute inset-0 md:inset-y-0 md:right-0 md:left-auto md:w-[52%] flex items-end md:items-center px-5 sm:px-8 md:px-12 py-7 sm:py-9 md:py-0">
+        <div class="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[52%] flex items-end md:items-center px-5 sm:px-8 md:px-12 py-7 sm:py-9 md:py-0">
             <div class="max-w-lg">
                 <p class="text-sm font-bold tracking-wide text-[#637A63] mb-4">Only Cards</p>
                 <h1 class="text-[clamp(1.55rem,5.8vw,2.25rem)] font-extrabold text-[#4A3A35] leading-[1.65] mb-5">
