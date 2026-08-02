@@ -3,9 +3,12 @@ title: "چرخ احساسات چیست و چطور از آن استفاده کن
 slug: "emotion-wheel"
 description: "چرخ احساسات ابزاری برای پیدا کردن واژه‌های دقیق‌تر است. ببین چطور بدون تبدیل آن به آزمون، از این ابزار برای شناخت حال خودت استفاده کنی."
 published_at: "2026-07-16"
-updated_at: "2026-07-16"
+updated_at: "2026-08-03"
 category: "احساسات و خودشناسی"
 draft: false
+image: "images/blog/articles/emotion-wheel-blog-site.webp"
+image_alt: "??? ??????? ????? Only Cards ?? ??? ??????? ?????? ? ???????? ???????"
+image_fit: "contain"
 ---
 
 # چرخ احساسات چیست و چطور از آن استفاده کنیم؟
