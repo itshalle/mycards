@@ -61,106 +61,179 @@
     {% endif %}
 </header>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-10 items-start">
-    <div>
-        {% set product_images = split_product_images(product.image) %}
+<!-- ONLYCARDS_BATCH5_PRODUCT_GALLERY -->
+{% set product_images = split_product_images(product.image) %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-10 items-start lg:items-stretch">
+    <div class="min-w-0 lg:flex lg:h-full lg:flex-col lg:gap-5">
         {% if product_images %}
-            {% set main_image = product_images[0] %}
+            {% set main_image = get_product_preview_image(product) or product_images[0] %}
             {% set main_asset = get_image_asset(main_image, 'detail') %}
-            <div class="oc-surface min-h-[280px] sm:min-h-[360px] lg:min-h-[420px] flex items-center justify-center overflow-hidden p-3 sm:p-4 mb-4">
-                <img id="mainProductImage"
-                     src="{{ main_asset.src }}"
-                     {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"{% endif %}
-                     alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
-                     class="w-full h-full max-h-[540px] object-contain rounded-2xl"
-                     width="{{ main_asset.width or 960 }}"
-                     height="{{ main_asset.height or 1200 }}"
-                     loading="eager"
-                     fetchpriority="high"
-                     decoding="async">
-            </div>
 
-            {% if product_images|length > 1 %}
-            <div class="grid grid-cols-4 gap-2 sm:gap-3">
-                {% for image in product_images %}
-                    {% set thumb_asset = get_image_asset(image, 'thumb') %}
-                    {% set detail_asset = get_image_asset(image, 'detail') %}
+            <div class="product-gallery">
+                <div class="oc-surface relative min-h-[300px] sm:min-h-[390px] lg:min-h-[500px] overflow-hidden p-3 sm:p-4">
                     <button type="button"
-                            data-image-url="{{ detail_asset.src }}"
-                            data-image-srcset="{{ detail_asset.srcset }}"
-                            data-image-width="{{ detail_asset.width or 960 }}"
-                            data-image-height="{{ detail_asset.height or 1200 }}"
-                            class="product-thumbnail oc-touch-target min-w-0 bg-white rounded-xl border border-[#E0D8CE] p-1.5 sm:p-2 h-20 sm:h-24 hover:border-[#637A63] transition"
-                            aria-label="نمایش تصویر {{ loop.index }} از {{ product.name }}">
-                        <img src="{{ thumb_asset.src }}"
-                             {% if thumb_asset.srcset %}srcset="{{ thumb_asset.srcset }}" sizes="96px"{% endif %}
-                             alt="نمای دیگر {{ product.name }}، تصویر {{ loop.index }}"
-                             class="w-full h-full object-contain rounded-lg"
-                             width="{{ thumb_asset.width or 480 }}"
-                             height="{{ thumb_asset.height or 600 }}"
-                             loading="lazy"
+                            id="productGalleryOpen"
+                            class="group flex min-h-[274px] sm:min-h-[358px] lg:min-h-[468px] w-full cursor-zoom-in items-center justify-center rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#637A63]"
+                            aria-label="بازکردن تصویر محصول در حالت تمام‌صفحه">
+                        <img id="mainProductImage"
+                             src="{{ main_asset.src }}"
+                             {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"{% endif %}
+                             alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
+                             class="max-h-[570px] w-full object-contain rounded-2xl transition duration-300 group-hover:scale-[1.01]"
+                             width="{{ main_asset.width or 960 }}"
+                             height="{{ main_asset.height or 1200 }}"
+                             loading="eager"
+                             fetchpriority="high"
                              decoding="async">
+                        <span class="absolute bottom-4 left-4 rounded-full border border-white/80 bg-white/90 px-3 py-2 text-xs font-bold text-[#4A3A35] opacity-90 shadow-sm">
+                            نمایش تمام‌صفحه
+                        </span>
                     </button>
-                {% endfor %}
+
+                    {% if product_images|length > 1 %}
+                    <button type="button"
+                            id="productGalleryNext"
+                            class="oc-touch-target absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[#E9E2D8] bg-white/95 text-3xl leading-none text-[#4A3A35] shadow-md transition hover:bg-white"
+                            aria-label="تصویر بعدی" dir="ltr">›</button>
+                    <button type="button"
+                            id="productGalleryPrev"
+                            class="oc-touch-target absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[#E9E2D8] bg-white/95 text-3xl leading-none text-[#4A3A35] shadow-md transition hover:bg-white"
+                            aria-label="تصویر قبلی" dir="ltr">‹</button>
+                    <span id="productGalleryCounter"
+                          class="absolute right-4 bottom-4 rounded-full bg-[#4A3A35]/80 px-3 py-1.5 text-xs font-bold text-white"
+                          aria-live="polite"></span>
+                    {% endif %}
+                </div>
+
+                <div id="productGalleryData" class="hidden" aria-hidden="true">
+                    {% for image in product_images %}
+                        {% set detail_asset = get_image_asset(image, 'detail') %}
+                        <span data-product-gallery-item
+                              data-image-url="{{ detail_asset.src }}"
+                              data-image-srcset="{{ detail_asset.srcset }}"
+                              data-image-width="{{ detail_asset.width or 960 }}"
+                              data-image-height="{{ detail_asset.height or 1200 }}"
+                              data-image-alt="نمای {{ loop.index }} از {{ product.name }}"
+                              data-selected="{{ 'true' if image == main_image else 'false' }}"></span>
+                    {% endfor %}
+                </div>
             </div>
-            {% endif %}
         {% else %}
-            <div class="oc-surface min-h-[280px] sm:min-h-[360px] lg:min-h-[420px] flex items-center justify-center">
+            <div class="oc-surface min-h-[300px] sm:min-h-[390px] lg:min-h-[500px] flex items-center justify-center">
                 <span class="oc-product-fallback">{{ icon('card', 'w-16 h-16') }}</span>
             </div>
         {% endif %}
+
+        {% if page_content %}
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 items-stretch gap-5 lg:mt-0 lg:flex-1 lg:grid-cols-1 lg:grid-rows-2">
+            <section class="oc-surface h-full p-6 sm:p-7 flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="oc-icon-tile !w-14 !h-14 shrink-0">{{ icon('box', 'w-7 h-7') }}</div>
+                    <h2 class="text-xl font-extrabold text-[#4A3A35]">داخل جعبه</h2>
+                </div>
+                <ul class="space-y-3 flex-1">
+                    {% for item in page_content.inside_box %}
+                    <li class="flex gap-3 text-sm sm:text-base text-[#665A55] leading-7">
+                        <span class="mt-2 w-2 h-2 rounded-full bg-[#637A63] shrink-0"></span>
+                        <span>{{ item }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section class="oc-surface h-full p-6 sm:p-7 flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="oc-icon-tile !w-14 !h-14 shrink-0">{{ icon('target', 'w-7 h-7') }}</div>
+                    <h2 class="text-xl font-extrabold text-[#4A3A35]">مناسب برای</h2>
+                </div>
+                <ul class="space-y-3 flex-1">
+                    {% for item in page_content.suitable_for %}
+                    <li class="flex gap-3 text-sm sm:text-base text-[#665A55] leading-7">
+                        <span class="mt-2 w-2 h-2 rounded-full bg-[#C3AFA5] shrink-0"></span>
+                        <span>{{ item }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="oc-surface p-5 sm:p-8 lg:sticky lg:top-24">
-        <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ product.description }}</p>
+    <div class="space-y-5 lg:h-full">
+        <div class="oc-surface p-5 sm:p-8 lg:h-full">
+            <p class="text-[#665A55] leading-8 mb-7 whitespace-pre-line">{{ clean_product_description(product.description) }}</p>
 
-        <div class="border-y border-[#EEE8DF] py-5 mb-7">
+            <div class="border-y border-[#EEE8DF] py-5 mb-7">
+                {% if product.stock > 0 %}
+                <p class="text-sm text-[#8A7E78] mb-1">قیمت</p>
+                <p class="text-2xl font-extrabold text-[#637A63]">{{ "{:,}".format(product.price|int) }} تومان</p>
+                {% else %}
+                <p class="text-lg font-extrabold text-gray-500">ناموجود</p>
+                {% endif %}
+            </div>
+
             {% if product.stock > 0 %}
-            <p class="text-sm text-[#8A7E78] mb-1">قیمت</p>
-            <p class="text-2xl font-extrabold text-[#637A63]">{{ "{:,}".format(product.price|int) }} تومان</p>
+            <a href="/add-to-cart/{{ product.id }}" class="oc-primary-button w-full text-lg py-4">افزودن به سبد خرید</a>
             {% else %}
-            <p class="text-lg font-extrabold text-gray-500">ناموجود</p>
+            <span class="flex w-full items-center justify-center bg-gray-200 text-gray-500 text-lg font-bold px-8 py-4 rounded-full">ناموجود</span>
             {% endif %}
+            <p class="text-xs text-[#8A7E78] text-center mt-4">ارسال تهران با پیک و شهرهای دیگر با پست</p>
         </div>
 
-        {% if product.stock > 0 %}
-        <a href="/add-to-cart/{{ product.id }}" class="oc-primary-button w-full text-lg py-4">افزودن به سبد خرید</a>
-        {% else %}
-        <span class="flex w-full items-center justify-center bg-gray-200 text-gray-500 text-lg font-bold px-8 py-4 rounded-full">ناموجود</span>
-        {% endif %}
-        <p class="text-xs text-[#8A7E78] text-center mt-4">ارسال تهران با پیک و شهرهای دیگر با پست</p>
+
     </div>
 </div>
 
-{% if page_content %}
-<section class="mt-16 md:mt-24">
-    <div class="max-w-3xl mx-auto text-center mb-10">
-        <div class="oc-title-frame oc-title-frame-center mb-5">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35] leading-[1.6]">{{ page_content.section_title }}</h2>
+{% if product_images %}
+<div id="productLightbox"
+     class="fixed inset-0 z-[100] hidden bg-[#2E2825]/95 p-3 sm:p-6"
+     role="dialog"
+     aria-modal="true"
+     aria-label="گالری تمام‌صفحه {{ product.name }}">
+    <div class="mx-auto flex h-full max-w-6xl flex-col">
+        <div class="flex items-center justify-between gap-4 pb-3 text-white">
+            <p class="min-w-0 truncate text-sm sm:text-base font-bold">{{ product.name }}</p>
+            <button type="button"
+                    id="productLightboxClose"
+                    class="oc-touch-target shrink-0 rounded-full border border-white/30 bg-white/10 text-2xl text-white transition hover:bg-white/20"
+                    aria-label="بستن گالری">×</button>
         </div>
-        <p class="text-[#665A55] leading-8">{{ page_content.section_text }}</p>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
-        <div class="oc-surface p-7 sm:p-8">
-            <div class="oc-icon-tile mb-5">{{ icon('box', 'w-8 h-8') }}</div>
-            <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">داخل جعبه</h2>
-            <ul class="space-y-4">
-                {% for item in page_content.inside_box %}
-                <li class="flex gap-3 text-[#665A55] leading-7"><span class="mt-2 w-2 h-2 rounded-full bg-[#637A63] shrink-0"></span><span>{{ item }}</span></li>
-                {% endfor %}
-            </ul>
+        <div class="relative flex min-h-0 flex-1 items-center justify-center">
+            <img id="productLightboxImage"
+                 src="{{ main_asset.src }}"
+                 alt="{{ product.name }}"
+                 class="max-h-[calc(100vh-12.5rem)] max-w-full rounded-2xl object-contain"
+                 width="{{ main_asset.width or 960 }}"
+                 height="{{ main_asset.height or 1200 }}">
+
+            {% if product_images|length > 1 %}
+            <button type="button"
+                    id="productLightboxNext"
+                    class="oc-touch-target absolute right-0 sm:right-3 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-black/30 text-4xl leading-none text-white transition hover:bg-black/50"
+                    aria-label="تصویر بعدی" dir="ltr">›</button>
+            <button type="button"
+                    id="productLightboxPrev"
+                    class="oc-touch-target absolute left-0 sm:left-3 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-black/30 text-4xl leading-none text-white transition hover:bg-black/50"
+                    aria-label="تصویر قبلی" dir="ltr">‹</button>
+            {% endif %}
         </div>
-        <div class="oc-surface p-7 sm:p-8">
-            <div class="oc-icon-tile mb-5">{{ icon('target', 'w-8 h-8') }}</div>
-            <h2 class="text-xl font-extrabold text-[#4A3A35] mb-6">مناسب برای</h2>
-            <ul class="space-y-4">
-                {% for item in page_content.suitable_for %}
-                <li class="flex gap-3 text-[#665A55] leading-7"><span class="mt-2 w-2 h-2 rounded-full bg-[#C3AFA5] shrink-0"></span><span>{{ item }}</span></li>
-                {% endfor %}
-            </ul>
-        </div>
+
+        {% if product_images|length > 1 %}
+        <div id="productLightboxThumbs"
+             class="product-gallery-strip mt-3 flex justify-start sm:justify-center gap-2 overflow-x-auto pb-1"
+             aria-label="تصاویر کوچک گالری"></div>
+        {% endif %}
     </div>
+</div>
+{% endif %}
+
+{% if page_content %}
+<section class="mt-14 md:mt-20 max-w-3xl mx-auto text-center">
+    <div class="oc-title-frame oc-title-frame-center mb-5">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-[#4A3A35] leading-[1.6]">{{ page_content.section_title }}</h2>
+    </div>
+    <p class="text-[#665A55] leading-8">{{ page_content.section_text }}</p>
 </section>
 
 <section class="mt-16 md:mt-24 max-w-4xl mx-auto">
@@ -205,32 +278,162 @@
 {% endif %}
 {% endif %}
 
+<style>
+    body.product-lightbox-open { overflow: hidden; }
+    .product-gallery-strip {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(99, 122, 99, .45) transparent;
+    }
+    .product-gallery-strip::-webkit-scrollbar { height: 6px; }
+    .product-gallery-strip::-webkit-scrollbar-thumb {
+        background: rgba(99, 122, 99, .38);
+        border-radius: 999px;
+    }
+</style>
+
 <script>
-    const thumbnails = document.querySelectorAll('.product-thumbnail');
+document.addEventListener('DOMContentLoaded', function () {
+    const galleryData = Array.from(document.querySelectorAll('[data-product-gallery-item]'));
     const mainImage = document.getElementById('mainProductImage');
-    thumbnails.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const newImageUrl = button.getAttribute('data-image-url');
-            const newImageSrcset = button.getAttribute('data-image-srcset');
-            const newImageWidth = button.getAttribute('data-image-width');
-            const newImageHeight = button.getAttribute('data-image-height');
-            if (mainImage && newImageUrl) {
-                mainImage.src = newImageUrl;
-                if (newImageSrcset) {
-                    mainImage.srcset = newImageSrcset;
-                } else {
-                    mainImage.removeAttribute('srcset');
-                }
-                if (newImageWidth) mainImage.width = Number(newImageWidth);
-                if (newImageHeight) mainImage.height = Number(newImageHeight);
-            }
-            thumbnails.forEach(function(item) {
-                item.classList.remove('border-[#637A63]');
-                item.classList.add('border-[#E0D8CE]');
+    const openButton = document.getElementById('productGalleryOpen');
+
+    if (!mainImage || !openButton) return;
+
+    const items = galleryData.length
+        ? galleryData.map(function (item) {
+            return {
+                src: item.dataset.imageUrl || '',
+                srcset: item.dataset.imageSrcset || '',
+                width: Number(item.dataset.imageWidth || 960),
+                height: Number(item.dataset.imageHeight || 1200),
+                alt: item.dataset.imageAlt || mainImage.alt,
+            };
+        })
+        : [{
+            src: mainImage.currentSrc || mainImage.src,
+            srcset: mainImage.getAttribute('srcset') || '',
+            width: Number(mainImage.getAttribute('width') || 960),
+            height: Number(mainImage.getAttribute('height') || 1200),
+            alt: mainImage.alt,
+        }];
+
+    let currentIndex = Math.max(
+        0,
+        galleryData.findIndex(function (item) {
+            return item.dataset.selected === 'true';
+        })
+    );
+
+    const counter = document.getElementById('productGalleryCounter');
+    const prevButton = document.getElementById('productGalleryPrev');
+    const nextButton = document.getElementById('productGalleryNext');
+    const lightbox = document.getElementById('productLightbox');
+    const lightboxImage = document.getElementById('productLightboxImage');
+    const lightboxClose = document.getElementById('productLightboxClose');
+    const lightboxPrev = document.getElementById('productLightboxPrev');
+    const lightboxNext = document.getElementById('productLightboxNext');
+    const lightboxThumbs = document.getElementById('productLightboxThumbs');
+
+    function applyImage(image, item) {
+        if (!image || !item) return;
+        image.src = item.src;
+        if (item.srcset) {
+            image.srcset = item.srcset;
+        } else {
+            image.removeAttribute('srcset');
+        }
+        image.width = item.width;
+        image.height = item.height;
+        image.alt = item.alt;
+    }
+
+    function renderLightboxThumbs() {
+        if (!lightboxThumbs || lightboxThumbs.childElementCount) return;
+
+        items.forEach(function (item, index) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'lightbox-gallery-thumb h-16 w-16 sm:h-20 sm:w-20 shrink-0 rounded-xl border border-white/25 bg-white/10 p-1.5 transition';
+            button.setAttribute('aria-label', 'نمایش تصویر ' + (index + 1));
+            button.dataset.galleryIndex = String(index);
+
+            const image = document.createElement('img');
+            image.src = item.src;
+            image.alt = '';
+            image.className = 'h-full w-full rounded-lg object-contain';
+            image.loading = 'lazy';
+            button.appendChild(image);
+
+            button.addEventListener('click', function () {
+                render(index);
             });
-            button.classList.remove('border-[#E0D8CE]');
-            button.classList.add('border-[#637A63]');
+
+            lightboxThumbs.appendChild(button);
         });
+    }
+
+    function render(index) {
+        currentIndex = (index + items.length) % items.length;
+        const item = items[currentIndex];
+
+        applyImage(mainImage, item);
+        applyImage(lightboxImage, item);
+
+        if (counter) {
+            counter.textContent = (currentIndex + 1) + ' / ' + items.length;
+        }
+
+        document.querySelectorAll('.lightbox-gallery-thumb').forEach(function (button, buttonIndex) {
+            const active = buttonIndex === currentIndex;
+            button.classList.toggle('border-white', active);
+            button.classList.toggle('ring-2', active);
+            button.classList.toggle('ring-white/40', active);
+            button.classList.toggle('border-white/25', !active);
+        });
+    }
+
+    function move(delta) {
+        render(currentIndex + delta);
+    }
+
+    function openLightbox() {
+        if (!lightbox) return;
+        renderLightboxThumbs();
+        render(currentIndex);
+        lightbox.classList.remove('hidden');
+        document.body.classList.add('product-lightbox-open');
+        if (lightboxClose) lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.add('hidden');
+        document.body.classList.remove('product-lightbox-open');
+        openButton.focus();
+    }
+
+    openButton.addEventListener('click', openLightbox);
+    if (prevButton) prevButton.addEventListener('click', function () { move(-1); });
+    if (nextButton) nextButton.addEventListener('click', function () { move(1); });
+    if (lightboxPrev) lightboxPrev.addEventListener('click', function () { move(-1); });
+    if (lightboxNext) lightboxNext.addEventListener('click', function () { move(1); });
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+
+    if (lightbox) {
+        lightbox.addEventListener('click', function (event) {
+            if (event.target === lightbox) closeLightbox();
+        });
+    }
+
+    document.addEventListener('keydown', function (event) {
+        const isOpen = lightbox && !lightbox.classList.contains('hidden');
+
+        if (isOpen && event.key === 'Escape') closeLightbox();
+        if (event.key === 'ArrowRight') move(1);
+        if (event.key === 'ArrowLeft') move(-1);
     });
+
+    render(currentIndex);
+});
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+# ONLYCARDS_BATCH5_GALLERY_SOCIAL_CHECKOUT
 from flask import Flask, render_template, request, redirect, url_for, session, Response, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
@@ -325,6 +326,32 @@ def delete_product_file(image_path):
     delete_image_variants(image_path)
 
 
+
+# ONLYCARDS_BATCH5_DESCRIPTION_CLEANUP
+def clean_product_description(text):
+    """Hide duplicated 'inside box' and 'suitable for' lists from product copy."""
+    lines = (text or '').replace('\r\n', '\n').replace('\r', '\n').split('\n')
+    cleaned = []
+    skipping_duplicate_section = False
+    headings = {'داخل جعبه', 'مناسب برای'}
+
+    for line in lines:
+        stripped = line.strip()
+        normalized = re.sub(r'^[•●▪◦*\-–—\s]+|[:：\s]+$', '', stripped)
+
+        if normalized in headings:
+            skipping_duplicate_section = True
+            continue
+
+        if skipping_duplicate_section:
+            if not stripped or re.match(r'^[•●▪◦*\-–—]\s*', stripped):
+                continue
+            skipping_duplicate_section = False
+
+        cleaned.append(line)
+
+    return '\n'.join(cleaned).strip()
+
 @app.context_processor
 def image_helpers():
     organization_schema = {
@@ -349,6 +376,7 @@ def image_helpers():
     }
 
     return dict(
+        clean_product_description=clean_product_description,
         split_product_images=split_product_images,
         get_product_preview_image=get_product_preview_image,
         get_product_url=get_product_url,
@@ -449,7 +477,11 @@ def index():
         meta_title='خرید کارت‌های گفت‌وگو و خودشناسی فارسی | Only Cards',
         meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، خودشناسی، گفت‌وگوی عمیق، رابطه عاطفی و وقت‌گذرانی دونفره معنادار بدون موبایل.',
         canonical_url=absolute_url(url_for('index')),
-        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home-final.webp')
+        og_image=absolute_static_url('images/social/onlycards-share-1200x630.jpg'),
+        og_image_alt='Only Cards؛ کارت‌هایی برای گفت‌وگو، آرامش و شناخت بیشتر',
+        og_image_type='image/jpeg',
+        og_image_width=1200,
+        og_image_height=630
     )
 
 
@@ -523,7 +555,11 @@ def blog():
         meta_title='راهنمای آرامش، خودشناسی و گفت‌وگوی عمیق | Only Cards',
         meta_description='مقاله‌های کاربردی Only Cards درباره شناخت احساسات، ذهن‌آگاهی، رابطه و زمان دو نفره؛ با توضیح‌های روشن و تمرین‌های قابل استفاده.',
         canonical_url=absolute_url(url_for('blog')),
-        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home-final.webp')
+        og_image=absolute_static_url('images/social/onlycards-share-1200x630.jpg'),
+        og_image_alt='بلاگ Only Cards؛ راهنماهای آرامش، خودشناسی و گفت‌وگو',
+        og_image_type='image/jpeg',
+        og_image_width=1200,
+        og_image_height=630
     )
 
 
@@ -960,10 +996,29 @@ def checkout():
 
         customer_name = request.form.get('name', '').strip()
         customer_phone = request.form.get('phone', '').strip()
-        customer_address = request.form.get('address', '').strip()
+        customer_province = request.form.get('province', '').strip()
+        customer_city = request.form.get('city', '').strip()
+        customer_address_detail = request.form.get('address', '').strip()
+        customer_notes = request.form.get('notes', '').strip()[:1000]
 
-        if not customer_name or not customer_phone or not customer_address:
+        if not all([
+            customer_name,
+            customer_phone,
+            customer_province,
+            customer_city,
+            customer_address_detail,
+        ]):
             return 'اطلاعات سفارش کامل نیست.', 400
+
+        address_parts = [
+            f'استان: {customer_province}',
+            f'شهر: {customer_city}',
+            f'آدرس: {customer_address_detail}',
+        ]
+        if customer_notes:
+            address_parts.append(f'توضیحات سفارش: {customer_notes}')
+
+        customer_address = '\n'.join(address_parts)
 
         order = Order(
             customer_name=customer_name,
