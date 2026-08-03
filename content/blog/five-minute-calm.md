@@ -3,7 +3,7 @@ title: "تمرین پنج دقیقه‌ای برای آرام کردن ذهن د
 slug: "five-minute-calm"
 description: "یک تمرین پنج دقیقه‌ای برای آرام کردن ذهن؛ بدون نیاز به مدیتیشن، فضای خاص یا وسایل زیاد. فقط چند دقیقه برای مکث و برگشتن به همین لحظه."
 published_at: "2026-07-16"
-updated_at: "2026-07-16"
+updated_at: "2026-08-03"
 category: "آرامش و ذهن‌آگاهی"
 draft: false
 image: "images/blog/articles/five-minute-calm.webp"
@@ -53,7 +53,7 @@ image_alt: "مکث کوتاه پنج‌دقیقه‌ای با دفتر، نوش�
 
 اگر شمردن کمکت می‌کند، هنگام دم آرام تا پنج بشمار و هنگام بازدم هم تا پنج. اگر پنج شماره برایت زیاد است، سه یا چهار شماره کافی است. نفس را حبس نکن و برای پرکردن کامل ریه‌ها به خودت فشار نیاور.
 
-NHS نیز برای یک تمرین تنفسی کوتاه، نفس‌کشیدن آرام و منظم، بدون اجبار و ادامه‌دادن آن برای چند دقیقه را پیشنهاد می‌کند. [راهنمای تمرین تنفس NHS](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/)
+راهنمای NHS نیز برای یک تمرین تنفسی کوتاه، نفس‌کشیدن آرام و منظم، بدون اجبار و ادامه‌دادن آن برای چند دقیقه را پیشنهاد می‌کند.[۱]
 
 اگر احساس سرگیجه یا ناراحتی کردی، تمرین را متوقف کن و به ریتم طبیعی نفست برگرد.
 
@@ -130,7 +130,7 @@ NHS نیز برای یک تمرین تنفسی کوتاه، نفس‌کشیدن 
 
 اگر تمرکز روی نفس یا سکوت حالت را بدتر می‌کند، لازم نیست خودت را مجبور کنی. می‌توانی بخش تنفس را کنار بگذاری و فقط روی محیط، تماس پاها با زمین یا یک کار ساده و قابل‌دیدن تمرکز کنی.
 
-تمرین‌های ذهن‌آگاهی برای همه و در همه‌ی موقعیت‌ها تجربه‌ی یکسانی ایجاد نمی‌کنند و نباید جای مراقبت حرفه‌ای را بگیرند. [مرور ایمنی و شواهد ذهن‌آگاهی از NCCIH](https://www.nccih.nih.gov/health/meditation-and-mindfulness-effectiveness-and-safety)
+تمرین‌های ذهن‌آگاهی برای همه و در همه‌ی موقعیت‌ها تجربه‌ی یکسانی ایجاد نمی‌کنند و نباید جای مراقبت حرفه‌ای را بگیرند.[۲]
 
 ## این تمرین را کجای روزت بگذاری؟
 
@@ -174,5 +174,5 @@ NHS نیز برای یک تمرین تنفسی کوتاه، نفس‌کشیدن 
 
 ## منابع
 
-- [NHS — تمرین تنفس برای استرس](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/)
-- [NCCIH — اثربخشی و ایمنی مدیتیشن و ذهن‌آگاهی](https://www.nccih.nih.gov/health/meditation-and-mindfulness-effectiveness-and-safety)
+- [۱] [NHS — تمرین تنفس برای استرس](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/)
+- [۲] [NCCIH — اثربخشی و ایمنی مدیتیشن و ذهن‌آگاهی](https://www.nccih.nih.gov/health/meditation-and-mindfulness-effectiveness-and-safety)
