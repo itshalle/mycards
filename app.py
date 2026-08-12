@@ -16,6 +16,10 @@ from image_pipeline import delete_image_variants, get_image_asset, optimized_sta
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
 
+@app.route('/72755503.txt')
+def enamad_verification_file():
+    return Response('', mimetype='text/plain')
+
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', uuid4().hex)
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', uuid4().hex)
 
