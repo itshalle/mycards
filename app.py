@@ -18,6 +18,21 @@ app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
 
 @app.route('/72755503.txt')
 def enamad_verification_file():
+    client_ip = (
+        request.headers.get('CF-Connecting-IP')
+        or request.headers.get('X-Forwarded-For')
+        or request.remote_addr
+        or ''
+    )
+    user_agent = request.headers.get('User-Agent', '')
+    cf_ray = request.headers.get('CF-Ray', '')
+
+    print(
+        f"ENAMAD_VERIFY_REQUEST ip={client_ip!r} "
+        f"ua={user_agent!r} cf_ray={cf_ray!r}",
+        flush=True,
+    )
+
     return Response('', mimetype='text/plain')
 
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', uuid4().hex)
