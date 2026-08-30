@@ -166,7 +166,35 @@ def load_blog_post(file_path):
     return metadata
 
 
-def get_blog_posts(include_drafts=False):
+def parse_blog_published_at(value):
+    raw_value = str(value or '').strip()
+
+    if not raw_value:
+        return None
+
+    try:
+        parsed = datetime.fromisoformat(
+            raw_value.replace('Z', '+00:00')
+        )
+    except ValueError:
+        return None
+
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+
+    return parsed.astimezone(timezone.utc)
+
+
+def is_blog_post_published(post):
+    published_at = parse_blog_published_at(post.get('published_at'))
+
+    if published_at is None:
+        return False
+
+    return published_at <= datetime.now(timezone.utc)
+
+
+def get_blog_posts(include_drafts=False, include_future=False):
     posts = []
 
     if not os.path.isdir(BLOG_CONTENT_DIR):
@@ -177,15 +205,28 @@ def get_blog_posts(include_drafts=False):
             continue
 
         post = load_blog_post(os.path.join(BLOG_CONTENT_DIR, filename))
-        if not post or (post['draft'] and not include_drafts):
+
+        if not post:
+            continue
+
+        if post['draft'] and not include_drafts:
+            continue
+
+        if not include_future and not is_blog_post_published(post):
             continue
 
         posts.append(post)
 
     posts.sort(key=lambda post: post['slug'])
-    posts.sort(key=lambda post: post['published_at'], reverse=True)
-    return posts
+    posts.sort(
+        key=lambda post: (
+            parse_blog_published_at(post['published_at'])
+            or datetime.min.replace(tzinfo=timezone.utc)
+        ),
+        reverse=True
+    )
 
+    return posts
 
 def get_blog_post(slug):
     for post in get_blog_posts():
