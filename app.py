@@ -122,6 +122,18 @@ BLOG_CATEGORIES = {
         'meta_title': 'زمان دو نفره و هدیه | ایده برای زوج‌ها | Only Cards',
         'meta_description': 'ایده‌های زمان دونفره، دیت در خانه، سرگرمی بدون موبایل و انتخاب هدیه‌ای شخصی‌تر و معنادار برای آدم‌های مهم زندگی.'
     },
+    'daily-life': {
+        'name': 'زندگی روزمره',
+        'image': '',
+        'image_alt': 'فضایی گرم و ساده برای انتخاب\u200cهای روزمره و ایده\u200cهای غذا',
+        'intro': 'بعضی تصمیم\u200cهای کوچک روزمره بیشتر از چیزی که باید انرژی می\u200cگیرند.',
+        'intro_paragraphs': [
+            'بعضی تصمیم\u200cهای کوچک روزمره، مثل اینکه امشب چی بخوریم یا بین چند انتخاب ساده یکی را برداریم، گاهی بیشتر از چیزی که انتظار داریم انرژی می\u200cگیرند. این بخش برای همین موقعیت\u200cهای معمولی است؛ انتخاب\u200cهایی که قرار نیست مهم باشند، اما وقتی خسته\u200cایم یا ایده نداریم می\u200cتوانند آزاردهنده شوند.',
+            'در این دسته ایده\u200cهای ساده و قابل\u200cاستفاده برای زندگی روزمره را جمع می\u200cکنیم؛ از پیدا کردن ایده برای شام تا راه\u200cهایی برای کمترکردن خستگی تصمیم\u200cگیری. هدف ساختن فهرست\u200cهای بی\u200cپایان نیست؛ قرار است انتخاب\u200cهای روزانه کمی سبک\u200cتر، بازیگوشانه\u200cتر و قابل\u200cمدیریت\u200cتر شوند.'
+        ],
+        'meta_title': 'زندگی روزمره | ایده\u200cهای ساده برای انتخاب\u200cهای روزانه | Only Cards',
+        'meta_description': 'ایده\u200cهای کاربردی Only Cards برای انتخاب\u200cهای روزمره؛ از ایده شام و تصمیم\u200cگیری درباره غذا تا راه\u200cهای ساده\u200cتر و بازیگوشانه\u200cتر برای انتخاب.'
+    },
 }
 
 BLOG_CATEGORY_BY_NAME = {
@@ -251,6 +263,8 @@ def get_blog_category_cards(posts):
             1 for post in posts
             if post.get('category_slug') == category_slug
         )
+        if card['count'] == 0:
+            continue
         cards.append(card)
     return cards
 
@@ -635,6 +649,10 @@ def blog_category(category_slug):
         post for post in all_posts
         if post.get('category_slug') == category_slug
     ]
+
+    if not posts:
+        abort(404)
+
     category = dict(category_data)
     category['slug'] = category_slug
     category_image_url = (
@@ -1225,6 +1243,10 @@ def sitemap():
             post for post in blog_posts
             if post.get('category_slug') == category_slug
         ]
+
+        if not category_posts:
+            continue
+
         category_page = {
             'loc': absolute_url(
                 url_for('blog_category', category_slug=category_slug)
