@@ -63,6 +63,24 @@
 
 <!-- ONLYCARDS_BATCH5_PRODUCT_GALLERY -->
 {% set product_images = split_product_images(product.image) %}
+{% if product.id == 4 and not product_images %}
+{% set product_images = [
+    'uploads/products/what-to-eat-tonight-overview.webp',
+    'uploads/products/what-to-eat-tonight-food-pasta.webp',
+    'uploads/products/what-to-eat-tonight-condition-under-30-minutes.webp',
+    'uploads/products/what-to-eat-tonight-chaos-veto.webp'
+] %}
+{% endif %}
+{% if product.id == 4 %}
+{% set product_image_alts = {
+    'uploads/products/what-to-eat-tonight-overview.webp': 'سه کارت از دک «امشب چی بخوریم» شامل پاستا، زیر ۳۰ دقیقه و وتو کنار مواد غذایی',
+    'uploads/products/what-to-eat-tonight-food-pasta.webp': 'کارت غذای «پاستا» از دک «امشب چی بخوریم» کنار پشت کارت نارنجی',
+    'uploads/products/what-to-eat-tonight-condition-under-30-minutes.webp': 'کارت شرط «زیر ۳۰ دقیقه» از دک «امشب چی بخوریم» در فضای آشپزخانه کنار پشت کارت سبز',
+    'uploads/products/what-to-eat-tonight-chaos-veto.webp': 'کارت آشوب «وتو» از دک «امشب چی بخوریم» کنار پشت کارت زرد و یک کاسه غذا'
+} %}
+{% else %}
+{% set product_image_alts = {} %}
+{% endif %}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 lg:gap-10 items-start lg:items-stretch">
     <div class="min-w-0 lg:flex lg:h-full lg:flex-col lg:gap-5">
         {% if product_images %}
@@ -78,7 +96,7 @@
                         <img id="mainProductImage"
                              src="{{ main_asset.src }}"
                              {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"{% endif %}
-                             alt="{{ product.name }}؛ کارت‌های فارسی Only Cards"
+                             alt="{{ product_image_alts.get(main_image, product.name ~ '؛ کارت‌های فارسی Only Cards') }}"
                              class="max-h-[570px] w-full object-contain rounded-2xl transition duration-300 group-hover:scale-[1.01]"
                              width="{{ main_asset.width or 960 }}"
                              height="{{ main_asset.height or 1200 }}"
@@ -113,7 +131,7 @@
                               data-image-srcset="{{ detail_asset.srcset }}"
                               data-image-width="{{ detail_asset.width or 960 }}"
                               data-image-height="{{ detail_asset.height or 1200 }}"
-                              data-image-alt="نمای {{ loop.index }} از {{ product.name }}"
+                              data-image-alt="{{ product_image_alts.get(image, 'نمای ' ~ loop.index ~ ' از ' ~ product.name) }}"
                               data-selected="{{ 'true' if image == main_image else 'false' }}"></span>
                     {% endfor %}
                 </div>
@@ -202,7 +220,7 @@
         <div class="relative flex min-h-0 flex-1 items-center justify-center">
             <img id="productLightboxImage"
                  src="{{ main_asset.src }}"
-                 alt="{{ product.name }}"
+                 alt="{{ product_image_alts.get(main_image, product.name) }}"
                  class="max-h-[calc(100vh-12.5rem)] max-w-full rounded-2xl object-contain"
                  width="{{ main_asset.width or 960 }}"
                  height="{{ main_asset.height or 1200 }}">

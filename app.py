@@ -321,10 +321,25 @@ def split_product_images(image_text):
     return [image.strip() for image in image_text.split('||') if image.strip()]
 
 
+PRODUCT_IMAGE_FALLBACKS = {
+    4: [
+        'uploads/products/what-to-eat-tonight-overview.webp',
+        'uploads/products/what-to-eat-tonight-food-pasta.webp',
+        'uploads/products/what-to-eat-tonight-condition-under-30-minutes.webp',
+        'uploads/products/what-to-eat-tonight-chaos-veto.webp',
+    ],
+}
+
+
 def get_product_preview_image(product):
     images = split_product_images(product.image)
     if images:
         return images[0]
+
+    fallback_images = PRODUCT_IMAGE_FALLBACKS.get(product.id, [])
+    if fallback_images:
+        return fallback_images[0]
+
     return ''
 
 
@@ -339,6 +354,7 @@ def make_product_slug(product):
         1: 'calm-cards',
         2: 'couples-conversation-cards',
         3: 'mindfulness-skills-cards',
+        4: 'what-to-eat-tonight',
     }
     return product_slugs.get(product.id, make_legacy_product_slug(product))
 
@@ -963,6 +979,49 @@ def get_product_page_content(product):
             ],
             'related_slugs': ['what-is-dbt', 'dbt-mindfulness'],
         },
+    }
+
+    # ONLYCARDS_PRODUCT4_PAGE_CONTENT
+    product_content[4] = {
+        'eyebrow': '۵۳ کارت برای انتخاب شام بدون کلنجار',
+        'section_title': 'انتخاب شام را به یک بازی کوچک تبدیل کن',
+        'section_text': 'یک کارت غذا بکش، یک شرط به آن اضافه کن و اگر هنوز به نتیجه نرسیدی، کارت آشوب را وارد بازی کن. این دک قرار نیست به\u200cجای تو تصمیم بگیرد؛ قرار است انتخاب را سریع\u200cتر، سبک\u200cتر و کمی بامزه\u200cتر کند.',
+        'inside_box': [
+            '۳۶ کارت غذا',
+            '۱۲ کارت شرط',
+            '۴ کارت آشوب',
+            '۱ کارت راهنما',
+        ],
+        'suitable_for': [
+            'شب\u200cهایی که نمی\u200cدانی برای شام چی درست کنی',
+            'وقتی از غذاهای همیشگی خسته شده\u200cای',
+            'زوج\u200cها و هم\u200cخانه\u200cای\u200cها که سر شام به نتیجه نمی\u200cرسند',
+            'وقت\u200cهایی که حوصله تصمیم\u200cگیری طولانی نداری',
+            'اضافه\u200cکردن کمی بازی و تنوع به یک تصمیم روزمره',
+        ],
+        'faqs': [
+            {
+                'question': 'چطور بازی کنیم؟',
+                'answer': 'یک کارت غذا و یک کارت شرط بکش. اگر ترکیب به دردت نخورد، یک کارت آشوب بکش و قانون همان دور را اجرا کن.',
+            },
+            {
+                'question': 'آیا کارت\u200cها دستور پخت کامل دارند؟',
+                'answer': 'نه. روی کارت\u200cهای غذا راهنمای کوتاهی هست که ایده را روشن می\u200cکند، اما قرار نیست یک دستور آشپزی طولانی را مو به مو اجرا کنی.',
+            },
+            {
+                'question': 'می\u200cشود دونفره از آن استفاده کرد؟',
+                'answer': 'بله. می\u200cتوانید دونفره کارت\u200cها را بکشید و بر سر نتیجه به یک انتخاب مشترک برسید. برای هم\u200cخانه\u200cای\u200cها و جمع\u200cهای کوچک هم قابل استفاده است.',
+            },
+            {
+                'question': 'اگر ترکیب کارت غذا و شرط به دردمان نخورد چی؟',
+                'answer': 'برای همین ۴ کارت آشوب داری: وتو، از اول، بی\u200cخیال شرط و دو تا شانس. هر کدام قانون همان دور را عوض می\u200cکند.',
+            },
+        ],
+        'related_slugs': [
+            'what-to-make-for-dinner',
+            'simple-quick-dinner-ideas',
+            'dinner-not-repetitive',
+        ],
     }
 
     content = product_content.get(product.id)
