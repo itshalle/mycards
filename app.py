@@ -567,11 +567,11 @@ def index():
         meta_title='خرید کارت‌های گفت‌وگو و خودشناسی فارسی | Only Cards',
         meta_description='خرید کارت‌های فارسی Only Cards برای آرامش، خودشناسی، گفت‌وگوی عمیق، رابطه عاطفی و وقت‌گذرانی دونفره معنادار بدون موبایل.',
         canonical_url=absolute_url(url_for('index')),
-        og_image=absolute_static_url('images/social/onlycards-share-1200x630.jpg'),
+        og_image=absolute_static_url('images/blog/hero/conversation-cards-couples-home-final.webp'),
         og_image_alt='Only Cards؛ کارت‌هایی برای گفت‌وگو، آرامش و شناخت بیشتر',
-        og_image_type='image/jpeg',
+        og_image_type='image/webp',
         og_image_width=1200,
-        og_image_height=630
+        og_image_height=675
     )
 
 
