@@ -331,7 +331,23 @@ PRODUCT_IMAGE_FALLBACKS = {
 }
 
 
+ENGLISH_CONVERSATION_IMAGE_PATHS = [
+    'uploads/products/english-conversation-hero.webp',
+    'uploads/products/english-conversation-two-friends.webp',
+    'uploads/products/english-conversation-three-cards.webp',
+    'uploads/products/english-conversation-group.webp',
+]
+
+
+def is_english_conversation_product(product):
+    name = (product.name or '').lower()
+    return 'مکالمه انگلیسی' in name or 'english conversation' in name
+
+
 def get_product_preview_image(product):
+    if is_english_conversation_product(product):
+        return ENGLISH_CONVERSATION_IMAGE_PATHS[0]
+
     if product.id == 4:
         return PRODUCT_IMAGE_FALLBACKS[4][0]
 

@@ -74,6 +74,14 @@
 
 <!-- ONLYCARDS_BATCH5_PRODUCT_GALLERY -->
 {% set product_images = split_product_images(product.image) %}
+{% if 'مکالمه انگلیسی' in product.name or 'english conversation' in product.name|lower %}
+{% set product_images = [
+    'uploads/products/english-conversation-hero.webp',
+    'uploads/products/english-conversation-two-friends.webp',
+    'uploads/products/english-conversation-three-cards.webp',
+    'uploads/products/english-conversation-group.webp'
+] %}
+{% endif %}
 {% if product.id == 4 %}
 {% set product_images = [
     'uploads/products/what-to-eat-tonight-overview.webp',
@@ -90,26 +98,12 @@
     'uploads/products/what-to-eat-tonight-chaos-veto.webp': 'کارت آشوب «وتو» از دک «امشب چی بخوریم» کنار پشت کارت زرد و یک کاسه غذا'
 } %}
 {% elif 'مکالمه انگلیسی' in product.name or 'english conversation' in product.name|lower %}
-{% set product_image_alts = {} %}
-{% for image in product_images %}
-    {% set filename = image|lower %}
-    {% if 'group' in filename or 'friends' in filename %}
-        {% set alt = 'دوستان در حال تمرین مکالمه انگلیسی با کارت‌های گفت‌وگوی Only Cards' %}
-    {% elif 'couple' in filename or 'duo' in filename or 'two-people' in filename %}
-        {% set alt = 'دو نفر در حال تمرین گفت‌وگوی انگلیسی با کارت‌های مکالمه Only Cards' %}
-    {% elif 'phrase' in filename %}
-        {% set alt = 'کارت Phrase از دک مکالمه انگلیسی Only Cards برای تمرین عبارت‌های کاربردی' %}
-    {% elif 'keep-talking' in filename or 'keep_talking' in filename %}
-        {% set alt = 'کارت Keep Talking از دک مکالمه انگلیسی Only Cards برای ادامه گفت‌وگو' %}
-    {% elif 'prompt' in filename or 'easy' in filename %}
-        {% set alt = 'کارت شروع گفت‌وگو از مجموعه کارت‌های مکالمه انگلیسی Only Cards' %}
-    {% elif 'back' in filename %}
-        {% set alt = 'پشت کارت‌های مکالمه انگلیسی Only Cards با طراحی اختصاصی دک' %}
-    {% else %}
-        {% set alt = 'نمایی از کارت‌های مکالمه انگلیسی Only Cards برای تمرین گفت‌وگو' %}
-    {% endif %}
-    {% set _ = product_image_alts.update({image: alt}) %}
-{% endfor %}
+{% set product_image_alts = {
+    'uploads/products/english-conversation-hero.webp': 'چهار کارت مکالمه انگلیسی Only Cards روی میز شامل Easy Prompt، Keep Talking، Phrase و پشت کارت',
+    'uploads/products/english-conversation-two-friends.webp': 'دو دوست در حال تمرین مکالمه انگلیسی با کارت سؤال روزمره Only Cards کنار میز',
+    'uploads/products/english-conversation-three-cards.webp': 'سه مدل کارت تمرین مکالمه انگلیسی Easy Prompt، Keep Talking و Phrase روی پایه چوبی',
+    'uploads/products/english-conversation-group.webp': 'چهار دوست دور میز در حال گفت‌وگو و تمرین مکالمه انگلیسی با کارت‌های Only Cards'
+} %}
 {% else %}
 {% set product_image_alts = {} %}
 {% endif %}
