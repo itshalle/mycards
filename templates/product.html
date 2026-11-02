@@ -63,7 +63,7 @@
 
 <!-- ONLYCARDS_BATCH5_PRODUCT_GALLERY -->
 {% set product_images = split_product_images(product.image) %}
-{% if product.id == 4 and not product_images %}
+{% if product.id == 4 %}
 {% set product_images = [
     'uploads/products/what-to-eat-tonight-overview.webp',
     'uploads/products/what-to-eat-tonight-food-pasta.webp',
