@@ -332,6 +332,9 @@ PRODUCT_IMAGE_FALLBACKS = {
 
 
 def get_product_preview_image(product):
+    if product.id == 4:
+        return PRODUCT_IMAGE_FALLBACKS[4][0]
+
     images = split_product_images(product.image)
     if images:
         return images[0]
