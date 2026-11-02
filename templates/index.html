@@ -58,7 +58,7 @@
                     {% set product_asset = get_image_asset(preview_image, 'card') %}
                     <img src="{{ product_asset.src }}"
                          {% if product_asset.srcset %}srcset="{{ product_asset.srcset }}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, calc(100vw - 2rem)"{% endif %}
-                         alt="تصویر محصول {{ product.name }}"
+                         alt="{% if 'مکالمه انگلیسی' in product.name or 'english conversation' in product.name|lower %}کارت‌های مکالمه انگلیسی Only Cards برای تمرین صحبت‌کردن و گفت‌وگو{% else %}تصویر محصول {{ product.name }}{% endif %}"
                          class="w-full h-full object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
                          width="{{ product_asset.width or 480 }}"
                          height="{{ product_asset.height or 600 }}"

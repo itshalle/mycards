@@ -78,6 +78,27 @@
     'uploads/products/what-to-eat-tonight-condition-under-30-minutes.webp': 'کارت شرط «زیر ۳۰ دقیقه» از دک «امشب چی بخوریم» در فضای آشپزخانه کنار پشت کارت سبز',
     'uploads/products/what-to-eat-tonight-chaos-veto.webp': 'کارت آشوب «وتو» از دک «امشب چی بخوریم» کنار پشت کارت زرد و یک کاسه غذا'
 } %}
+{% elif 'مکالمه انگلیسی' in product.name or 'english conversation' in product.name|lower %}
+{% set product_image_alts = {} %}
+{% for image in product_images %}
+    {% set filename = image|lower %}
+    {% if 'group' in filename or 'friends' in filename %}
+        {% set alt = 'دوستان در حال تمرین مکالمه انگلیسی با کارت‌های گفت‌وگوی Only Cards' %}
+    {% elif 'couple' in filename or 'duo' in filename or 'two-people' in filename %}
+        {% set alt = 'دو نفر در حال تمرین گفت‌وگوی انگلیسی با کارت‌های مکالمه Only Cards' %}
+    {% elif 'phrase' in filename %}
+        {% set alt = 'کارت Phrase از دک مکالمه انگلیسی Only Cards برای تمرین عبارت‌های کاربردی' %}
+    {% elif 'keep-talking' in filename or 'keep_talking' in filename %}
+        {% set alt = 'کارت Keep Talking از دک مکالمه انگلیسی Only Cards برای ادامه گفت‌وگو' %}
+    {% elif 'prompt' in filename or 'easy' in filename %}
+        {% set alt = 'کارت شروع گفت‌وگو از مجموعه کارت‌های مکالمه انگلیسی Only Cards' %}
+    {% elif 'back' in filename %}
+        {% set alt = 'پشت کارت‌های مکالمه انگلیسی Only Cards با طراحی اختصاصی دک' %}
+    {% else %}
+        {% set alt = 'نمایی از کارت‌های مکالمه انگلیسی Only Cards برای تمرین گفت‌وگو' %}
+    {% endif %}
+    {% set _ = product_image_alts.update({image: alt}) %}
+{% endfor %}
 {% else %}
 {% set product_image_alts = {} %}
 {% endif %}
@@ -96,7 +117,7 @@
                         <img id="mainProductImage"
                              src="{{ main_asset.src }}"
                              {% if main_asset.srcset %}srcset="{{ main_asset.srcset }}" sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"{% endif %}
-                             alt="{{ product_image_alts.get(main_image, product.name ~ '؛ کارت‌های فارسی Only Cards') }}"
+                             alt="{{ product_image_alts.get(main_image, product.name ~ '؛ کارت‌های Only Cards') }}"
                              class="max-h-[570px] w-full object-contain rounded-2xl transition duration-300 group-hover:scale-[1.01]"
                              width="{{ main_asset.width or 960 }}"
                              height="{{ main_asset.height or 1200 }}"

@@ -1045,11 +1045,48 @@ def render_product_detail(product):
         fallback='مشاهده و خرید محصول از فروشگاه Only Cards.'
     )
     seo_title, seo_description = get_product_seo_metadata(product, product_description)
+    # Only Cards English Conversation: SEO and specification blocks only.
+    english_deck = ('مکالمه انگلیسی' in (product.name or '') or
+                    'english conversation' in (product.name or '').lower())
+    english_page_content = None
+    if english_deck:
+        seo_title = 'خرید کارت‌های مکالمه انگلیسی | تمرین گفت‌وگو | Only Cards'
+        seo_description = ('کارت‌های مکالمه انگلیسی Only Cards؛ مجموعه ۵۳ کارتی برای شروع و ادامه گفت‌وگو، '
+                           'تمرین صحبت‌کردن و بازی مکالمه انگلیسی به‌صورت دونفره یا گروهی.')
+        english_page_content = {
+            'eyebrow': 'Only Cards — English Conversation',
+            'inside_box': [
+                '۳۶ کارت شروع مکالمه (Easy، Normal و Challenge)',
+                '۸ کارت Keep Talking برای ادامه‌دادن گفت‌وگو',
+                '۷ کارت Phrase برای تمرین عبارت‌های کاربردی انگلیسی',
+                '۱ کارت راهنمای استفاده',
+                '۱ کارت جمع‌بندی (Wrap-Up)',
+            ],
+            'suitable_for': [
+                'تمرین مکالمه انگلیسی به‌صورت دونفره یا گروهی',
+                'زبان‌آموزانی که می‌خواهند راحت‌تر انگلیسی صحبت کنند',
+                'مدرسان زبان برای فعالیت‌های مکالمه‌محور در کلاس',
+                'دورهمی‌های دوستانه با هدف گفت‌وگو به انگلیسی',
+                'تمرین صحبت‌کردن در فضایی غیررسمی و بدون فشار',
+            ],
+            'section_title': 'تمرین مکالمه انگلیسی در گفت‌وگوهای واقعی',
+            'section_text': ('کارت‌ها موضوعی برای شروع صحبت، فرصتی برای ادامه مکالمه و عبارت‌هایی '
+                             'برای استفاده در گفت‌وگو در اختیارت می‌گذارند.'),
+            'faqs': [
+                {'question': 'این کارت‌ها برای چه کسانی مناسب‌اند؟',
+                 'answer': 'برای زبان‌آموزان، مدرسان و دوستانی که می‌خواهند مکالمه انگلیسی را به‌صورت دونفره یا گروهی تمرین کنند.'},
+                {'question': 'چند کارت داخل جعبه وجود دارد؟',
+                 'answer': '۵۳ کارت شامل ۳۶ کارت شروع مکالمه، ۸ کارت Keep Talking، ۷ کارت Phrase، یک راهنما و یک Wrap-Up.'},
+                {'question': 'می‌توان از دک در کلاس زبان استفاده کرد؟',
+                 'answer': 'بله، کارت‌ها برای فعالیت‌های گفت‌وگومحور در کلاس و تمرین دو یا چند نفره طراحی شده‌اند.'},
+            ],
+            'related_posts': [],
+        }
 
     return render_template(
         'product.html',
         product=product,
-        page_content=get_product_page_content(product),
+        page_content=english_page_content if english_page_content is not None else get_product_page_content(product),
         meta_title=seo_title,
         meta_description=seo_description,
         canonical_url=absolute_url(get_product_url(product)),
